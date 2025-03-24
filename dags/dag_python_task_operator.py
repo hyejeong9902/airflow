@@ -5,7 +5,7 @@ from airflow.decorators import task
 with DAG(
     dag_id = "dag_python_operator",
     schedule="0 2 * * 1", # 매일 6시 30분 마다 수행
-    start_date=pendulum.datetime(2025, 3, 1, tz='Asia/Seoul'),
+    start_date=pendulum.datetime(2025, 3, 1, tz='Asia/Seoul'),  
     catchup=False,
 ) as dag:
     

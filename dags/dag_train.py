@@ -14,26 +14,7 @@ def print_text(text):
     print(text)
 
 # t2: 원천데이터 사용 학습용 데이터 구축 및 db 업데이트
-def insert_data():
-    # .env 파일 로드
-    #load_dotenv(dotenv_path="/home/airflow/.env")
-    # 환경변수에서 DB 정보 로드
-    #POSTGRES_HOST = os.getenv("POSTGRES_HOST")
-    #POSTGRES_USER = os.getenv("POSTGRES_USER")
-    #POSTGRES_PASSWORD = os.getenv("POSTGRES_PASSWORD")
-    #POSTGRES_DB = os.getenv("POSTGRES_DB")
-    #POSTGRES_PORT = os.getenv("POSTGRES_PORT")
-    # DB연결(학습용 DB)
-    #db_connect = psycopg2.connect(
-    #database=POSTGRES_DB,
-    #user=POSTGRES_USER,
-    #password=POSTGRES_PASSWORD,
-    #host=POSTGRES_HOST,
-    #port=POSTGRES_PORT
-    #)
-
-    # (외부)원천데이터 읽기
-    db_connect_raw_input = psycopg2.connect(
+db_connect = psycopg2.connect(
         database="postgres",
         user="wesleyquest",
         password="Wqasdf01!",
@@ -41,26 +22,26 @@ def insert_data():
         port="5432"
     )
 
+def insert_data(db_connect):
+
     # (새로 저장할) 원천데이터 불러오기(SQL사용) / test할 때 limit 걸어서 불러와지는지 확인하기! / 2025-03-25인  데이터만 불러오기
-    with db_connect_raw_input.cursor() as cur:
-        AAA260MT = pd.read_sql_query('SELECT * FROM "AAA260MT" LIMIT 5', db_connect_raw_input)
-        AAA010MT = pd.read_sql_query('SELECT * FROM "AAA010MT" LIMIT 5', db_connect_raw_input)
-        AAA050DT = pd.read_sql_query('SELECT * FROM "AAA050DT" LIMIT 5', db_connect_raw_input)
-        AAA230DT = pd.read_sql_query('SELECT * FROM "AAA230MT" LIMIT 5', db_connect_raw_input)
-        AAA460MT = pd.read_sql_query('SELECT * FROM "AAA460MT" LIMIT 5', db_connect_raw_input)
-        SURGERY = pd.read_sql_query('SELECT * FROM "SURGERY" LIMIT 5', db_connect_raw_input)
-        EXAM = pd.read_sql_query('SELECT * FROM "EXAM" LIMIT 5', db_connect_raw_input)
-        BOJOGI = pd.read_sql_query('SELECT * FROM "BOJOGI" LIMIT 5', db_connect_raw_input)
-        BCA201DT = pd.read_sql_query('SELECT * FROM "BCA201DT" LIMIT 5', db_connect_raw_input)
-        BCA200MT = pd.read_sql_query('SELECT * FROM "BCA200MT" LIMIT 5', db_connect_raw_input)
+    with db_connect.cursor() as cur:
+        AAA260MT = pd.read_sql_query('SELECT * FROM "AAA260MT" LIMIT 5', db_connect)
+        AAA010MT = pd.read_sql_query('SELECT * FROM "AAA010MT" LIMIT 5', db_connect)
+        AAA050DT = pd.read_sql_query('SELECT * FROM "AAA050DT" LIMIT 5', db_connect)
+        AAA230DT = pd.read_sql_query('SELECT * FROM "AAA230MT" LIMIT 5', db_connect)
+        AAA460MT = pd.read_sql_query('SELECT * FROM "AAA460MT" LIMIT 5', db_connect)
+        SURGERY = pd.read_sql_query('SELECT * FROM "SURGERY" LIMIT 5', db_connect)
+        EXAM = pd.read_sql_query('SELECT * FROM "EXAM" LIMIT 5', db_connect)
+        BOJOGI = pd.read_sql_query('SELECT * FROM "BOJOGI" LIMIT 5', db_connect)
+        BCA201DT = pd.read_sql_query('SELECT * FROM "BCA201DT" LIMIT 5', db_connect)
+        BCA200MT = pd.read_sql_query('SELECT * FROM "BCA200MT" LIMIT 5', db_connect)
     
     print("원천 데이터 불러오기 완료")
 
 
-###############################################################################3
+###############################################################################
 
-# timezone 한국시간으로 변경
-#kst = pendulum.timezone("Asia/Seoul")
 # 기본 args 생성
 default_args = {
     #'owner' : 'Hello World',
@@ -87,8 +68,8 @@ with DAG(
 
     t2 = PythonOperator(
         task_id="insert_data",
-        python_callable=insert_data
-        #op_args={"db_connect":db_connect}
+        python_callable=insert_data,
+        op_args=[db_connect]
     )
 
     t3 = PythonOperator(

@@ -16,7 +16,7 @@ def print_text(text):
 # t2: 원천데이터 사용 학습용 데이터 구축 및 db 업데이트
 def insert_data():
     # .env 파일 로드
-    load_dotenv()
+    load_dotenv(dotenv_path="/home/airflow/.env")
     # 환경변수에서 DB 정보 로드
     POSTGRES_HOST = os.getenv("POSTGRES_HOST")
     POSTGRES_USER = os.getenv("POSTGRES_USER")

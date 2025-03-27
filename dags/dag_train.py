@@ -51,12 +51,14 @@ def insert_data(db_connect):
     # 2. 테이블별 전처리
     # AAA260MT 전처리
     AAA260MT = AAA260MT[(AAA260MT["AGE"] > 0)&(AAA260MT["AGE"]<100)&(AAA260MT["AGE"].notnull())] # 연령대가 1 이상, 100 미만이며 null 아닌 경우만 사용
+    AAA260MT = AAA260MT[["WONBU_NO","AGE","SEX"]].copy() # 필요컬럼만 불러오기
     # AAA010MT 전처리
     AAA010MT = AAA010MT[(AAA010MT["YOYANG_JUNG_SAMANG"]!="Y")&(AAA010MT["YOYANG_ILSU"]>0)&(AAA010MT["YOYANG_ILSU"].notnull())] # 요양중 사망 제외 & 요양일수가 0보다 큰 경우만 사용 & 요양일수가 NULL이 아닌 경우만 사용
     AAA010MT = AAA010MT.drop(columns=["YOYANG_JUNG_SAMANG"]) # "YOYANG_JUNG_SAMANG" 컬럼 삭제
     AAA010MT.loc[AAA010MT["IPWON_BIYUL"] >1, "IPWON_BIYUL"] = 1 # 입원비율이 1보다 큰 경우 1로 대체
+    AAA010MT = AAA010MT[['WONBU_NO', 'JAEHAEBALSAENG_HYEONGTAE_FG_CD', 'CODE_NM', 'GEUNROJA_FG','JONGSAJA_JIWI_CD', 'GY_HYEONGTAE_CD', 'JIKJONG_CD', 'YOYANG_ILSU','IPWON_BIYUL']].copy() # 필요컬럼만 불러오기
     # AAA050DT 전처리
-    AAA050DT = AAA050DT[AAA050DT["SEUNGIN_FG"] == '3'] # 승인구분이 3인 데이터만 남기기
+    AAA050DT = AAA050DT[AAA050DT["SEUNGIN_FG"] == '3'] # 승인구분이 3인 데이터만 남기기"
     AAA050DT.loc[AAA050DT["BOJEONG_SANGBYEONG_CD"].notnull(), "SANGBYEONG_CD"] = AAA050DT["BOJEONG_SANGBYEONG_CD"] # 보정상병코드가 null이 아닌 경우 상병코드 컬럼 null에 상관없이 상병코드 값 보정상병코드값으로 대체
     AAA050DT.loc[AAA050DT["BOJEONG_SANGBYEONG_CD"].notnull(), "SANGSE_SANGBYEONG_NM"] = AAA050DT["BOJEONG_SANGSE_SANGBYEONG_NM"] # 보정상병코드가 null이 아닌 경우 상세상병명 컬럼 null에 상관없이 상세상병명 값 보정상세상병명값으로 대체
     AAA050DT = AAA050DT[AAA050DT["SANGBYEONG_CD"].notnull()] # 대체 후 상병코드가 Null인 경우 제외
@@ -66,6 +68,11 @@ def insert_data(db_connect):
     # AAA200MT_주치의소견 전처리
     AAA200MT["JANGHAE_GRADE_old"] = AAA200MT["JANGHAE_GRADE"] # 장해등급호 변수 복사
     AAA200MT["JANGHAE_GRADE"] = AAA200MT["JANGHAE_GRADE"].apply(lambda x: x[:2] if not pd.isna(x) else x) # 앞의 두자리만 추출한 장해등급 변수 생성
+    AAA200MT = AAA200MT[['WONBU_NO', 'JUCHIUI_SOGYEON', 'JANGHAE_GRADE','JANGHAE_GRADE_old']].copy()
+    # AAA230MT(필요변수만 불러오기)
+    AAA230MT = AAA230MT[['WONBU_NO', 'JAEHAE_WONIN']].copy()
+    # AAA460MT(필요변수만 불러오기)
+    AAA460MT = AAA460MT[['WONBU_NO', 'GYOTONGSAGO_YN']].copy()
     # SURGERY_수술이력
     SURGERY = SURGERY[SURGERY["SUGA_CD"].notnull()] # 수술코드(SUGA_CD)가 NULL이 아닌 경우만 사용
     # EXAM_주요검사정보
@@ -96,11 +103,59 @@ def insert_data(db_connect):
     not_grade_final = list(BCA200MT.loc[BCA200MT["JANGHAE_GRADE"] == '00', "WONBU_NO"].unique()) # 앞서 전처리한 BCA200MT기준 무장해자 원부 리스트 생성
     BCA201DT = BCA201DT[~((BCA201DT["WONBU_NO"].isin(not_grade_final))&(BCA201DT["JANGHAE_GRADE"]!="00"))] # 최종 무장해자이나, 복수 또는 단일의 기초장해등급을 갖는 경우 제외(최종 무장해자는 기초장해등급을 가질 수 없다고 가정)
     
+    # 3. 공통원부 및 사용변수 추출
+    # 3-1. 공통 원부번호 추출
+    dfs_to_check = [AAA010MT, AAA260MT, BCA200MT, BCA201DT]
+    all_ids = set(AAA260MT['WONBU_NO']) # AAA260MT_최초요양급여신청서 기준으로
+    deleted_ids = set()
+    for tmp in dfs_to_check:
+        current_ids = set(tmp['WONBU_NO'])
+        to_add = all_ids - current_ids  # 삭제된 ID들
+        # 이미 있는 값은 추가하지 않음
+        for value in to_add:
+            if value not in deleted_ids:
+                deleted_ids.add(value)
+    result_wonbu_no = list(all_ids - deleted_ids)
+    # 3-2. 테이블별 공통원부번호만 남기기
+    AAA010MT = AAA010MT[AAA010MT["WONBU_NO"].isin(result_wonbu_no)].copy().sort_values(by="WONBU_NO").reset_index(drop=True)
+    AAA050DT = AAA050DT[AAA050DT["WONBU_NO"].isin(result_wonbu_no)].copy().sort_values(by=["WONBU_NO","SANGHAE_BUWI_CD","SANGBYEONG_FG","SANGBYEONG_CD"]).reset_index(drop=True)
+    AAA200MT = AAA200MT[AAA200MT["WONBU_NO"].isin(result_wonbu_no)].copy().sort_values(by="WONBU_NO").reset_index(drop=True)
+    AAA230MT = AAA230MT[AAA230MT["WONBU_NO"].isin(result_wonbu_no)].copy().sort_values(by="WONBU_NO").reset_index(drop=True)
+    AAA260MT = AAA260MT[AAA260MT["WONBU_NO"].isin(result_wonbu_no)].copy().sort_values(by="WONBU_NO").reset_index(drop=True)
+    AAA460MT = AAA460MT[AAA460MT["WONBU_NO"].isin(result_wonbu_no)].copy().sort_values(by="WONBU_NO").reset_index(drop=True)
+    SURGERY = SURGERY[SURGERY["WONBU_NO"].isin(result_wonbu_no)].copy().sort_values(by=["WONBU_NO","SUGA_CD"]).reset_index(drop=True)
+    EXAM = EXAM[EXAM["WONBU_NO"].isin(result_wonbu_no)].copy().sort_values(by=["WONBU_NO","SUGA_CD"]).reset_index(drop=True)
+    BOJOGI = BOJOGI[BOJOGI["WONBU_NO"].isin(result_wonbu_no)].copy().sort_values(by=["WONBU_NO","SUGA_CD"]).reset_index(drop=True)
+    BCA201DT = BCA201DT[BCA201DT["WONBU_NO"].isin(result_wonbu_no)].copy().sort_values(by="WONBU_NO").reset_index(drop=True)
+    BCA200MT = BCA200MT[BCA200MT["WONBU_NO"].isin(result_wonbu_no)].copy().sort_values(by="WONBU_NO").reset_index(drop=True)
 
-    print("원천 데이터 불러오기 및 전처리 완료")
+    # 4. 독립변수 데이터셋 생성
+    DF = AAA260MT.merge(AAA010MT, on="WONBU_NO", how="inner")
+    DF = pd.merge(DF, AAA050DT.groupby('WONBU_NO').SANGHAE_BUWI_CD.unique().apply(lambda x: ", ".join(map(str, filter(pd.notna, x)))).rename('SANGHAE_BUWI_CD'),how='left',left_on='WONBU_NO',right_on='WONBU_NO')  
+    DF["SANGHAE_BUWI_CD"] = DF["SANGHAE_BUWI_CD"].apply(lambda x: np.nan if x=='' else x) # 결측치가 있어 ''로 들어간 데이터는 결측치로 처리
+    DF = pd.merge(DF, AAA050DT.groupby('WONBU_NO').SANGBYEONG_CD.nunique().rename('SANGBYEONG_NUNIQUE'),how='left',left_on='WONBU_NO',right_on='WONBU_NO')
+    DF["SANGBYEONG_NUNIQUE"] = DF["SANGBYEONG_NUNIQUE"].apply(lambda x: 0 if pd.isna(x) else x).astype('float')
+    DF = pd.merge(DF, AAA050DT.groupby('WONBU_NO').SANGBYEONG_CD.unique().apply(lambda x: ", ".join(x)).rename('SANGBYEONG_CD'),how='left',left_on='WONBU_NO',right_on='WONBU_NO')
+    DF = pd.merge(DF, AAA050DT.groupby('WONBU_NO').SANGSE_SANGBYEONG_NM.unique().apply(lambda x: ", ".join(map(str, x))).rename('SANGSE_SANGBYEONG_NM'),how='left',left_on='WONBU_NO',right_on='WONBU_NO')
+    DF = pd.merge(DF, AAA050DT.groupby('WONBU_NO').SANGBYEONG_CD_MAJOR.unique().apply(lambda x: ", ".join(map(str, x))).rename('SANGBYEONG_CD_MAJOR'),how='left',left_on='WONBU_NO',right_on='WONBU_NO')
+    DF = pd.merge(DF, AAA050DT.groupby('WONBU_NO').SANGBYEONG_CD_MIDDLE.unique().apply(lambda x: ", ".join(map(str, x))).rename('SANGBYEONG_CD_MIDDLE'),how='left',left_on='WONBU_NO',right_on='WONBU_NO')
+    DF = pd.merge(DF, AAA050DT.groupby('WONBU_NO').SANGBYEONG_CD_SMALL.unique().apply(lambda x: ", ".join(map(str, x))).rename('SANGBYEONG_CD_SMALL'),how='left',left_on='WONBU_NO',right_on='WONBU_NO')
+    DF = pd.merge(DF, AAA050DT[AAA050DT["SANGBYEONG_FG"]=='1'].groupby('WONBU_NO').SANGHAE_BUWI_CD.unique().apply(lambda x: ", ".join(map(str, x))).rename('MAIN_SANGHAE_BUWI_CD'),how='left',left_on='WONBU_NO',right_on='WONBU_NO')
+    DF = pd.merge(DF, AAA050DT[AAA050DT["SANGBYEONG_FG"]=='1'].groupby('WONBU_NO').SANGBYEONG_CD.unique().apply(lambda x: ", ".join(map(str, x))).rename('MAIN_SANGBYEONG_CD'),how='left',left_on='WONBU_NO',right_on='WONBU_NO')
+    DF = pd.merge(DF, AAA050DT[AAA050DT["SANGBYEONG_FG"]=='1'].groupby('WONBU_NO').SANGSE_SANGBYEONG_NM.unique().apply(lambda x: ", ".join(map(str, x))).rename('MAIN_SANGSE_SANGBYEONG_NM'),how='left',left_on='WONBU_NO',right_on='WONBU_NO')
+    DF = pd.merge(DF, AAA050DT[AAA050DT["SANGBYEONG_FG"]=='1'].groupby('WONBU_NO').SANGBYEONG_CD_MAJOR.unique().apply(lambda x: ", ".join(map(str, x))).rename('MAIN_SANGBYEONG_CD_MAJOR'),how='left',left_on='WONBU_NO',right_on='WONBU_NO')
+    DF = pd.merge(DF, AAA050DT[AAA050DT["SANGBYEONG_FG"]=='1'].groupby('WONBU_NO').SANGBYEONG_CD_MIDDLE.unique().apply(lambda x: ", ".join(map(str, x))).rename('MAIN_SANGBYEONG_CD_MIDDLE'),how='left',left_on='WONBU_NO',right_on='WONBU_NO')
+    DF = pd.merge(DF, AAA050DT[AAA050DT["SANGBYEONG_FG"]=='1'].groupby('WONBU_NO').SANGBYEONG_CD_SMALL.unique().apply(lambda x: ", ".join(map(str, x))).rename('MAIN_SANGBYEONG_CD_SMALL'),how='left',left_on='WONBU_NO',right_on='WONBU_NO')
+    DF = DF.merge(AAA230MT, on="WONBU_NO", how="inner")
+    DF = DF.merge(AAA460MT, on="WONBU_NO", how="inner")
+    DF = pd.merge(DF, SURGERY.groupby('WONBU_NO').SUGA_CD.count().rename('SUGA_CD_COUNT'),how='left',left_on='WONBU_NO',right_on='WONBU_NO')
+    DF = pd.merge(DF, SURGERY.groupby('WONBU_NO').SUGA_CD.unique().apply(lambda x: ", ".join(x)).rename('SUGA_CD'),how='left',left_on='WONBU_NO',right_on='WONBU_NO')
+    DF = pd.merge(DF, EXAM.groupby('WONBU_NO').SUGA_CD.count().rename('EXAM_CD_COUNT'),how='left',left_on='WONBU_NO',right_on='WONBU_NO')
+    DF = pd.merge(DF, EXAM.groupby('WONBU_NO').SUGA_CD.unique().apply(lambda x: ", ".join(x)).rename('EXAM_CD'),how='left',left_on='WONBU_NO',right_on='WONBU_NO')
+    DF = pd.merge(DF, BOJOGI.groupby('WONBU_NO').SUGA_CD.unique().apply(lambda x: ", ".join(x)).rename('BOJOGI_CD'),how='left',left_on='WONBU_NO',right_on='WONBU_NO')
+    DF = DF.merge(AAA200MT, on="WONBU_NO", how="inner")
 
-
-###############################################################################################################################
+    print(DF.shape)
 
 # 기본 args 생성
 default_args = {
@@ -108,7 +163,7 @@ default_args = {
     #'email' : ['airflow@airflow.com'],
     'email_on_failure' : False,
 }
-
+# DAG 정의
 with DAG(
     dag_id="dag_train",
     default_args=default_args,

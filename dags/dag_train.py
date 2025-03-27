@@ -7,32 +7,32 @@ from airflow import DAG
 import pendulum
 import datetime
 from airflow.operators.python import PythonOperator 
-
 from dotenv import load_dotenv
-
-load_dotenv()
-
-POSTGRES_HOST = os.getenv("POSTGRES_HOST")
-POSTGRES_USER = os.getenv("POSTGRES_USER")
-POSTGRES_PASSWORD = os.getenv("POSTGRES_PASSWORD")
-POSTGRES_DB = os.getenv("POSTGRES_DB")
-POSTGRES_PORT = os.getenv("POSTGRES_PORT")
-
-db_connect = psycopg2.connect(
-    database=POSTGRES_DB,
-    user=POSTGRES_USER,
-    password=POSTGRES_PASSWORD,
-    host=POSTGRES_HOST,
-    port=POSTGRES_PORT
-)
 
 # t1
 def print_text(text):
     print(text)
 
 # t2: 원천데이터 사용 학습용 데이터 구축 및 db 업데이트
-def insert_data(db_connect):
-    # wq 서버 db 주소
+def insert_data():
+    # .env 파일 로드
+    load_dotenv()
+    # 환경변수에서 DB 정보 로드
+    POSTGRES_HOST = os.getenv("POSTGRES_HOST")
+    POSTGRES_USER = os.getenv("POSTGRES_USER")
+    POSTGRES_PASSWORD = os.getenv("POSTGRES_PASSWORD")
+    POSTGRES_DB = os.getenv("POSTGRES_DB")
+    POSTGRES_PORT = os.getenv("POSTGRES_PORT")
+    # DB연결(학습용 DB)
+    db_connect = psycopg2.connect(
+    database=POSTGRES_DB,
+    user=POSTGRES_USER,
+    password=POSTGRES_PASSWORD,
+    host=POSTGRES_HOST,
+    port=POSTGRES_PORT
+    )
+
+    # 외부 원천데이터 읽기
     db_connect_raw_input = psycopg2.connect(
         database="postgres",
         user="wesleyquest",
@@ -53,6 +53,8 @@ def insert_data(db_connect):
         BOJOGI = pd.read_sql_query('SELECT * FROM BOJOGI LIMIT 5', db_connect_raw_input)
         BCA201DT = pd.read_sql_query('SELECT * FROM BCA201DT LIMIT 5', db_connect_raw_input)
         BCA200MT = pd.read_sql_query('SELECT * FROM BCA200MT LIMIT 5', db_connect_raw_input)
+    
+    print("원천 데이터 불러오기 완료")
 
 
 ###############################################################################3
@@ -78,21 +80,21 @@ with DAG(
 ) as dag:
     
     t1 = PythonOperator(
-        task_id="strt_job",
+        task_id="start_job",
         python_callable=print_text,
-        op_args={"text":"start train model"}
+        op_args=["start train model"]
     )
 
     t2 = PythonOperator(
         task_id="insert_data",
-        python_callable=insert_data,
-        op_args={"db_connect":db_connect}
+        python_callable=insert_data
+        #op_args={"db_connect":db_connect}
     )
 
     t3 = PythonOperator(
         task_id="end_job",
         python_callable=print_text,
-        op_args={"text":"end train model"}
+        op_args=["end train model"]
     )
 
     t1 >> t2 >> t3

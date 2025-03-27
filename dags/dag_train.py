@@ -43,16 +43,16 @@ def insert_data():
 
     # (새로 저장할) 원천데이터 불러오기(SQL사용) / test할 때 limit 걸어서 불러와지는지 확인하기! / 2025-03-25인  데이터만 불러오기
     with db_connect_raw_input.cursor() as cur:
-        AAA260MT = pd.read_sql_query('SELECT * FROM AAA260MT LIMIT 5', db_connect_raw_input)
-        AAA010MT = pd.read_sql_query('SELECT * FROM AAA010MT LIMIT 5', db_connect_raw_input)
-        AAA050DT = pd.read_sql_query('SELECT * FROM AAA050DT LIMIT 5', db_connect_raw_input)
-        AAA230DT = pd.read_sql_query('SELECT * FROM AAA230DT LIMIT 5', db_connect_raw_input)
-        AAA460MT = pd.read_sql_query('SELECT * FROM AAA460MT LIMIT 5', db_connect_raw_input)
-        SURGERY = pd.read_sql_query('SELECT * FROM SURGERY LIMIT 5', db_connect_raw_input)
-        EXAM = pd.read_sql_query('SELECT * FROM EXAM LIMIT 5', db_connect_raw_input)
-        BOJOGI = pd.read_sql_query('SELECT * FROM BOJOGI LIMIT 5', db_connect_raw_input)
-        BCA201DT = pd.read_sql_query('SELECT * FROM BCA201DT LIMIT 5', db_connect_raw_input)
-        BCA200MT = pd.read_sql_query('SELECT * FROM BCA200MT LIMIT 5', db_connect_raw_input)
+        AAA260MT = pd.read_sql_query('SELECT * FROM "AAA260MT" LIMIT 5', db_connect_raw_input)
+        AAA010MT = pd.read_sql_query('SELECT * FROM "AAA010MT" LIMIT 5', db_connect_raw_input)
+        AAA050DT = pd.read_sql_query('SELECT * FROM "AAA050DT" LIMIT 5', db_connect_raw_input)
+        AAA230DT = pd.read_sql_query('SELECT * FROM "AAA230DT" LIMIT 5', db_connect_raw_input)
+        AAA460MT = pd.read_sql_query('SELECT * FROM "AAA460MT" LIMIT 5', db_connect_raw_input)
+        SURGERY = pd.read_sql_query('SELECT * FROM "SURGERY" LIMIT 5', db_connect_raw_input)
+        EXAM = pd.read_sql_query('SELECT * FROM "EXAM" LIMIT 5', db_connect_raw_input)
+        BOJOGI = pd.read_sql_query('SELECT * FROM "BOJOGI" LIMIT 5', db_connect_raw_input)
+        BCA201DT = pd.read_sql_query('SELECT * FROM "BCA201DT" LIMIT 5', db_connect_raw_input)
+        BCA200MT = pd.read_sql_query('SELECT * FROM "BCA200MT" LIMIT 5', db_connect_raw_input)
     
     print("원천 데이터 불러오기 완료")
 
@@ -71,7 +71,7 @@ default_args = {
 with DAG(
     dag_id="dag_train",
     default_args=default_args,
-    start_date=pendulum.datetime(2025, 3, 1, tz='Asia/Seoul'),
+    start_date=pendulum.datetime(2025, 3, 1, tzinfo=kst),
     description='train model',
     #schedule="30 6 * * *",
     schedule_interval=None,

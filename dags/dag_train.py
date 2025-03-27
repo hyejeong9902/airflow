@@ -24,19 +24,27 @@ db_connect = psycopg2.connect(
 
 def insert_data(db_connect):
 
-    # (새로 저장할) 원천데이터 불러오기(SQL사용) / test할 때 limit 걸어서 불러와지는지 확인하기! / 2025-03-25인  데이터만 불러오기
+    # 학습용데이터에 추가할 데이터 불러오기(필터링 부분 수정 필요)
     with db_connect.cursor() as cur:
-        AAA260MT = pd.read_sql_query('SELECT * FROM "AAA260MT" LIMIT 5', db_connect)
-        AAA010MT = pd.read_sql_query('SELECT * FROM "AAA010MT" LIMIT 5', db_connect)
-        AAA050DT = pd.read_sql_query('SELECT * FROM "AAA050DT" LIMIT 5', db_connect)
-        AAA230DT = pd.read_sql_query('SELECT * FROM "AAA230MT" LIMIT 5', db_connect)
-        AAA460MT = pd.read_sql_query('SELECT * FROM "AAA460MT" LIMIT 5', db_connect)
-        SURGERY = pd.read_sql_query('SELECT * FROM "SURGERY" LIMIT 5', db_connect)
-        EXAM = pd.read_sql_query('SELECT * FROM "EXAM" LIMIT 5', db_connect)
-        BOJOGI = pd.read_sql_query('SELECT * FROM "BOJOGI" LIMIT 5', db_connect)
-        BCA201DT = pd.read_sql_query('SELECT * FROM "BCA201DT" LIMIT 5', db_connect)
-        BCA200MT = pd.read_sql_query('SELECT * FROM "BCA200MT" LIMIT 5', db_connect)
-    
+        # 기존 학습용데이터 테이블 4종
+        TRAIN_JANGHAE_FINAL = pd.read_sql_query('SELECT * FROM "TRAIN_JANGHAE_FINAL"', db_connect)
+        TRAIN_JANGHAE_BUWI8 = pd.read_sql_query('SELECT * FROM "TRAIN_JANGHAE_BUWI8"', db_connect)
+        TRAIN_JANGHAE_BUWI9 = pd.read_sql_query('SELECT * FROM "TRAIN_JANGHAE_BUWI9"', db_connect)
+        TRAIN_JANGHAE_BUWI10 = pd.read_sql_query('SELECT * FROM "TRAIN_JANGHAE_BUWI10"', db_connect)
+        # BCA200MT(최종장해)에서 학습용데이터에 새로 추가할 원부 추출
+        # 원천 데이터 테이블에서 새로 추가할 원부 정보만 추출
+        AAA260MT = pd.read_sql_query('SELECT * FROM "AAA260MT" WHERE "LAST_CHANGE_ILSU"="2025-03-25"', db_connect)
+        AAA010MT = pd.read_sql_query('SELECT * FROM "AAA010MT" WHERE "LAST_CHANGE_ILSU"="2025-03-25"', db_connect)
+        AAA050DT = pd.read_sql_query('SELECT * FROM "AAA050DT" WHERE "LAST_CHANGE_ILSU"="2025-03-25"', db_connect)
+        AAA230DT = pd.read_sql_query('SELECT * FROM "AAA230MT" WHERE "LAST_CHANGE_ILSU"="2025-03-25"', db_connect)
+        AAA460MT = pd.read_sql_query('SELECT * FROM "AAA460MT" WHERE "LAST_CHANGE_ILSU"="2025-03-25"', db_connect)
+        SURGERY = pd.read_sql_query('SELECT * FROM "SURGERY" WHERE "LAST_CHANGE_ILSU"="2025-03-25"', db_connect)
+        EXAM = pd.read_sql_query('SELECT * FROM "EXAM" WHERE "LAST_CHANGE_ILSU"="2025-03-25"', db_connect)
+        BOJOGI = pd.read_sql_query('SELECT * FROM "BOJOGI" WHERE "LAST_CHANGE_ILSU"="2025-03-25"', db_connect)
+        BCA201DT = pd.read_sql_query('SELECT * FROM "BCA201DT" WHERE "LAST_CHANGE_ILSU"="2025-03-25"', db_connect)
+        BCA200MT = pd.read_sql_query('SELECT * FROM "BCA200MT" WHERE "LAST_CHANGE_ILSU"="2025-03-25"', db_connect)
+        
+
     print("원천 데이터 불러오기 완료")
 
 

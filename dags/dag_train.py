@@ -60,7 +60,7 @@ def insert_data():
 ###############################################################################3
 
 # timezone 한국시간으로 변경
-kst = pendulum.timezone("Asia/Seoul")
+#kst = pendulum.timezone("Asia/Seoul")
 # 기본 args 생성
 default_args = {
     #'owner' : 'Hello World',
@@ -71,7 +71,7 @@ default_args = {
 with DAG(
     dag_id="dag_train",
     default_args=default_args,
-    start_date=pendulum.datetime(2025, 3, 1, tzinfo=kst),
+    start_date=pendulum.datetime(2025, 3, 1, tz="Asia/Seoul"),
     description='train model',
     #schedule="30 6 * * *",
     schedule_interval=None,

@@ -46,7 +46,7 @@ def insert_data():
         AAA260MT = pd.read_sql_query('SELECT * FROM "AAA260MT" LIMIT 5', db_connect_raw_input)
         AAA010MT = pd.read_sql_query('SELECT * FROM "AAA010MT" LIMIT 5', db_connect_raw_input)
         AAA050DT = pd.read_sql_query('SELECT * FROM "AAA050DT" LIMIT 5', db_connect_raw_input)
-        AAA230DT = pd.read_sql_query('SELECT * FROM "AAA230DT" LIMIT 5', db_connect_raw_input)
+        AAA230DT = pd.read_sql_query('SELECT * FROM "AAA230MT" LIMIT 5', db_connect_raw_input)
         AAA460MT = pd.read_sql_query('SELECT * FROM "AAA460MT" LIMIT 5', db_connect_raw_input)
         SURGERY = pd.read_sql_query('SELECT * FROM "SURGERY" LIMIT 5', db_connect_raw_input)
         EXAM = pd.read_sql_query('SELECT * FROM "EXAM" LIMIT 5', db_connect_raw_input)

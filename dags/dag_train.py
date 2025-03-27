@@ -16,23 +16,23 @@ def print_text(text):
 # t2: 원천데이터 사용 학습용 데이터 구축 및 db 업데이트
 def insert_data():
     # .env 파일 로드
-    load_dotenv(dotenv_path="/home/airflow/.env")
+    #load_dotenv(dotenv_path="/home/airflow/.env")
     # 환경변수에서 DB 정보 로드
-    POSTGRES_HOST = os.getenv("POSTGRES_HOST")
-    POSTGRES_USER = os.getenv("POSTGRES_USER")
-    POSTGRES_PASSWORD = os.getenv("POSTGRES_PASSWORD")
-    POSTGRES_DB = os.getenv("POSTGRES_DB")
-    POSTGRES_PORT = os.getenv("POSTGRES_PORT")
+    #POSTGRES_HOST = os.getenv("POSTGRES_HOST")
+    #POSTGRES_USER = os.getenv("POSTGRES_USER")
+    #POSTGRES_PASSWORD = os.getenv("POSTGRES_PASSWORD")
+    #POSTGRES_DB = os.getenv("POSTGRES_DB")
+    #POSTGRES_PORT = os.getenv("POSTGRES_PORT")
     # DB연결(학습용 DB)
-    db_connect = psycopg2.connect(
-    database=POSTGRES_DB,
-    user=POSTGRES_USER,
-    password=POSTGRES_PASSWORD,
-    host=POSTGRES_HOST,
-    port=POSTGRES_PORT
-    )
+    #db_connect = psycopg2.connect(
+    #database=POSTGRES_DB,
+    #user=POSTGRES_USER,
+    #password=POSTGRES_PASSWORD,
+    #host=POSTGRES_HOST,
+    #port=POSTGRES_PORT
+    #)
 
-    # 외부 원천데이터 읽기
+    # (외부)원천데이터 읽기
     db_connect_raw_input = psycopg2.connect(
         database="postgres",
         user="wesleyquest",

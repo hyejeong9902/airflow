@@ -159,6 +159,76 @@ def insert_data(db_connect):
 
     print(DF.shape)
 
+    # 5. 학습용 데이터셋 생성
+    # 최종장해등급 (초안) 테이블 생성
+    DF_FINAL = DF.merge(BCA200MT[["WONBU_NO","FINAL_JANGHAE_GRADE_YN"]], on="WONBU_NO", how="inner")
+    # (종속변수 테이블) 장해부위별 기초장해등급 테이블 생성
+    DF_BASIC = DF[["WONBU_NO"]]
+    for buwi in ['1','2','3','4','5','6','7','8','9','10']:
+        buwi_grade_df = BCA201DT.loc[BCA201DT["BUWI_FG"]==buwi, ["WONBU_NO","JANGHAE_GRADE"]].rename(columns={"JANGHAE_GRADE":f"BUWI_{buwi}"})
+        DF_BASIC = DF_BASIC.merge(buwi_grade_df, on="WONBU_NO", how="outer")
+    DF_BASIC = DF_BASIC.fillna('00')
+    DF_BASIC = DF_BASIC.drop_duplicates()
+    # 상해부위별 무장해자수 추출
+    sanghae_buwi_dict = {}
+    sanghae_buwi_list = ["01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "99"]
+    for buwi in sanghae_buwi_list:
+        sanghae_buwi_dict[buwi] = DF_FINAL.loc[(DF_FINAL["SANGHAE_BUWI_CD"].str.contains(buwi))&(DF_FINAL["FINAL_JANGHAE_GRADE_YN"]=="N"), "WONBU_NO"].nunique()
+    # 부위별 주요 상해부위 지정
+    buwi_sanghaebuwi_dict = {
+        "BUWI_8" : ["05", "08", "09"],
+        "BUWI_9": ["06","07"],
+        "BUWI_10" : ["10", "11", "12"]}
+    # 부위별 장해등급 및 무장해(상해부위별 샘플링) 통합 학습용 데이터셋 생성
+    def to_basic_buwi(BUWI):
+        # 장해부위와 상해부위 일치여부에 따라 추출해야 하는 무장해자 수 
+        buwi_nongrade_no = int(DF_BASIC.loc[DF_BASIC[BUWI]!="00", "WONBU_NO"].nunique() * 0.05)
+        # 해당 장해 부위의 상해부위 리스트
+        buwi_sanghaebuwi = buwi_sanghaebuwi_dict[BUWI]
+        # 해당 상해부위를 가지나 무장해자인 재해자 수 합계
+        buwi_sanghaebuwi_total = sum(value for key, value in sanghae_buwi_dict.items() if key in buwi_sanghaebuwi)
+        # 해당 상해부위가 아니지만 무장해자인 재해자 수 합계
+        buwi_sanghaebuwi_none_total = sum(value for key, value in sanghae_buwi_dict.items() if key not in buwi_sanghaebuwi)
+        # 상해부위별 샘플링할 무장해자 수
+        buwi_sample_pct = {}
+        for buwi in sanghae_buwi_list:
+            if buwi in buwi_sanghaebuwi:
+                buwi_sample_pct[buwi] = int(round(sanghae_buwi_dict[buwi] / buwi_sanghaebuwi_total * buwi_nongrade_no, 0))
+            elif buwi not in buwi_sanghaebuwi:
+                buwi_sample_pct[buwi] = int(round(sanghae_buwi_dict[buwi] / buwi_sanghaebuwi_none_total * buwi_nongrade_no, 0))
+        # 해당 장해 부위 데이터셋 생성(무장해자 제외)
+        df_basic_buwi = DF.merge(DF_BASIC[["WONBU_NO", BUWI]], on="WONBU_NO", how="inner")
+        df_basic_buwi = df_basic_buwi[df_basic_buwi[BUWI]!="00"]
+        # 무장해자 포함된 최종 데이터셋 추출
+        for buwi in sanghae_buwi_list:
+            sample_list = list(DF.loc[(DF["SANGHAE_BUWI_CD"].notnull())&(DF["SANGHAE_BUWI_CD"].str.contains(buwi)), "WONBU_NO"].unique())
+            sample_df = DF[DF["WONBU_NO"].isin(sample_list)].merge(DF_BASIC.loc[DF_BASIC[BUWI]=="00", ["WONBU_NO", BUWI]], on="WONBU_NO", how="inner")
+            df_basic_buwi = pd.concat([df_basic_buwi, sample_df.sample(n=buwi_sample_pct[buwi])])
+        df_basic_buwi = df_basic_buwi.sort_values(by="WONBU_NO").reset_index(drop=True)
+        return df_basic_buwi
+
+    # 최종장해여부 학습용 데이터셋
+    DF_FINAL = DF_FINAL.drop(columns=["GEUNROJA_FG", "MAIN_SANGBYEONG_CD_MAJOR","GYOTONGSAGO_YN","JUCHIUI_SOGYEON","JANGHAE_GRADE","JANGHAE_GRADE_old"])
+
+    # BUWI_8(장해부위 척주) 학습용 데이터셋
+    DF_BASIC_BUWI8 = to_basic_buwi("BUWI_8")
+    DF_BASIC_BUWI8.loc[~DF_BASIC_BUWI8["BUWI_8"].isin(["00", "11", "12", "13", "14"]),"BUWI_8"] = "10" 
+    DF_BASIC_BUWI8 = DF_BASIC_BUWI8.drop(columns=["GEUNROJA_FG", "JONGSAJA_JIWI_CD", "GY_HYEONGTAE_CD",
+                                                  "SANGSE_SANGBYEONG_NM", "SANGBYEONG_CD", "MAIN_SANGSE_SANGBYEONG_NM", "MAIN_SANGBYEONG_CD_MAJOR",
+                                                  "GYOTONGSAGO_YN"])
+
+    # BUWI_9(장해부위 팔) 학습용 데이터셋
+    DF_BASIC_BUWI9 = to_basic_buwi("BUWI_9")
+    DF_BASIC_BUWI9 = DF_BASIC_BUWI9.drop(columns=["CODE_NM","JONGSAJA_JIWI_CD"])
+
+    # BUWI_10(장해부위 다리) 학습용 데이터셋
+    DF_BASIC_BUWI10 = to_basic_buwi("BUWI_10")
+    DF_BASIC_BUWI10 = DF_BASIC_BUWI10.drop(columns=["GEUNROJA_FG","JONGSAJA_JIWI_CD",
+                                                    "SANGSE_SANGBYEONG_NM","MAIN_SANGBYEONG_CD_MAJOR",
+                                                    "GYOTONGSAGO_YN","JUCHIUI_SOGYEON"])
+    
+    print(DF_FINAL.shape, DF_BASIC_BUWI8.shape, DF_BASIC_BUWI9.shape, DF_BASIC_BUWI10.shape)
+
 # 기본 args 생성
 default_args = {
     #'owner' : 'Hello World',
@@ -167,7 +237,7 @@ default_args = {
 }
 # DAG 정의
 with DAG(
-    dag_id="dag_train",
+    dag_id="dag_train_janghae_grade_aim_model",
     default_args=default_args,
     start_date=pendulum.datetime(2025, 3, 1, tz="Asia/Seoul"),
     description='train model',

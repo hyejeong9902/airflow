@@ -256,7 +256,7 @@ def insert_data(db_connect):
 
         with conn.cursor() as cur: 
             extras.execute_values(cur, query, tuples)
-            conn.commit
+            conn.commit()
 
     with db_connect.cursor() as cur:
         #넣기        

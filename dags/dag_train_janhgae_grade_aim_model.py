@@ -9,7 +9,6 @@ import datetime
 from airflow.operators.python import PythonOperator 
 from dotenv import load_dotenv
 from datetime import datetime as dt
-import socket
 
 # t1
 def print_text(text):
@@ -246,7 +245,8 @@ def insert_data(db_connect):
     print(DF_FINAL.shape, DF_BASIC_BUWI8.shape, DF_BASIC_BUWI9.shape, DF_BASIC_BUWI10.shape)
 
     # 8. DB에 Insert
-    def _execute_values(conn, df, table_name): 
+    def _execute_values(conn, df, table_name):
+        import socket 
         #df['FIRST_INPUTJA_ID'] = 'SYSTEM' # 현재 해당 컬럼 없어서 우선 생성x
         #df['LAST_CHANGEJA_ID'] = 'SYSTEM'
         df['FIRST_INPUT_ILSI'] = dt.today()
@@ -262,10 +262,16 @@ def insert_data(db_connect):
 
     with db_connect.cursor() as cur:
         #넣기        
-        _execute_values(conn=db_connect, df=DF_FINAL, table_name='TRAIN_JANGHAE_FINAL')
-        _execute_values(conn=db_connect, df=DF_BASIC_BUWI8, table_name='TRAIN_JANGHAE_BUWI8')
-        _execute_values(conn=db_connect, df=DF_BASIC_BUWI9, table_name='TRAIN_JANGHAE_BUWI9')
-        _execute_values(conn=db_connect, df=DF_BASIC_BUWI10, table_name='TRAIN_JANGHAE_BUWI10')
+        _execute_values(conn=db_connect, df=DF_FINAL, table_name="TRAIN_JANGHAE_FINAL")
+        _execute_values(conn=db_connect, df=DF_BASIC_BUWI8, table_name="TRAIN_JANGHAE_BUWI8")
+        _execute_values(conn=db_connect, df=DF_BASIC_BUWI9, table_name="TRAIN_JANGHAE_BUWI9")
+        _execute_values(conn=db_connect, df=DF_BASIC_BUWI10, table_name="TRAIN_JANGHAE_BUWI10")
+    
+    print("t2 실행완료")
+    
+# t3: 모델학습
+#def train_model():
+#    import mlflow # mlflow skinny
 
 ########################################################################################################
 

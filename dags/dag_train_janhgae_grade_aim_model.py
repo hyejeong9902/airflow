@@ -251,7 +251,7 @@ def insert_data(db_connect):
         #df['LAST_CHANGEJA_IP'] = socket.gethostbyname(socket.gethostname())
 
         tuples = [tuple(x) for x in df.to_numpy()] 
-        cols = ', '.join([f'"{col}"' for col in df.columns])  # (원래버전) ','.join(list(df.columns))
+        cols = ', '.join([f'"{col}"' for col in df.columns])  # ','.join(list(df.columns))
         query = f'INSERT INTO "{table_name}" ({cols}) VALUES %s' # "INSERT INTO %s(%s) VALUES %%s" % (table_name, cols) 
 
         with conn.cursor() as cur: 

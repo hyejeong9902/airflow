@@ -30,7 +30,7 @@ def insert_data(db_connect):
         # 기존 학습용데이터 전체 재해자 포함된 테이블(최종장해) 로드
         train_janghae_final = pd.read_sql_query('SELECT "WONBU_NO" FROM "TRAIN_JANGHAE_FINAL"', db_connect)
         # BCA200MT(최종장해)에서 학습용데이터에 새로 추가할 원부 추출(최종변경일시(LAST_CHANGE_ILSI) 기간 조건, 승인구분(SEUNGIN_FG)이 3인 조건도 추가하려고 했으나 이럴 경우 최종무장해자 전체는 제외됨)
-        bca200mt = pd.read_sql_query(f'SELECT "WONBU_NO" FROM "BCA200MT" WHERE "LAST_CHANGE_ILSU" > \'2024-12-31\'', db_connect) # 날짜 인수로?
+        bca200mt = pd.read_sql_query(f'SELECT "WONBU_NO" FROM "BCA200MT" WHERE "LAST_CHANGE_ILSI" > \'2024-12-31\'', db_connect) # 날짜 인수로?
         # 학습용데이터에 추가할 원부 리스트
         insert_wonbu = ', '.join(f"'{w}'" for w in (set(bca200mt["WONBU_NO"].unique())-set(train_janghae_final["WONBU_NO"].unique())))
         # 1-3. 원천 데이터 테이블에서 새로 추가할 원부 정보만 추출

@@ -27,16 +27,12 @@ def insert_data(db_connect):
 
     # 1. 학습용데이터에 추가할 데이터 불러오기
     with db_connect.cursor() as cur:
-        # 기존 학습용데이터 테이블 로드
-        TRAIN_JANGHAE_FINAL = pd.read_sql_query('SELECT * FROM "TRAIN_JANGHAE_FINAL"', db_connect)
-        TRAIN_JANGHAE_BUWI8 = pd.read_sql_query('SELECT * FROM "TRAIN_JANGHAE_BUWI8"', db_connect)
-        TRAIN_JANGHAE_BUWI9 = pd.read_sql_query('SELECT * FROM "TRAIN_JANGHAE_BUWI9"', db_connect)
-        TRAIN_JANGHAE_BUWI10 = pd.read_sql_query('SELECT * FROM "TRAIN_JANGHAE_BUWI10"', db_connect)
-        # BCA200MT(최종장해)에서 학습용데이터에 새로 추가할 원부 추출: 최종변경일시(LAST_CHANGE_ILSI) 기간 조건) 
-        # 승인구분(SEUNGIN_FG)이 3인 조건도 추가하려고 했으나 이럴 경우 최종무장해자 전체는 제외됨
+        # 기존 학습용데이터 전체 재해자 포함된 테이블(최종장해) 로드
+        train_janghae_final = pd.read_sql_query('SELECT "WONBU_NO" FROM "TRAIN_JANGHAE_FINAL"', db_connect)
+        # BCA200MT(최종장해)에서 학습용데이터에 새로 추가할 원부 추출(최종변경일시(LAST_CHANGE_ILSI) 기간 조건, 승인구분(SEUNGIN_FG)이 3인 조건도 추가하려고 했으나 이럴 경우 최종무장해자 전체는 제외됨)
         bca200mt = pd.read_sql_query(f'SELECT "WONBU_NO" FROM "BCA200MT" WHERE "LAST_CHANGE_ILSU" > \'2024-12-31\'', db_connect) # 날짜 인수로?
         # 학습용데이터에 추가할 원부 리스트
-        insert_wonbu = ', '.join(f"'{w}'" for w in (set(bca200mt["WONBU_NO"].unique())-set(TRAIN_JANGHAE_FINAL["WONBU_NO"].unique())))
+        insert_wonbu = ', '.join(f"'{w}'" for w in (set(bca200mt["WONBU_NO"].unique())-set(train_janghae_final["WONBU_NO"].unique())))
         # 1-3. 원천 데이터 테이블에서 새로 추가할 원부 정보만 추출
         AAA260MT = pd.read_sql_query(f'SELECT * FROM "AAA260MT" WHERE "WONBU_NO" IN ({insert_wonbu})', db_connect)
         AAA010MT = pd.read_sql_query(f'SELECT * FROM "AAA010MT" WHERE "WONBU_NO" in ({insert_wonbu})', db_connect)
@@ -255,10 +251,12 @@ def insert_data(db_connect):
         #df['LAST_CHANGEJA_IP'] = socket.gethostbyname(socket.gethostname())
 
         tuples = [tuple(x) for x in df.to_numpy()] 
-        cols = ','.join(list(df.columns)) 
-        query = "INSERT INTO %s(%s) VALUES %%s" % (table_name, cols) 
-        extras.execute_values(cur, query, tuples) 
-        conn.commit()
+        cols = ', '.join([f'"{col}"' for col in df.columns])  # (원래버전) ','.join(list(df.columns))
+        query = f'INSERT INTO "{table_name}" ({cols}) VALUES %s' # "INSERT INTO %s(%s) VALUES %%s" % (table_name, cols) 
+
+        with conn.cursor() as cur: 
+            extras.execute_values(cur, query, tuples)
+            conn.commit
 
     with db_connect.cursor() as cur:
         #넣기        
@@ -269,10 +267,6 @@ def insert_data(db_connect):
     
     print("t2 실행완료")
     
-# t3: 모델학습
-#def train_model():
-#    import mlflow # mlflow skinny
-
 ########################################################################################################
 
 # 기본 args 생성

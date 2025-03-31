@@ -237,8 +237,6 @@ def insert_data(db_connect):
     DF_BASIC_BUWI10 = DF_BASIC_BUWI10.drop(columns=["GEUNROJA_FG","JONGSAJA_JIWI_CD",
                                                     "SANGSE_SANGBYEONG_NM","MAIN_SANGBYEONG_CD_MAJOR",
                                                     "GYOTONGSAGO_YN","JUCHIUI_SOGYEON"])
-    
-    print(DF_FINAL.shape, DF_BASIC_BUWI8.shape, DF_BASIC_BUWI9.shape, DF_BASIC_BUWI10.shape)
 
     # 8. DB에 Insert
     def _execute_values(conn, df, table_name):
@@ -264,8 +262,11 @@ def insert_data(db_connect):
         _execute_values(conn=db_connect, df=DF_BASIC_BUWI8, table_name="TRAIN_JANGHAE_BUWI8")
         _execute_values(conn=db_connect, df=DF_BASIC_BUWI9, table_name="TRAIN_JANGHAE_BUWI9")
         _execute_values(conn=db_connect, df=DF_BASIC_BUWI10, table_name="TRAIN_JANGHAE_BUWI10")
-    
-    print("t2 실행완료")
+
+# km-bert 모델 업데이트 태스크 추가?        
+
+# t3 : train(모델 7종 train)
+
     
 ########################################################################################################
 

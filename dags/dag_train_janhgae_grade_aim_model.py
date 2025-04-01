@@ -227,11 +227,9 @@ def insert_data(db_connect):
     DF_BASIC_BUWI8 = DF_BASIC_BUWI8.drop(columns=["GEUNROJA_FG", "JONGSAJA_JIWI_CD", "GY_HYEONGTAE_CD",
                                                   "SANGSE_SANGBYEONG_NM", "SANGBYEONG_CD", "MAIN_SANGSE_SANGBYEONG_NM", "MAIN_SANGBYEONG_CD_MAJOR",
                                                   "GYOTONGSAGO_YN"])
-
     # BUWI_9(장해부위 팔) 학습용 데이터셋
     DF_BASIC_BUWI9 = to_basic_buwi("BUWI_9")
     DF_BASIC_BUWI9 = DF_BASIC_BUWI9.drop(columns=["CODE_NM","JONGSAJA_JIWI_CD"])
-
     # BUWI_10(장해부위 다리) 학습용 데이터셋
     DF_BASIC_BUWI10 = to_basic_buwi("BUWI_10")
     DF_BASIC_BUWI10 = DF_BASIC_BUWI10.drop(columns=["GEUNROJA_FG","JONGSAJA_JIWI_CD",
@@ -263,9 +261,62 @@ def insert_data(db_connect):
         _execute_values(conn=db_connect, df=DF_BASIC_BUWI9, table_name="TRAIN_JANGHAE_BUWI9")
         _execute_values(conn=db_connect, df=DF_BASIC_BUWI10, table_name="TRAIN_JANGHAE_BUWI10")
 
-# km-bert 모델 업데이트 태스크 추가?        
+# t3: KM-BERT 업데이트(TRAIN_JANGHAE_FINAL만 사용): 학습 시 필요하므로 이전 task에서 수행 필요
+def update_bert(db_connect):
+    import os
+    from transformers import AutoTokenizer, AutoModel # transformers=4.39.3
 
-# t3 : train(모델 7종 train)
+    # 저장되어 있는 bert 불러오기
+    current_dir = os.path.dirname(os.path.abspath(__file__))  # dags/
+    parent_dir = os.path.dirname(current_dir) # airflow/
+    model_path = os.path.join(parent_dir, "km-bert_test") # C:\Users\wq240\vscode\airflow\km-bert_test
+    print(f"Model loaded from: {model_path}") # test용
+
+    tokenizer = AutoTokenizer.from_pretrained(model_path, force_download=True) 
+    model = AutoModel.from_pretrained(model_path, force_download=True)
+    existing_vocab = tokenizer.get_vocab() # 기존 토큰 리스트
+    print(f"Tokenizer vocab size before: {len(existing_vocab)}") # 테스트용
+    # TRAIN_JANGHAE_FINAL 불러오기(새로 추가한 데이터만 불러오기)
+    df = pd.read_sql_query('SELECT * FROM "TRAIN_JANGHAE_FINAL" WHERE "LAST_CHANGE_ILSI"=(SELECT MAX("LAST_CHANGE_ILSI") FROM "TRAIN_JANGHAE_FINAL")', db_connect)
+    # 토큰 추출 대상 컬럼 리스트
+    col_list = ["SANGHAE_BUWI_CD", "SANGBYEONG_CD", "SANGBYEONG_CD_MAJOR","SANGBYEONG_CD_MIDDLE", "SANGBYEONG_CD_SMALL",
+                "SUGA_CD", "EXAM_CD", "BOJOGI_CD"]
+    # 추가 토큰 리스트 생성 및 vocab 추가
+    def new_add_tokens(df, col):
+        token_list = list(set(
+                        code.strip()  
+                        for row in df.loc[df[col].notnull(),col].unique()  
+                        for code in row.split(',')))
+        new_tokens = [token for token in token_list if token not in existing_vocab]
+        return  new_tokens
+    for col in col_list:
+        add_token_list = new_add_tokens(df, col)
+        if add_token_list: # 리스트가 비어있지 않은 경우에만 추가
+            num_added_toks = tokenizer.add_tokens(add_token_list)
+            print(f"{col}: {num_added_toks} tokens added.") # test 후 삭제
+    # 모델 임베딩 레이어 조절 후 저장
+    print(f"Tokenizer vocab size after: {len(tokenizer)}") # test후 삭제
+    model.resize_token_embeddings(len(tokenizer))
+    tokenizer.save_pretrained(model_path)
+    model.save_pretrained(model_path)
+
+
+# t4 : 모델 학습 및 저장 코드
+# def train_model(db_connect, exp_name, model_name):
+#     import mlflow 
+#     from mlflow.tracking import MlflowClient
+#     from mlflow.models import infer_signature
+#     from autogluon.tabular import TabularPredictor
+
+
+#     # 1. MLflow 설정
+#     mlflow.set_tracking_uri(MLFLOW_TRACKING_URI) #mlflow 주소: http://211.218.17.10:9090/mlflow (외부에서 접속하는 링크)
+#     mlflow.set_experiment(exp_name) # 실험이름 설정
+
+#     # 2. 사용자 정의 모델(AutoGluon)
+#     class AutogluonModel(mlflow.pyfunc.PythonModel):
+        # def fit, load_context, predict 
+        # autogluon.common.features.feature_metadata > 이친구는 함수 따로?
 
     
 ########################################################################################################
@@ -299,11 +350,23 @@ with DAG(
         python_callable=insert_data,
         op_args=[db_connect]
     )
-
+    # 수정
     t3 = PythonOperator(
+        task_id="update_bert",
+        python_callable=update_bert,
+        op_args=[db_connect]
+    )
+    # 수정
+    t4 = PythonOperator(
+        task_id="train_model",
+        python_callable=train_model,
+        op_args=["end train model"] # 수정
+    )
+
+    t5 = PythonOperator(
         task_id="end_job",
         python_callable=print_text,
         op_args=["end train model"]
     )
 
-    t1 >> t2 >> t3
+    t1 >> t2 >> t3 >> t4 >> t5

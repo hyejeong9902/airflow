@@ -4,4 +4,4 @@ venv/
 venv_py311/
 km-bert_test/*.safetensors
 __pycache__/
-*.py
+*.pyc

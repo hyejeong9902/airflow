@@ -301,22 +301,22 @@ def update_bert(db_connect):
     model.save_pretrained(model_path)
 
 
-# t4 : 모델 학습 및 저장 코드
+# # t4 : 모델 학습 및 저장 코드
 # def train_model(db_connect, exp_name, model_name):
-#     import mlflow 
-#     from mlflow.tracking import MlflowClient
-#     from mlflow.models import infer_signature
-#     from autogluon.tabular import TabularPredictor
+#      import mlflow 
+#      from mlflow.tracking import MlflowClient
+#      from mlflow.models import infer_signature
+#      from autogluon.tabular import TabularPredictor
 
 
-#     # 1. MLflow 설정
-#     mlflow.set_tracking_uri(MLFLOW_TRACKING_URI) #mlflow 주소: http://211.218.17.10:9090/mlflow (외부에서 접속하는 링크)
-#     mlflow.set_experiment(exp_name) # 실험이름 설정
+#      # 1. MLflow 설정
+#      mlflow.set_tracking_uri(MLFLOW_TRACKING_URI) #mlflow 주소: http://211.218.17.10:9090/mlflow (외부에서 접속하는 링크)
+#      mlflow.set_experiment(exp_name) # 실험이름 설정
 
-#     # 2. 사용자 정의 모델(AutoGluon)
-#     class AutogluonModel(mlflow.pyfunc.PythonModel):
-        # def fit, load_context, predict 
-        # autogluon.common.features.feature_metadata > 이친구는 함수 따로?
+#      # 2. 사용자 정의 모델(AutoGluon)
+#      class AutogluonModel(mlflow.pyfunc.PythonModel):
+#         # def fit, load_context, predict 
+#         # autogluon.common.features.feature_metadata > 이친구는 함수 따로?
 
     
 ########################################################################################################
@@ -356,12 +356,12 @@ with DAG(
         python_callable=update_bert,
         op_args=[db_connect]
     )
-    # 수정
-    t4 = PythonOperator(
-        task_id="train_model",
-        python_callable=train_model,
-        op_args=["end train model"] # 수정
-    )
+    # # 수정
+    # t4 = PythonOperator(
+    #     task_id="train_model",
+    #     python_callable=train_model,
+    #     op_args=["end train model"] # 수정
+    # )
 
     t5 = PythonOperator(
         task_id="end_job",
@@ -369,4 +369,4 @@ with DAG(
         op_args=["end train model"]
     )
 
-    t1 >> t2 >> t3 >> t4 >> t5
+    t1 >> t2 >> t3 >> t5

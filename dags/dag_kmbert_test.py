@@ -68,14 +68,14 @@ default_args = {
 }
 # DAG 정의
 with DAG(
-    dag_id="dag_train_janghae_grade_aim_model",
+    dag_id="dag_kmbert_test",
     default_args=default_args,
     start_date=pendulum.datetime(2025, 3, 1, tz="Asia/Seoul"),
-    description='train model',
+    #description='train model',
     #schedule="30 6 * * *",
     schedule_interval=None,
     catchup=False,
-    tags=['train']
+    #tags=['train']
 ) as dag:
     
     t1 = PythonOperator(

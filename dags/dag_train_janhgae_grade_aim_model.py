@@ -261,7 +261,7 @@ def insert_data(db_connect):
         _execute_values(conn=db_connect, df=DF_BASIC_BUWI9, table_name="TRAIN_JANGHAE_BUWI9")
         _execute_values(conn=db_connect, df=DF_BASIC_BUWI10, table_name="TRAIN_JANGHAE_BUWI10")
 
-# t3: KM-BERT 업데이트(TRAIN_JANGHAE_FINAL만 사용): 학습 시 필요하므로 이전 task에서 수행 필요
+# t3: KM-BERT 업데이트(TRAIN_JANGHAE_FINAL만 사용): 학습 시 필요하므로 이전 task에서 수행 필요 / 테스트 필요
 def update_bert(db_connect):
     import os
     from transformers import AutoTokenizer, AutoModel # transformers=4.39.3

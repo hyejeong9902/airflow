@@ -1,4 +1,5 @@
-venv
+venv/
+.venv/
 .env
 venv_py311/
-"km-bert_test/*.safetensors" 
+km-bert_test/*.safetensors

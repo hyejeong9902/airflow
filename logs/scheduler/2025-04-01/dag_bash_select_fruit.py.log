@@ -1,0 +1,190 @@
+[2025-04-01T09:19:48.763+0000] {processor.py:161} INFO - Started process (PID=97) to work on /opt/airflow/dags/dag_bash_select_fruit.py
+[2025-04-01T09:19:48.766+0000] {processor.py:830} INFO - Processing file /opt/airflow/dags/dag_bash_select_fruit.py for tasks to queue
+[2025-04-01T09:19:48.773+0000] {logging_mixin.py:188} INFO - [2025-04-01T09:19:48.773+0000] {dagbag.py:538} INFO - Filling up the DagBag from /opt/airflow/dags/dag_bash_select_fruit.py
+[2025-04-01T09:19:48.848+0000] {processor.py:840} INFO - DAG(s) 'dag_bash_select_fruit' retrieved from /opt/airflow/dags/dag_bash_select_fruit.py
+[2025-04-01T09:19:49.057+0000] {logging_mixin.py:188} INFO - [2025-04-01T09:19:49.056+0000] {override.py:1769} INFO - Created Permission View: can read on DAG:dag_bash_select_fruit
+[2025-04-01T09:19:49.075+0000] {logging_mixin.py:188} INFO - [2025-04-01T09:19:49.074+0000] {override.py:1769} INFO - Created Permission View: can edit on DAG:dag_bash_select_fruit
+[2025-04-01T09:19:49.087+0000] {logging_mixin.py:188} INFO - [2025-04-01T09:19:49.086+0000] {override.py:1769} INFO - Created Permission View: can delete on DAG:dag_bash_select_fruit
+[2025-04-01T09:19:49.088+0000] {logging_mixin.py:188} INFO - [2025-04-01T09:19:49.087+0000] {dag.py:3036} INFO - Sync 1 DAGs
+[2025-04-01T09:19:49.104+0000] {logging_mixin.py:188} INFO - [2025-04-01T09:19:49.104+0000] {dag.py:3058} INFO - Creating ORM DAG for dag_bash_select_fruit
+[2025-04-01T09:19:49.123+0000] {logging_mixin.py:188} INFO - [2025-04-01T09:19:49.123+0000] {dag.py:3823} INFO - Setting next_dagrun for dag_bash_select_fruit to 2025-02-28 15:10:00+00:00, run_after=2025-04-04 15:10:00+00:00
+[2025-04-01T09:19:49.161+0000] {processor.py:183} INFO - Processing /opt/airflow/dags/dag_bash_select_fruit.py took 0.403 seconds
+[2025-04-01T09:20:19.588+0000] {processor.py:161} INFO - Started process (PID=169) to work on /opt/airflow/dags/dag_bash_select_fruit.py
+[2025-04-01T09:20:19.590+0000] {processor.py:830} INFO - Processing file /opt/airflow/dags/dag_bash_select_fruit.py for tasks to queue
+[2025-04-01T09:20:19.593+0000] {logging_mixin.py:188} INFO - [2025-04-01T09:20:19.592+0000] {dagbag.py:538} INFO - Filling up the DagBag from /opt/airflow/dags/dag_bash_select_fruit.py
+[2025-04-01T09:20:19.621+0000] {processor.py:840} INFO - DAG(s) 'dag_bash_select_fruit' retrieved from /opt/airflow/dags/dag_bash_select_fruit.py
+[2025-04-01T09:20:19.647+0000] {logging_mixin.py:188} INFO - [2025-04-01T09:20:19.646+0000] {dag.py:3036} INFO - Sync 1 DAGs
+[2025-04-01T09:20:19.680+0000] {logging_mixin.py:188} INFO - [2025-04-01T09:20:19.679+0000] {dag.py:3823} INFO - Setting next_dagrun for dag_bash_select_fruit to 2025-02-28 15:10:00+00:00, run_after=2025-04-04 15:10:00+00:00
+[2025-04-01T09:20:19.710+0000] {processor.py:183} INFO - Processing /opt/airflow/dags/dag_bash_select_fruit.py took 0.127 seconds
+[2025-04-01T09:20:53.136+0000] {processor.py:161} INFO - Started process (PID=259) to work on /opt/airflow/dags/dag_bash_select_fruit.py
+[2025-04-01T09:20:53.139+0000] {processor.py:830} INFO - Processing file /opt/airflow/dags/dag_bash_select_fruit.py for tasks to queue
+[2025-04-01T09:20:53.145+0000] {logging_mixin.py:188} INFO - [2025-04-01T09:20:53.143+0000] {dagbag.py:538} INFO - Filling up the DagBag from /opt/airflow/dags/dag_bash_select_fruit.py
+[2025-04-01T09:20:53.190+0000] {processor.py:840} INFO - DAG(s) 'dag_bash_select_fruit' retrieved from /opt/airflow/dags/dag_bash_select_fruit.py
+[2025-04-01T09:20:53.240+0000] {logging_mixin.py:188} INFO - [2025-04-01T09:20:53.240+0000] {dag.py:3036} INFO - Sync 1 DAGs
+[2025-04-01T09:20:53.292+0000] {logging_mixin.py:188} INFO - [2025-04-01T09:20:53.292+0000] {dag.py:3823} INFO - Setting next_dagrun for dag_bash_select_fruit to 2025-02-28 15:10:00+00:00, run_after=2025-04-04 15:10:00+00:00
+[2025-04-01T09:20:53.331+0000] {processor.py:183} INFO - Processing /opt/airflow/dags/dag_bash_select_fruit.py took 0.204 seconds
+[2025-04-01T09:21:23.444+0000] {processor.py:161} INFO - Started process (PID=326) to work on /opt/airflow/dags/dag_bash_select_fruit.py
+[2025-04-01T09:21:23.446+0000] {processor.py:830} INFO - Processing file /opt/airflow/dags/dag_bash_select_fruit.py for tasks to queue
+[2025-04-01T09:21:23.449+0000] {logging_mixin.py:188} INFO - [2025-04-01T09:21:23.449+0000] {dagbag.py:538} INFO - Filling up the DagBag from /opt/airflow/dags/dag_bash_select_fruit.py
+[2025-04-01T09:21:23.494+0000] {processor.py:840} INFO - DAG(s) 'dag_bash_select_fruit' retrieved from /opt/airflow/dags/dag_bash_select_fruit.py
+[2025-04-01T09:21:23.531+0000] {logging_mixin.py:188} INFO - [2025-04-01T09:21:23.531+0000] {dag.py:3036} INFO - Sync 1 DAGs
+[2025-04-01T09:21:23.570+0000] {logging_mixin.py:188} INFO - [2025-04-01T09:21:23.569+0000] {dag.py:3823} INFO - Setting next_dagrun for dag_bash_select_fruit to 2025-02-28 15:10:00+00:00, run_after=2025-04-04 15:10:00+00:00
+[2025-04-01T09:21:23.596+0000] {processor.py:183} INFO - Processing /opt/airflow/dags/dag_bash_select_fruit.py took 0.157 seconds
+[2025-04-01T09:21:54.160+0000] {processor.py:161} INFO - Started process (PID=392) to work on /opt/airflow/dags/dag_bash_select_fruit.py
+[2025-04-01T09:21:54.162+0000] {processor.py:830} INFO - Processing file /opt/airflow/dags/dag_bash_select_fruit.py for tasks to queue
+[2025-04-01T09:21:54.165+0000] {logging_mixin.py:188} INFO - [2025-04-01T09:21:54.165+0000] {dagbag.py:538} INFO - Filling up the DagBag from /opt/airflow/dags/dag_bash_select_fruit.py
+[2025-04-01T09:21:54.198+0000] {processor.py:840} INFO - DAG(s) 'dag_bash_select_fruit' retrieved from /opt/airflow/dags/dag_bash_select_fruit.py
+[2025-04-01T09:21:54.233+0000] {logging_mixin.py:188} INFO - [2025-04-01T09:21:54.233+0000] {dag.py:3036} INFO - Sync 1 DAGs
+[2025-04-01T09:21:54.272+0000] {logging_mixin.py:188} INFO - [2025-04-01T09:21:54.272+0000] {dag.py:3823} INFO - Setting next_dagrun for dag_bash_select_fruit to 2025-02-28 15:10:00+00:00, run_after=2025-04-04 15:10:00+00:00
+[2025-04-01T09:21:54.301+0000] {processor.py:183} INFO - Processing /opt/airflow/dags/dag_bash_select_fruit.py took 0.147 seconds
+[2025-04-01T09:22:24.711+0000] {processor.py:161} INFO - Started process (PID=446) to work on /opt/airflow/dags/dag_bash_select_fruit.py
+[2025-04-01T09:22:24.713+0000] {processor.py:830} INFO - Processing file /opt/airflow/dags/dag_bash_select_fruit.py for tasks to queue
+[2025-04-01T09:22:24.718+0000] {logging_mixin.py:188} INFO - [2025-04-01T09:22:24.717+0000] {dagbag.py:538} INFO - Filling up the DagBag from /opt/airflow/dags/dag_bash_select_fruit.py
+[2025-04-01T09:22:24.762+0000] {processor.py:840} INFO - DAG(s) 'dag_bash_select_fruit' retrieved from /opt/airflow/dags/dag_bash_select_fruit.py
+[2025-04-01T09:22:24.802+0000] {logging_mixin.py:188} INFO - [2025-04-01T09:22:24.801+0000] {dag.py:3036} INFO - Sync 1 DAGs
+[2025-04-01T09:22:24.841+0000] {logging_mixin.py:188} INFO - [2025-04-01T09:22:24.841+0000] {dag.py:3823} INFO - Setting next_dagrun for dag_bash_select_fruit to 2025-02-28 15:10:00+00:00, run_after=2025-04-04 15:10:00+00:00
+[2025-04-01T09:22:24.882+0000] {processor.py:183} INFO - Processing /opt/airflow/dags/dag_bash_select_fruit.py took 0.180 seconds
+[2025-04-01T09:22:55.025+0000] {processor.py:161} INFO - Started process (PID=508) to work on /opt/airflow/dags/dag_bash_select_fruit.py
+[2025-04-01T09:22:55.026+0000] {processor.py:830} INFO - Processing file /opt/airflow/dags/dag_bash_select_fruit.py for tasks to queue
+[2025-04-01T09:22:55.029+0000] {logging_mixin.py:188} INFO - [2025-04-01T09:22:55.028+0000] {dagbag.py:538} INFO - Filling up the DagBag from /opt/airflow/dags/dag_bash_select_fruit.py
+[2025-04-01T09:22:55.047+0000] {processor.py:840} INFO - DAG(s) 'dag_bash_select_fruit' retrieved from /opt/airflow/dags/dag_bash_select_fruit.py
+[2025-04-01T09:22:55.063+0000] {logging_mixin.py:188} INFO - [2025-04-01T09:22:55.063+0000] {dag.py:3036} INFO - Sync 1 DAGs
+[2025-04-01T09:22:55.083+0000] {logging_mixin.py:188} INFO - [2025-04-01T09:22:55.083+0000] {dag.py:3823} INFO - Setting next_dagrun for dag_bash_select_fruit to 2025-02-28 15:10:00+00:00, run_after=2025-04-04 15:10:00+00:00
+[2025-04-01T09:22:55.108+0000] {processor.py:183} INFO - Processing /opt/airflow/dags/dag_bash_select_fruit.py took 0.086 seconds
+[2025-04-01T09:23:26.034+0000] {processor.py:161} INFO - Started process (PID=576) to work on /opt/airflow/dags/dag_bash_select_fruit.py
+[2025-04-01T09:23:26.035+0000] {processor.py:830} INFO - Processing file /opt/airflow/dags/dag_bash_select_fruit.py for tasks to queue
+[2025-04-01T09:23:26.037+0000] {logging_mixin.py:188} INFO - [2025-04-01T09:23:26.036+0000] {dagbag.py:538} INFO - Filling up the DagBag from /opt/airflow/dags/dag_bash_select_fruit.py
+[2025-04-01T09:23:26.059+0000] {processor.py:840} INFO - DAG(s) 'dag_bash_select_fruit' retrieved from /opt/airflow/dags/dag_bash_select_fruit.py
+[2025-04-01T09:23:26.078+0000] {logging_mixin.py:188} INFO - [2025-04-01T09:23:26.078+0000] {dag.py:3036} INFO - Sync 1 DAGs
+[2025-04-01T09:23:26.103+0000] {logging_mixin.py:188} INFO - [2025-04-01T09:23:26.103+0000] {dag.py:3823} INFO - Setting next_dagrun for dag_bash_select_fruit to 2025-02-28 15:10:00+00:00, run_after=2025-04-04 15:10:00+00:00
+[2025-04-01T09:23:26.128+0000] {processor.py:183} INFO - Processing /opt/airflow/dags/dag_bash_select_fruit.py took 0.098 seconds
+[2025-04-01T09:23:56.997+0000] {processor.py:161} INFO - Started process (PID=650) to work on /opt/airflow/dags/dag_bash_select_fruit.py
+[2025-04-01T09:23:57.000+0000] {processor.py:830} INFO - Processing file /opt/airflow/dags/dag_bash_select_fruit.py for tasks to queue
+[2025-04-01T09:23:57.006+0000] {logging_mixin.py:188} INFO - [2025-04-01T09:23:57.006+0000] {dagbag.py:538} INFO - Filling up the DagBag from /opt/airflow/dags/dag_bash_select_fruit.py
+[2025-04-01T09:23:57.050+0000] {processor.py:840} INFO - DAG(s) 'dag_bash_select_fruit' retrieved from /opt/airflow/dags/dag_bash_select_fruit.py
+[2025-04-01T09:23:57.086+0000] {logging_mixin.py:188} INFO - [2025-04-01T09:23:57.086+0000] {dag.py:3036} INFO - Sync 1 DAGs
+[2025-04-01T09:23:57.125+0000] {logging_mixin.py:188} INFO - [2025-04-01T09:23:57.125+0000] {dag.py:3823} INFO - Setting next_dagrun for dag_bash_select_fruit to 2025-02-28 15:10:00+00:00, run_after=2025-04-04 15:10:00+00:00
+[2025-04-01T09:23:57.173+0000] {processor.py:183} INFO - Processing /opt/airflow/dags/dag_bash_select_fruit.py took 0.190 seconds
+[2025-04-01T09:24:27.575+0000] {processor.py:161} INFO - Started process (PID=718) to work on /opt/airflow/dags/dag_bash_select_fruit.py
+[2025-04-01T09:24:27.576+0000] {processor.py:830} INFO - Processing file /opt/airflow/dags/dag_bash_select_fruit.py for tasks to queue
+[2025-04-01T09:24:27.579+0000] {logging_mixin.py:188} INFO - [2025-04-01T09:24:27.578+0000] {dagbag.py:538} INFO - Filling up the DagBag from /opt/airflow/dags/dag_bash_select_fruit.py
+[2025-04-01T09:24:27.602+0000] {processor.py:840} INFO - DAG(s) 'dag_bash_select_fruit' retrieved from /opt/airflow/dags/dag_bash_select_fruit.py
+[2025-04-01T09:24:27.624+0000] {logging_mixin.py:188} INFO - [2025-04-01T09:24:27.624+0000] {dag.py:3036} INFO - Sync 1 DAGs
+[2025-04-01T09:24:27.646+0000] {logging_mixin.py:188} INFO - [2025-04-01T09:24:27.646+0000] {dag.py:3823} INFO - Setting next_dagrun for dag_bash_select_fruit to 2025-02-28 15:10:00+00:00, run_after=2025-04-04 15:10:00+00:00
+[2025-04-01T09:24:27.665+0000] {processor.py:183} INFO - Processing /opt/airflow/dags/dag_bash_select_fruit.py took 0.094 seconds
+[2025-04-01T09:24:57.970+0000] {processor.py:161} INFO - Started process (PID=786) to work on /opt/airflow/dags/dag_bash_select_fruit.py
+[2025-04-01T09:24:57.972+0000] {processor.py:830} INFO - Processing file /opt/airflow/dags/dag_bash_select_fruit.py for tasks to queue
+[2025-04-01T09:24:57.976+0000] {logging_mixin.py:188} INFO - [2025-04-01T09:24:57.975+0000] {dagbag.py:538} INFO - Filling up the DagBag from /opt/airflow/dags/dag_bash_select_fruit.py
+[2025-04-01T09:24:58.007+0000] {processor.py:840} INFO - DAG(s) 'dag_bash_select_fruit' retrieved from /opt/airflow/dags/dag_bash_select_fruit.py
+[2025-04-01T09:24:58.041+0000] {logging_mixin.py:188} INFO - [2025-04-01T09:24:58.040+0000] {dag.py:3036} INFO - Sync 1 DAGs
+[2025-04-01T09:24:58.089+0000] {logging_mixin.py:188} INFO - [2025-04-01T09:24:58.089+0000] {dag.py:3823} INFO - Setting next_dagrun for dag_bash_select_fruit to 2025-02-28 15:10:00+00:00, run_after=2025-04-04 15:10:00+00:00
+[2025-04-01T09:24:58.120+0000] {processor.py:183} INFO - Processing /opt/airflow/dags/dag_bash_select_fruit.py took 0.156 seconds
+[2025-04-01T09:26:28.526+0000] {processor.py:161} INFO - Started process (PID=91) to work on /opt/airflow/dags/dag_bash_select_fruit.py
+[2025-04-01T09:26:28.529+0000] {processor.py:830} INFO - Processing file /opt/airflow/dags/dag_bash_select_fruit.py for tasks to queue
+[2025-04-01T09:26:28.532+0000] {logging_mixin.py:188} INFO - [2025-04-01T09:26:28.532+0000] {dagbag.py:538} INFO - Filling up the DagBag from /opt/airflow/dags/dag_bash_select_fruit.py
+[2025-04-01T09:26:28.604+0000] {processor.py:840} INFO - DAG(s) 'dag_bash_select_fruit' retrieved from /opt/airflow/dags/dag_bash_select_fruit.py
+[2025-04-01T09:26:28.894+0000] {logging_mixin.py:188} INFO - [2025-04-01T09:26:28.892+0000] {override.py:1769} INFO - Created Permission View: can read on DAG:dag_bash_select_fruit
+[2025-04-01T09:26:28.920+0000] {logging_mixin.py:188} INFO - [2025-04-01T09:26:28.920+0000] {override.py:1769} INFO - Created Permission View: can delete on DAG:dag_bash_select_fruit
+[2025-04-01T09:26:28.942+0000] {logging_mixin.py:188} INFO - [2025-04-01T09:26:28.941+0000] {override.py:1769} INFO - Created Permission View: can edit on DAG:dag_bash_select_fruit
+[2025-04-01T09:26:28.944+0000] {logging_mixin.py:188} INFO - [2025-04-01T09:26:28.943+0000] {dag.py:3036} INFO - Sync 1 DAGs
+[2025-04-01T09:26:28.983+0000] {logging_mixin.py:188} INFO - [2025-04-01T09:26:28.981+0000] {dag.py:3058} INFO - Creating ORM DAG for dag_bash_select_fruit
+[2025-04-01T09:26:29.009+0000] {logging_mixin.py:188} INFO - [2025-04-01T09:26:29.008+0000] {dag.py:3823} INFO - Setting next_dagrun for dag_bash_select_fruit to 2025-02-28 15:10:00+00:00, run_after=2025-04-04 15:10:00+00:00
+[2025-04-01T09:26:29.050+0000] {processor.py:183} INFO - Processing /opt/airflow/dags/dag_bash_select_fruit.py took 0.531 seconds
+[2025-04-01T09:26:59.132+0000] {processor.py:161} INFO - Started process (PID=159) to work on /opt/airflow/dags/dag_bash_select_fruit.py
+[2025-04-01T09:26:59.133+0000] {processor.py:830} INFO - Processing file /opt/airflow/dags/dag_bash_select_fruit.py for tasks to queue
+[2025-04-01T09:26:59.136+0000] {logging_mixin.py:188} INFO - [2025-04-01T09:26:59.136+0000] {dagbag.py:538} INFO - Filling up the DagBag from /opt/airflow/dags/dag_bash_select_fruit.py
+[2025-04-01T09:26:59.166+0000] {processor.py:840} INFO - DAG(s) 'dag_bash_select_fruit' retrieved from /opt/airflow/dags/dag_bash_select_fruit.py
+[2025-04-01T09:26:59.201+0000] {logging_mixin.py:188} INFO - [2025-04-01T09:26:59.201+0000] {dag.py:3036} INFO - Sync 1 DAGs
+[2025-04-01T09:26:59.234+0000] {logging_mixin.py:188} INFO - [2025-04-01T09:26:59.234+0000] {dag.py:3823} INFO - Setting next_dagrun for dag_bash_select_fruit to 2025-02-28 15:10:00+00:00, run_after=2025-04-04 15:10:00+00:00
+[2025-04-01T09:26:59.261+0000] {processor.py:183} INFO - Processing /opt/airflow/dags/dag_bash_select_fruit.py took 0.134 seconds
+[2025-04-01T09:27:31.894+0000] {processor.py:161} INFO - Started process (PID=227) to work on /opt/airflow/dags/dag_bash_select_fruit.py
+[2025-04-01T09:27:31.898+0000] {processor.py:830} INFO - Processing file /opt/airflow/dags/dag_bash_select_fruit.py for tasks to queue
+[2025-04-01T09:27:31.905+0000] {logging_mixin.py:188} INFO - [2025-04-01T09:27:31.904+0000] {dagbag.py:538} INFO - Filling up the DagBag from /opt/airflow/dags/dag_bash_select_fruit.py
+[2025-04-01T09:27:31.962+0000] {processor.py:840} INFO - DAG(s) 'dag_bash_select_fruit' retrieved from /opt/airflow/dags/dag_bash_select_fruit.py
+[2025-04-01T09:27:32.017+0000] {logging_mixin.py:188} INFO - [2025-04-01T09:27:32.017+0000] {dag.py:3036} INFO - Sync 1 DAGs
+[2025-04-01T09:27:32.074+0000] {logging_mixin.py:188} INFO - [2025-04-01T09:27:32.073+0000] {dag.py:3823} INFO - Setting next_dagrun for dag_bash_select_fruit to 2025-02-28 15:10:00+00:00, run_after=2025-04-04 15:10:00+00:00
+[2025-04-01T09:27:32.148+0000] {processor.py:183} INFO - Processing /opt/airflow/dags/dag_bash_select_fruit.py took 0.260 seconds
+[2025-04-01T09:28:02.337+0000] {processor.py:161} INFO - Started process (PID=295) to work on /opt/airflow/dags/dag_bash_select_fruit.py
+[2025-04-01T09:28:02.338+0000] {processor.py:830} INFO - Processing file /opt/airflow/dags/dag_bash_select_fruit.py for tasks to queue
+[2025-04-01T09:28:02.341+0000] {logging_mixin.py:188} INFO - [2025-04-01T09:28:02.341+0000] {dagbag.py:538} INFO - Filling up the DagBag from /opt/airflow/dags/dag_bash_select_fruit.py
+[2025-04-01T09:28:02.368+0000] {processor.py:840} INFO - DAG(s) 'dag_bash_select_fruit' retrieved from /opt/airflow/dags/dag_bash_select_fruit.py
+[2025-04-01T09:28:02.396+0000] {logging_mixin.py:188} INFO - [2025-04-01T09:28:02.395+0000] {dag.py:3036} INFO - Sync 1 DAGs
+[2025-04-01T09:28:02.430+0000] {logging_mixin.py:188} INFO - [2025-04-01T09:28:02.430+0000] {dag.py:3823} INFO - Setting next_dagrun for dag_bash_select_fruit to 2025-02-28 15:10:00+00:00, run_after=2025-04-04 15:10:00+00:00
+[2025-04-01T09:28:02.458+0000] {processor.py:183} INFO - Processing /opt/airflow/dags/dag_bash_select_fruit.py took 0.126 seconds
+[2025-04-01T09:28:32.876+0000] {processor.py:161} INFO - Started process (PID=363) to work on /opt/airflow/dags/dag_bash_select_fruit.py
+[2025-04-01T09:28:32.878+0000] {processor.py:830} INFO - Processing file /opt/airflow/dags/dag_bash_select_fruit.py for tasks to queue
+[2025-04-01T09:28:32.879+0000] {logging_mixin.py:188} INFO - [2025-04-01T09:28:32.879+0000] {dagbag.py:538} INFO - Filling up the DagBag from /opt/airflow/dags/dag_bash_select_fruit.py
+[2025-04-01T09:28:32.900+0000] {processor.py:840} INFO - DAG(s) 'dag_bash_select_fruit' retrieved from /opt/airflow/dags/dag_bash_select_fruit.py
+[2025-04-01T09:28:32.914+0000] {logging_mixin.py:188} INFO - [2025-04-01T09:28:32.914+0000] {dag.py:3036} INFO - Sync 1 DAGs
+[2025-04-01T09:28:32.931+0000] {logging_mixin.py:188} INFO - [2025-04-01T09:28:32.931+0000] {dag.py:3823} INFO - Setting next_dagrun for dag_bash_select_fruit to 2025-02-28 15:10:00+00:00, run_after=2025-04-04 15:10:00+00:00
+[2025-04-01T09:28:32.948+0000] {processor.py:183} INFO - Processing /opt/airflow/dags/dag_bash_select_fruit.py took 0.074 seconds
+[2025-04-01T09:29:05.480+0000] {processor.py:161} INFO - Started process (PID=431) to work on /opt/airflow/dags/dag_bash_select_fruit.py
+[2025-04-01T09:29:05.482+0000] {processor.py:830} INFO - Processing file /opt/airflow/dags/dag_bash_select_fruit.py for tasks to queue
+[2025-04-01T09:29:05.486+0000] {logging_mixin.py:188} INFO - [2025-04-01T09:29:05.485+0000] {dagbag.py:538} INFO - Filling up the DagBag from /opt/airflow/dags/dag_bash_select_fruit.py
+[2025-04-01T09:29:05.524+0000] {processor.py:840} INFO - DAG(s) 'dag_bash_select_fruit' retrieved from /opt/airflow/dags/dag_bash_select_fruit.py
+[2025-04-01T09:29:05.559+0000] {logging_mixin.py:188} INFO - [2025-04-01T09:29:05.558+0000] {dag.py:3036} INFO - Sync 1 DAGs
+[2025-04-01T09:29:05.596+0000] {logging_mixin.py:188} INFO - [2025-04-01T09:29:05.596+0000] {dag.py:3823} INFO - Setting next_dagrun for dag_bash_select_fruit to 2025-02-28 15:10:00+00:00, run_after=2025-04-04 15:10:00+00:00
+[2025-04-01T09:29:05.635+0000] {processor.py:183} INFO - Processing /opt/airflow/dags/dag_bash_select_fruit.py took 0.161 seconds
+[2025-04-01T09:29:34.252+0000] {processor.py:161} INFO - Started process (PID=512) to work on /opt/airflow/dags/dag_bash_select_fruit.py
+[2025-04-01T09:29:34.254+0000] {processor.py:830} INFO - Processing file /opt/airflow/dags/dag_bash_select_fruit.py for tasks to queue
+[2025-04-01T09:29:34.258+0000] {logging_mixin.py:188} INFO - [2025-04-01T09:29:34.257+0000] {dagbag.py:538} INFO - Filling up the DagBag from /opt/airflow/dags/dag_bash_select_fruit.py
+[2025-04-01T09:29:34.290+0000] {processor.py:840} INFO - DAG(s) 'dag_bash_select_fruit' retrieved from /opt/airflow/dags/dag_bash_select_fruit.py
+[2025-04-01T09:29:34.321+0000] {logging_mixin.py:188} INFO - [2025-04-01T09:29:34.320+0000] {dag.py:3036} INFO - Sync 1 DAGs
+[2025-04-01T09:29:34.364+0000] {logging_mixin.py:188} INFO - [2025-04-01T09:29:34.363+0000] {dag.py:3823} INFO - Setting next_dagrun for dag_bash_select_fruit to 2025-02-28 15:10:00+00:00, run_after=2025-04-04 15:10:00+00:00
+[2025-04-01T09:29:34.395+0000] {processor.py:183} INFO - Processing /opt/airflow/dags/dag_bash_select_fruit.py took 0.151 seconds
+[2025-04-01T09:30:05.078+0000] {processor.py:161} INFO - Started process (PID=568) to work on /opt/airflow/dags/dag_bash_select_fruit.py
+[2025-04-01T09:30:05.079+0000] {processor.py:830} INFO - Processing file /opt/airflow/dags/dag_bash_select_fruit.py for tasks to queue
+[2025-04-01T09:30:05.081+0000] {logging_mixin.py:188} INFO - [2025-04-01T09:30:05.080+0000] {dagbag.py:538} INFO - Filling up the DagBag from /opt/airflow/dags/dag_bash_select_fruit.py
+[2025-04-01T09:30:05.101+0000] {processor.py:840} INFO - DAG(s) 'dag_bash_select_fruit' retrieved from /opt/airflow/dags/dag_bash_select_fruit.py
+[2025-04-01T09:30:05.115+0000] {logging_mixin.py:188} INFO - [2025-04-01T09:30:05.115+0000] {dag.py:3036} INFO - Sync 1 DAGs
+[2025-04-01T09:30:05.130+0000] {logging_mixin.py:188} INFO - [2025-04-01T09:30:05.130+0000] {dag.py:3823} INFO - Setting next_dagrun for dag_bash_select_fruit to 2025-02-28 15:10:00+00:00, run_after=2025-04-04 15:10:00+00:00
+[2025-04-01T09:30:05.144+0000] {processor.py:183} INFO - Processing /opt/airflow/dags/dag_bash_select_fruit.py took 0.069 seconds
+[2025-04-01T09:30:34.277+0000] {processor.py:161} INFO - Started process (PID=643) to work on /opt/airflow/dags/dag_bash_select_fruit.py
+[2025-04-01T09:30:34.281+0000] {processor.py:830} INFO - Processing file /opt/airflow/dags/dag_bash_select_fruit.py for tasks to queue
+[2025-04-01T09:30:34.288+0000] {logging_mixin.py:188} INFO - [2025-04-01T09:30:34.287+0000] {dagbag.py:538} INFO - Filling up the DagBag from /opt/airflow/dags/dag_bash_select_fruit.py
+[2025-04-01T09:30:34.398+0000] {processor.py:840} INFO - DAG(s) 'dag_bash_select_fruit' retrieved from /opt/airflow/dags/dag_bash_select_fruit.py
+[2025-04-01T09:30:34.457+0000] {logging_mixin.py:188} INFO - [2025-04-01T09:30:34.456+0000] {dag.py:3036} INFO - Sync 1 DAGs
+[2025-04-01T09:30:34.530+0000] {logging_mixin.py:188} INFO - [2025-04-01T09:30:34.530+0000] {dag.py:3823} INFO - Setting next_dagrun for dag_bash_select_fruit to 2025-02-28 15:10:00+00:00, run_after=2025-04-04 15:10:00+00:00
+[2025-04-01T09:30:34.596+0000] {processor.py:183} INFO - Processing /opt/airflow/dags/dag_bash_select_fruit.py took 0.327 seconds
+[2025-04-01T09:31:05.209+0000] {processor.py:161} INFO - Started process (PID=701) to work on /opt/airflow/dags/dag_bash_select_fruit.py
+[2025-04-01T09:31:05.212+0000] {processor.py:830} INFO - Processing file /opt/airflow/dags/dag_bash_select_fruit.py for tasks to queue
+[2025-04-01T09:31:05.216+0000] {logging_mixin.py:188} INFO - [2025-04-01T09:31:05.215+0000] {dagbag.py:538} INFO - Filling up the DagBag from /opt/airflow/dags/dag_bash_select_fruit.py
+[2025-04-01T09:31:05.252+0000] {processor.py:840} INFO - DAG(s) 'dag_bash_select_fruit' retrieved from /opt/airflow/dags/dag_bash_select_fruit.py
+[2025-04-01T09:31:05.286+0000] {logging_mixin.py:188} INFO - [2025-04-01T09:31:05.286+0000] {dag.py:3036} INFO - Sync 1 DAGs
+[2025-04-01T09:31:05.322+0000] {logging_mixin.py:188} INFO - [2025-04-01T09:31:05.322+0000] {dag.py:3823} INFO - Setting next_dagrun for dag_bash_select_fruit to 2025-02-28 15:10:00+00:00, run_after=2025-04-04 15:10:00+00:00
+[2025-04-01T09:31:05.356+0000] {processor.py:183} INFO - Processing /opt/airflow/dags/dag_bash_select_fruit.py took 0.157 seconds
+[2025-04-01T09:31:34.693+0000] {processor.py:161} INFO - Started process (PID=775) to work on /opt/airflow/dags/dag_bash_select_fruit.py
+[2025-04-01T09:31:34.698+0000] {processor.py:830} INFO - Processing file /opt/airflow/dags/dag_bash_select_fruit.py for tasks to queue
+[2025-04-01T09:31:34.705+0000] {logging_mixin.py:188} INFO - [2025-04-01T09:31:34.704+0000] {dagbag.py:538} INFO - Filling up the DagBag from /opt/airflow/dags/dag_bash_select_fruit.py
+[2025-04-01T09:31:34.834+0000] {processor.py:840} INFO - DAG(s) 'dag_bash_select_fruit' retrieved from /opt/airflow/dags/dag_bash_select_fruit.py
+[2025-04-01T09:31:34.945+0000] {logging_mixin.py:188} INFO - [2025-04-01T09:31:34.944+0000] {dag.py:3036} INFO - Sync 1 DAGs
+[2025-04-01T09:31:35.043+0000] {logging_mixin.py:188} INFO - [2025-04-01T09:31:35.042+0000] {dag.py:3823} INFO - Setting next_dagrun for dag_bash_select_fruit to 2025-02-28 15:10:00+00:00, run_after=2025-04-04 15:10:00+00:00
+[2025-04-01T09:31:35.124+0000] {processor.py:183} INFO - Processing /opt/airflow/dags/dag_bash_select_fruit.py took 0.440 seconds
+[2025-04-01T09:32:05.739+0000] {processor.py:161} INFO - Started process (PID=839) to work on /opt/airflow/dags/dag_bash_select_fruit.py
+[2025-04-01T09:32:05.740+0000] {processor.py:830} INFO - Processing file /opt/airflow/dags/dag_bash_select_fruit.py for tasks to queue
+[2025-04-01T09:32:05.745+0000] {logging_mixin.py:188} INFO - [2025-04-01T09:32:05.744+0000] {dagbag.py:538} INFO - Filling up the DagBag from /opt/airflow/dags/dag_bash_select_fruit.py
+[2025-04-01T09:32:05.782+0000] {processor.py:840} INFO - DAG(s) 'dag_bash_select_fruit' retrieved from /opt/airflow/dags/dag_bash_select_fruit.py
+[2025-04-01T09:32:05.818+0000] {logging_mixin.py:188} INFO - [2025-04-01T09:32:05.817+0000] {dag.py:3036} INFO - Sync 1 DAGs
+[2025-04-01T09:32:06.064+0000] {logging_mixin.py:188} INFO - [2025-04-01T09:32:06.064+0000] {dag.py:3823} INFO - Setting next_dagrun for dag_bash_select_fruit to 2025-02-28 15:10:00+00:00, run_after=2025-04-04 15:10:00+00:00
+[2025-04-01T09:32:06.097+0000] {processor.py:183} INFO - Processing /opt/airflow/dags/dag_bash_select_fruit.py took 0.364 seconds
+[2025-04-01T09:32:36.212+0000] {processor.py:161} INFO - Started process (PID=910) to work on /opt/airflow/dags/dag_bash_select_fruit.py
+[2025-04-01T09:32:36.214+0000] {processor.py:830} INFO - Processing file /opt/airflow/dags/dag_bash_select_fruit.py for tasks to queue
+[2025-04-01T09:32:36.216+0000] {logging_mixin.py:188} INFO - [2025-04-01T09:32:36.216+0000] {dagbag.py:538} INFO - Filling up the DagBag from /opt/airflow/dags/dag_bash_select_fruit.py
+[2025-04-01T09:32:36.244+0000] {processor.py:840} INFO - DAG(s) 'dag_bash_select_fruit' retrieved from /opt/airflow/dags/dag_bash_select_fruit.py
+[2025-04-01T09:32:36.270+0000] {logging_mixin.py:188} INFO - [2025-04-01T09:32:36.269+0000] {dag.py:3036} INFO - Sync 1 DAGs
+[2025-04-01T09:32:36.299+0000] {logging_mixin.py:188} INFO - [2025-04-01T09:32:36.298+0000] {dag.py:3823} INFO - Setting next_dagrun for dag_bash_select_fruit to 2025-02-28 15:10:00+00:00, run_after=2025-04-04 15:10:00+00:00
+[2025-04-01T09:32:36.326+0000] {processor.py:183} INFO - Processing /opt/airflow/dags/dag_bash_select_fruit.py took 0.119 seconds
+[2025-04-01T09:33:06.416+0000] {processor.py:161} INFO - Started process (PID=976) to work on /opt/airflow/dags/dag_bash_select_fruit.py
+[2025-04-01T09:33:06.418+0000] {processor.py:830} INFO - Processing file /opt/airflow/dags/dag_bash_select_fruit.py for tasks to queue
+[2025-04-01T09:33:06.421+0000] {logging_mixin.py:188} INFO - [2025-04-01T09:33:06.420+0000] {dagbag.py:538} INFO - Filling up the DagBag from /opt/airflow/dags/dag_bash_select_fruit.py
+[2025-04-01T09:33:06.449+0000] {processor.py:840} INFO - DAG(s) 'dag_bash_select_fruit' retrieved from /opt/airflow/dags/dag_bash_select_fruit.py
+[2025-04-01T09:33:06.472+0000] {logging_mixin.py:188} INFO - [2025-04-01T09:33:06.472+0000] {dag.py:3036} INFO - Sync 1 DAGs
+[2025-04-01T09:33:06.498+0000] {logging_mixin.py:188} INFO - [2025-04-01T09:33:06.498+0000] {dag.py:3823} INFO - Setting next_dagrun for dag_bash_select_fruit to 2025-02-28 15:10:00+00:00, run_after=2025-04-04 15:10:00+00:00
+[2025-04-01T09:33:06.521+0000] {processor.py:183} INFO - Processing /opt/airflow/dags/dag_bash_select_fruit.py took 0.109 seconds
+[2025-04-01T09:33:34.705+0000] {processor.py:161} INFO - Started process (PID=1039) to work on /opt/airflow/dags/dag_bash_select_fruit.py
+[2025-04-01T09:33:34.706+0000] {processor.py:830} INFO - Processing file /opt/airflow/dags/dag_bash_select_fruit.py for tasks to queue
+[2025-04-01T09:33:34.708+0000] {logging_mixin.py:188} INFO - [2025-04-01T09:33:34.707+0000] {dagbag.py:538} INFO - Filling up the DagBag from /opt/airflow/dags/dag_bash_select_fruit.py
+[2025-04-01T09:33:34.723+0000] {processor.py:840} INFO - DAG(s) 'dag_bash_select_fruit' retrieved from /opt/airflow/dags/dag_bash_select_fruit.py
+[2025-04-01T09:33:34.738+0000] {logging_mixin.py:188} INFO - [2025-04-01T09:33:34.738+0000] {dag.py:3036} INFO - Sync 1 DAGs
+[2025-04-01T09:33:34.756+0000] {logging_mixin.py:188} INFO - [2025-04-01T09:33:34.756+0000] {dag.py:3823} INFO - Setting next_dagrun for dag_bash_select_fruit to 2025-02-28 15:10:00+00:00, run_after=2025-04-04 15:10:00+00:00
+[2025-04-01T09:33:34.773+0000] {processor.py:183} INFO - Processing /opt/airflow/dags/dag_bash_select_fruit.py took 0.070 seconds

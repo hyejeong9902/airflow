@@ -1,0 +1,364 @@
+[2025-04-01T09:19:47.583+0000] {processor.py:161} INFO - Started process (PID=92) to work on /opt/airflow/dags/dag_python_with_op_args.py
+[2025-04-01T09:19:47.585+0000] {processor.py:830} INFO - Processing file /opt/airflow/dags/dag_python_with_op_args.py for tasks to queue
+[2025-04-01T09:19:47.592+0000] {logging_mixin.py:188} INFO - [2025-04-01T09:19:47.592+0000] {dagbag.py:538} INFO - Filling up the DagBag from /opt/airflow/dags/dag_python_with_op_args.py
+[2025-04-01T09:19:47.668+0000] {logging_mixin.py:188} INFO - [2025-04-01T09:19:47.656+0000] {dagbag.py:348} ERROR - Failed to import: /opt/airflow/dags/dag_python_with_op_args.py
+Traceback (most recent call last):
+  File "/home/airflow/.local/lib/python3.11/site-packages/airflow/models/dagbag.py", line 344, in parse
+    loader.exec_module(new_module)
+  File "<frozen importlib._bootstrap_external>", line 940, in exec_module
+  File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
+  File "/opt/airflow/dags/dag_python_with_op_args.py", line 5, in <module>
+    from common.common_func import regist
+ModuleNotFoundError: No module named 'common'
+[2025-04-01T09:19:47.673+0000] {processor.py:842} WARNING - No viable dags retrieved from /opt/airflow/dags/dag_python_with_op_args.py
+[2025-04-01T09:19:47.741+0000] {processor.py:183} INFO - Processing /opt/airflow/dags/dag_python_with_op_args.py took 0.164 seconds
+[2025-04-01T09:20:18.919+0000] {processor.py:161} INFO - Started process (PID=161) to work on /opt/airflow/dags/dag_python_with_op_args.py
+[2025-04-01T09:20:18.921+0000] {processor.py:830} INFO - Processing file /opt/airflow/dags/dag_python_with_op_args.py for tasks to queue
+[2025-04-01T09:20:18.923+0000] {logging_mixin.py:188} INFO - [2025-04-01T09:20:18.923+0000] {dagbag.py:538} INFO - Filling up the DagBag from /opt/airflow/dags/dag_python_with_op_args.py
+[2025-04-01T09:20:18.947+0000] {logging_mixin.py:188} INFO - [2025-04-01T09:20:18.941+0000] {dagbag.py:348} ERROR - Failed to import: /opt/airflow/dags/dag_python_with_op_args.py
+Traceback (most recent call last):
+  File "/home/airflow/.local/lib/python3.11/site-packages/airflow/models/dagbag.py", line 344, in parse
+    loader.exec_module(new_module)
+  File "<frozen importlib._bootstrap_external>", line 940, in exec_module
+  File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
+  File "/opt/airflow/dags/dag_python_with_op_args.py", line 5, in <module>
+    from common.common_func import regist
+ModuleNotFoundError: No module named 'common'
+[2025-04-01T09:20:18.949+0000] {processor.py:842} WARNING - No viable dags retrieved from /opt/airflow/dags/dag_python_with_op_args.py
+[2025-04-01T09:20:18.971+0000] {processor.py:183} INFO - Processing /opt/airflow/dags/dag_python_with_op_args.py took 0.056 seconds
+[2025-04-01T09:20:48.905+0000] {processor.py:161} INFO - Started process (PID=239) to work on /opt/airflow/dags/dag_python_with_op_args.py
+[2025-04-01T09:20:48.907+0000] {processor.py:830} INFO - Processing file /opt/airflow/dags/dag_python_with_op_args.py for tasks to queue
+[2025-04-01T09:20:48.911+0000] {logging_mixin.py:188} INFO - [2025-04-01T09:20:48.911+0000] {dagbag.py:538} INFO - Filling up the DagBag from /opt/airflow/dags/dag_python_with_op_args.py
+[2025-04-01T09:20:48.975+0000] {logging_mixin.py:188} INFO - [2025-04-01T09:20:48.964+0000] {dagbag.py:348} ERROR - Failed to import: /opt/airflow/dags/dag_python_with_op_args.py
+Traceback (most recent call last):
+  File "/home/airflow/.local/lib/python3.11/site-packages/airflow/models/dagbag.py", line 344, in parse
+    loader.exec_module(new_module)
+  File "<frozen importlib._bootstrap_external>", line 940, in exec_module
+  File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
+  File "/opt/airflow/dags/dag_python_with_op_args.py", line 5, in <module>
+    from common.common_func import regist
+ModuleNotFoundError: No module named 'common'
+[2025-04-01T09:20:48.979+0000] {processor.py:842} WARNING - No viable dags retrieved from /opt/airflow/dags/dag_python_with_op_args.py
+[2025-04-01T09:20:49.022+0000] {processor.py:183} INFO - Processing /opt/airflow/dags/dag_python_with_op_args.py took 0.123 seconds
+[2025-04-01T09:21:19.821+0000] {processor.py:161} INFO - Started process (PID=299) to work on /opt/airflow/dags/dag_python_with_op_args.py
+[2025-04-01T09:21:19.822+0000] {processor.py:830} INFO - Processing file /opt/airflow/dags/dag_python_with_op_args.py for tasks to queue
+[2025-04-01T09:21:19.825+0000] {logging_mixin.py:188} INFO - [2025-04-01T09:21:19.824+0000] {dagbag.py:538} INFO - Filling up the DagBag from /opt/airflow/dags/dag_python_with_op_args.py
+[2025-04-01T09:21:19.849+0000] {logging_mixin.py:188} INFO - [2025-04-01T09:21:19.841+0000] {dagbag.py:348} ERROR - Failed to import: /opt/airflow/dags/dag_python_with_op_args.py
+Traceback (most recent call last):
+  File "/home/airflow/.local/lib/python3.11/site-packages/airflow/models/dagbag.py", line 344, in parse
+    loader.exec_module(new_module)
+  File "<frozen importlib._bootstrap_external>", line 940, in exec_module
+  File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
+  File "/opt/airflow/dags/dag_python_with_op_args.py", line 5, in <module>
+    from common.common_func import regist
+ModuleNotFoundError: No module named 'common'
+[2025-04-01T09:21:19.852+0000] {processor.py:842} WARNING - No viable dags retrieved from /opt/airflow/dags/dag_python_with_op_args.py
+[2025-04-01T09:21:19.872+0000] {processor.py:183} INFO - Processing /opt/airflow/dags/dag_python_with_op_args.py took 0.055 seconds
+[2025-04-01T09:21:50.760+0000] {processor.py:161} INFO - Started process (PID=367) to work on /opt/airflow/dags/dag_python_with_op_args.py
+[2025-04-01T09:21:50.761+0000] {processor.py:830} INFO - Processing file /opt/airflow/dags/dag_python_with_op_args.py for tasks to queue
+[2025-04-01T09:21:50.763+0000] {logging_mixin.py:188} INFO - [2025-04-01T09:21:50.763+0000] {dagbag.py:538} INFO - Filling up the DagBag from /opt/airflow/dags/dag_python_with_op_args.py
+[2025-04-01T09:21:50.790+0000] {logging_mixin.py:188} INFO - [2025-04-01T09:21:50.784+0000] {dagbag.py:348} ERROR - Failed to import: /opt/airflow/dags/dag_python_with_op_args.py
+Traceback (most recent call last):
+  File "/home/airflow/.local/lib/python3.11/site-packages/airflow/models/dagbag.py", line 344, in parse
+    loader.exec_module(new_module)
+  File "<frozen importlib._bootstrap_external>", line 940, in exec_module
+  File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
+  File "/opt/airflow/dags/dag_python_with_op_args.py", line 5, in <module>
+    from common.common_func import regist
+ModuleNotFoundError: No module named 'common'
+[2025-04-01T09:21:50.793+0000] {processor.py:842} WARNING - No viable dags retrieved from /opt/airflow/dags/dag_python_with_op_args.py
+[2025-04-01T09:21:50.814+0000] {processor.py:183} INFO - Processing /opt/airflow/dags/dag_python_with_op_args.py took 0.059 seconds
+[2025-04-01T09:22:23.193+0000] {processor.py:161} INFO - Started process (PID=435) to work on /opt/airflow/dags/dag_python_with_op_args.py
+[2025-04-01T09:22:23.196+0000] {processor.py:830} INFO - Processing file /opt/airflow/dags/dag_python_with_op_args.py for tasks to queue
+[2025-04-01T09:22:23.200+0000] {logging_mixin.py:188} INFO - [2025-04-01T09:22:23.199+0000] {dagbag.py:538} INFO - Filling up the DagBag from /opt/airflow/dags/dag_python_with_op_args.py
+[2025-04-01T09:22:23.245+0000] {logging_mixin.py:188} INFO - [2025-04-01T09:22:23.235+0000] {dagbag.py:348} ERROR - Failed to import: /opt/airflow/dags/dag_python_with_op_args.py
+Traceback (most recent call last):
+  File "/home/airflow/.local/lib/python3.11/site-packages/airflow/models/dagbag.py", line 344, in parse
+    loader.exec_module(new_module)
+  File "<frozen importlib._bootstrap_external>", line 940, in exec_module
+  File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
+  File "/opt/airflow/dags/dag_python_with_op_args.py", line 5, in <module>
+    from common.common_func import regist
+ModuleNotFoundError: No module named 'common'
+[2025-04-01T09:22:23.249+0000] {processor.py:842} WARNING - No viable dags retrieved from /opt/airflow/dags/dag_python_with_op_args.py
+[2025-04-01T09:22:23.292+0000] {processor.py:183} INFO - Processing /opt/airflow/dags/dag_python_with_op_args.py took 0.106 seconds
+[2025-04-01T09:22:53.714+0000] {processor.py:161} INFO - Started process (PID=503) to work on /opt/airflow/dags/dag_python_with_op_args.py
+[2025-04-01T09:22:53.715+0000] {processor.py:830} INFO - Processing file /opt/airflow/dags/dag_python_with_op_args.py for tasks to queue
+[2025-04-01T09:22:53.717+0000] {logging_mixin.py:188} INFO - [2025-04-01T09:22:53.717+0000] {dagbag.py:538} INFO - Filling up the DagBag from /opt/airflow/dags/dag_python_with_op_args.py
+[2025-04-01T09:22:53.737+0000] {logging_mixin.py:188} INFO - [2025-04-01T09:22:53.733+0000] {dagbag.py:348} ERROR - Failed to import: /opt/airflow/dags/dag_python_with_op_args.py
+Traceback (most recent call last):
+  File "/home/airflow/.local/lib/python3.11/site-packages/airflow/models/dagbag.py", line 344, in parse
+    loader.exec_module(new_module)
+  File "<frozen importlib._bootstrap_external>", line 940, in exec_module
+  File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
+  File "/opt/airflow/dags/dag_python_with_op_args.py", line 5, in <module>
+    from common.common_func import regist
+ModuleNotFoundError: No module named 'common'
+[2025-04-01T09:22:53.739+0000] {processor.py:842} WARNING - No viable dags retrieved from /opt/airflow/dags/dag_python_with_op_args.py
+[2025-04-01T09:22:53.766+0000] {processor.py:183} INFO - Processing /opt/airflow/dags/dag_python_with_op_args.py took 0.055 seconds
+[2025-04-01T09:23:24.670+0000] {processor.py:161} INFO - Started process (PID=571) to work on /opt/airflow/dags/dag_python_with_op_args.py
+[2025-04-01T09:23:24.672+0000] {processor.py:830} INFO - Processing file /opt/airflow/dags/dag_python_with_op_args.py for tasks to queue
+[2025-04-01T09:23:24.674+0000] {logging_mixin.py:188} INFO - [2025-04-01T09:23:24.674+0000] {dagbag.py:538} INFO - Filling up the DagBag from /opt/airflow/dags/dag_python_with_op_args.py
+[2025-04-01T09:23:24.696+0000] {logging_mixin.py:188} INFO - [2025-04-01T09:23:24.692+0000] {dagbag.py:348} ERROR - Failed to import: /opt/airflow/dags/dag_python_with_op_args.py
+Traceback (most recent call last):
+  File "/home/airflow/.local/lib/python3.11/site-packages/airflow/models/dagbag.py", line 344, in parse
+    loader.exec_module(new_module)
+  File "<frozen importlib._bootstrap_external>", line 940, in exec_module
+  File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
+  File "/opt/airflow/dags/dag_python_with_op_args.py", line 5, in <module>
+    from common.common_func import regist
+ModuleNotFoundError: No module named 'common'
+[2025-04-01T09:23:24.698+0000] {processor.py:842} WARNING - No viable dags retrieved from /opt/airflow/dags/dag_python_with_op_args.py
+[2025-04-01T09:23:24.720+0000] {processor.py:183} INFO - Processing /opt/airflow/dags/dag_python_with_op_args.py took 0.053 seconds
+[2025-04-01T09:23:55.477+0000] {processor.py:161} INFO - Started process (PID=645) to work on /opt/airflow/dags/dag_python_with_op_args.py
+[2025-04-01T09:23:55.479+0000] {processor.py:830} INFO - Processing file /opt/airflow/dags/dag_python_with_op_args.py for tasks to queue
+[2025-04-01T09:23:55.484+0000] {logging_mixin.py:188} INFO - [2025-04-01T09:23:55.483+0000] {dagbag.py:538} INFO - Filling up the DagBag from /opt/airflow/dags/dag_python_with_op_args.py
+[2025-04-01T09:23:55.520+0000] {logging_mixin.py:188} INFO - [2025-04-01T09:23:55.510+0000] {dagbag.py:348} ERROR - Failed to import: /opt/airflow/dags/dag_python_with_op_args.py
+Traceback (most recent call last):
+  File "/home/airflow/.local/lib/python3.11/site-packages/airflow/models/dagbag.py", line 344, in parse
+    loader.exec_module(new_module)
+  File "<frozen importlib._bootstrap_external>", line 940, in exec_module
+  File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
+  File "/opt/airflow/dags/dag_python_with_op_args.py", line 5, in <module>
+    from common.common_func import regist
+ModuleNotFoundError: No module named 'common'
+[2025-04-01T09:23:55.524+0000] {processor.py:842} WARNING - No viable dags retrieved from /opt/airflow/dags/dag_python_with_op_args.py
+[2025-04-01T09:23:55.561+0000] {processor.py:183} INFO - Processing /opt/airflow/dags/dag_python_with_op_args.py took 0.090 seconds
+[2025-04-01T09:24:26.257+0000] {processor.py:161} INFO - Started process (PID=713) to work on /opt/airflow/dags/dag_python_with_op_args.py
+[2025-04-01T09:24:26.258+0000] {processor.py:830} INFO - Processing file /opt/airflow/dags/dag_python_with_op_args.py for tasks to queue
+[2025-04-01T09:24:26.260+0000] {logging_mixin.py:188} INFO - [2025-04-01T09:24:26.260+0000] {dagbag.py:538} INFO - Filling up the DagBag from /opt/airflow/dags/dag_python_with_op_args.py
+[2025-04-01T09:24:26.283+0000] {logging_mixin.py:188} INFO - [2025-04-01T09:24:26.277+0000] {dagbag.py:348} ERROR - Failed to import: /opt/airflow/dags/dag_python_with_op_args.py
+Traceback (most recent call last):
+  File "/home/airflow/.local/lib/python3.11/site-packages/airflow/models/dagbag.py", line 344, in parse
+    loader.exec_module(new_module)
+  File "<frozen importlib._bootstrap_external>", line 940, in exec_module
+  File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
+  File "/opt/airflow/dags/dag_python_with_op_args.py", line 5, in <module>
+    from common.common_func import regist
+ModuleNotFoundError: No module named 'common'
+[2025-04-01T09:24:26.285+0000] {processor.py:842} WARNING - No viable dags retrieved from /opt/airflow/dags/dag_python_with_op_args.py
+[2025-04-01T09:24:26.309+0000] {processor.py:183} INFO - Processing /opt/airflow/dags/dag_python_with_op_args.py took 0.055 seconds
+[2025-04-01T09:24:56.459+0000] {processor.py:161} INFO - Started process (PID=781) to work on /opt/airflow/dags/dag_python_with_op_args.py
+[2025-04-01T09:24:56.461+0000] {processor.py:830} INFO - Processing file /opt/airflow/dags/dag_python_with_op_args.py for tasks to queue
+[2025-04-01T09:24:56.465+0000] {logging_mixin.py:188} INFO - [2025-04-01T09:24:56.464+0000] {dagbag.py:538} INFO - Filling up the DagBag from /opt/airflow/dags/dag_python_with_op_args.py
+[2025-04-01T09:24:56.493+0000] {logging_mixin.py:188} INFO - [2025-04-01T09:24:56.486+0000] {dagbag.py:348} ERROR - Failed to import: /opt/airflow/dags/dag_python_with_op_args.py
+Traceback (most recent call last):
+  File "/home/airflow/.local/lib/python3.11/site-packages/airflow/models/dagbag.py", line 344, in parse
+    loader.exec_module(new_module)
+  File "<frozen importlib._bootstrap_external>", line 940, in exec_module
+  File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
+  File "/opt/airflow/dags/dag_python_with_op_args.py", line 5, in <module>
+    from common.common_func import regist
+ModuleNotFoundError: No module named 'common'
+[2025-04-01T09:24:56.496+0000] {processor.py:842} WARNING - No viable dags retrieved from /opt/airflow/dags/dag_python_with_op_args.py
+[2025-04-01T09:24:56.528+0000] {processor.py:183} INFO - Processing /opt/airflow/dags/dag_python_with_op_args.py took 0.074 seconds
+[2025-04-01T09:26:27.335+0000] {processor.py:161} INFO - Started process (PID=86) to work on /opt/airflow/dags/dag_python_with_op_args.py
+[2025-04-01T09:26:27.338+0000] {processor.py:830} INFO - Processing file /opt/airflow/dags/dag_python_with_op_args.py for tasks to queue
+[2025-04-01T09:26:27.348+0000] {logging_mixin.py:188} INFO - [2025-04-01T09:26:27.347+0000] {dagbag.py:538} INFO - Filling up the DagBag from /opt/airflow/dags/dag_python_with_op_args.py
+[2025-04-01T09:26:27.410+0000] {logging_mixin.py:188} INFO - [2025-04-01T09:26:27.392+0000] {dagbag.py:348} ERROR - Failed to import: /opt/airflow/dags/dag_python_with_op_args.py
+Traceback (most recent call last):
+  File "/home/airflow/.local/lib/python3.11/site-packages/airflow/models/dagbag.py", line 344, in parse
+    loader.exec_module(new_module)
+  File "<frozen importlib._bootstrap_external>", line 940, in exec_module
+  File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
+  File "/opt/airflow/dags/dag_python_with_op_args.py", line 5, in <module>
+    from common.common_func import regist
+ModuleNotFoundError: No module named 'common'
+[2025-04-01T09:26:27.415+0000] {processor.py:842} WARNING - No viable dags retrieved from /opt/airflow/dags/dag_python_with_op_args.py
+[2025-04-01T09:26:27.480+0000] {processor.py:183} INFO - Processing /opt/airflow/dags/dag_python_with_op_args.py took 0.155 seconds
+[2025-04-01T09:26:58.790+0000] {processor.py:161} INFO - Started process (PID=154) to work on /opt/airflow/dags/dag_python_with_op_args.py
+[2025-04-01T09:26:58.791+0000] {processor.py:830} INFO - Processing file /opt/airflow/dags/dag_python_with_op_args.py for tasks to queue
+[2025-04-01T09:26:58.794+0000] {logging_mixin.py:188} INFO - [2025-04-01T09:26:58.793+0000] {dagbag.py:538} INFO - Filling up the DagBag from /opt/airflow/dags/dag_python_with_op_args.py
+[2025-04-01T09:26:58.819+0000] {logging_mixin.py:188} INFO - [2025-04-01T09:26:58.813+0000] {dagbag.py:348} ERROR - Failed to import: /opt/airflow/dags/dag_python_with_op_args.py
+Traceback (most recent call last):
+  File "/home/airflow/.local/lib/python3.11/site-packages/airflow/models/dagbag.py", line 344, in parse
+    loader.exec_module(new_module)
+  File "<frozen importlib._bootstrap_external>", line 940, in exec_module
+  File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
+  File "/opt/airflow/dags/dag_python_with_op_args.py", line 5, in <module>
+    from common.common_func import regist
+ModuleNotFoundError: No module named 'common'
+[2025-04-01T09:26:58.821+0000] {processor.py:842} WARNING - No viable dags retrieved from /opt/airflow/dags/dag_python_with_op_args.py
+[2025-04-01T09:26:58.845+0000] {processor.py:183} INFO - Processing /opt/airflow/dags/dag_python_with_op_args.py took 0.059 seconds
+[2025-04-01T09:27:30.665+0000] {processor.py:161} INFO - Started process (PID=222) to work on /opt/airflow/dags/dag_python_with_op_args.py
+[2025-04-01T09:27:30.669+0000] {processor.py:830} INFO - Processing file /opt/airflow/dags/dag_python_with_op_args.py for tasks to queue
+[2025-04-01T09:27:30.679+0000] {logging_mixin.py:188} INFO - [2025-04-01T09:27:30.678+0000] {dagbag.py:538} INFO - Filling up the DagBag from /opt/airflow/dags/dag_python_with_op_args.py
+[2025-04-01T09:27:30.783+0000] {logging_mixin.py:188} INFO - [2025-04-01T09:27:30.764+0000] {dagbag.py:348} ERROR - Failed to import: /opt/airflow/dags/dag_python_with_op_args.py
+Traceback (most recent call last):
+  File "/home/airflow/.local/lib/python3.11/site-packages/airflow/models/dagbag.py", line 344, in parse
+    loader.exec_module(new_module)
+  File "<frozen importlib._bootstrap_external>", line 940, in exec_module
+  File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
+  File "/opt/airflow/dags/dag_python_with_op_args.py", line 5, in <module>
+    from common.common_func import regist
+ModuleNotFoundError: No module named 'common'
+[2025-04-01T09:27:30.790+0000] {processor.py:842} WARNING - No viable dags retrieved from /opt/airflow/dags/dag_python_with_op_args.py
+[2025-04-01T09:27:30.872+0000] {processor.py:183} INFO - Processing /opt/airflow/dags/dag_python_with_op_args.py took 0.222 seconds
+[2025-04-01T09:28:01.920+0000] {processor.py:161} INFO - Started process (PID=290) to work on /opt/airflow/dags/dag_python_with_op_args.py
+[2025-04-01T09:28:01.921+0000] {processor.py:830} INFO - Processing file /opt/airflow/dags/dag_python_with_op_args.py for tasks to queue
+[2025-04-01T09:28:01.924+0000] {logging_mixin.py:188} INFO - [2025-04-01T09:28:01.923+0000] {dagbag.py:538} INFO - Filling up the DagBag from /opt/airflow/dags/dag_python_with_op_args.py
+[2025-04-01T09:28:01.954+0000] {logging_mixin.py:188} INFO - [2025-04-01T09:28:01.948+0000] {dagbag.py:348} ERROR - Failed to import: /opt/airflow/dags/dag_python_with_op_args.py
+Traceback (most recent call last):
+  File "/home/airflow/.local/lib/python3.11/site-packages/airflow/models/dagbag.py", line 344, in parse
+    loader.exec_module(new_module)
+  File "<frozen importlib._bootstrap_external>", line 940, in exec_module
+  File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
+  File "/opt/airflow/dags/dag_python_with_op_args.py", line 5, in <module>
+    from common.common_func import regist
+ModuleNotFoundError: No module named 'common'
+[2025-04-01T09:28:01.957+0000] {processor.py:842} WARNING - No viable dags retrieved from /opt/airflow/dags/dag_python_with_op_args.py
+[2025-04-01T09:28:01.983+0000] {processor.py:183} INFO - Processing /opt/airflow/dags/dag_python_with_op_args.py took 0.067 seconds
+[2025-04-01T09:28:32.672+0000] {processor.py:161} INFO - Started process (PID=358) to work on /opt/airflow/dags/dag_python_with_op_args.py
+[2025-04-01T09:28:32.673+0000] {processor.py:830} INFO - Processing file /opt/airflow/dags/dag_python_with_op_args.py for tasks to queue
+[2025-04-01T09:28:32.675+0000] {logging_mixin.py:188} INFO - [2025-04-01T09:28:32.674+0000] {dagbag.py:538} INFO - Filling up the DagBag from /opt/airflow/dags/dag_python_with_op_args.py
+[2025-04-01T09:28:32.695+0000] {logging_mixin.py:188} INFO - [2025-04-01T09:28:32.691+0000] {dagbag.py:348} ERROR - Failed to import: /opt/airflow/dags/dag_python_with_op_args.py
+Traceback (most recent call last):
+  File "/home/airflow/.local/lib/python3.11/site-packages/airflow/models/dagbag.py", line 344, in parse
+    loader.exec_module(new_module)
+  File "<frozen importlib._bootstrap_external>", line 940, in exec_module
+  File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
+  File "/opt/airflow/dags/dag_python_with_op_args.py", line 5, in <module>
+    from common.common_func import regist
+ModuleNotFoundError: No module named 'common'
+[2025-04-01T09:28:32.696+0000] {processor.py:842} WARNING - No viable dags retrieved from /opt/airflow/dags/dag_python_with_op_args.py
+[2025-04-01T09:28:32.712+0000] {processor.py:183} INFO - Processing /opt/airflow/dags/dag_python_with_op_args.py took 0.043 seconds
+[2025-04-01T09:29:04.682+0000] {processor.py:161} INFO - Started process (PID=426) to work on /opt/airflow/dags/dag_python_with_op_args.py
+[2025-04-01T09:29:04.693+0000] {processor.py:830} INFO - Processing file /opt/airflow/dags/dag_python_with_op_args.py for tasks to queue
+[2025-04-01T09:29:04.704+0000] {logging_mixin.py:188} INFO - [2025-04-01T09:29:04.702+0000] {dagbag.py:538} INFO - Filling up the DagBag from /opt/airflow/dags/dag_python_with_op_args.py
+[2025-04-01T09:29:04.778+0000] {logging_mixin.py:188} INFO - [2025-04-01T09:29:04.763+0000] {dagbag.py:348} ERROR - Failed to import: /opt/airflow/dags/dag_python_with_op_args.py
+Traceback (most recent call last):
+  File "/home/airflow/.local/lib/python3.11/site-packages/airflow/models/dagbag.py", line 344, in parse
+    loader.exec_module(new_module)
+  File "<frozen importlib._bootstrap_external>", line 940, in exec_module
+  File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
+  File "/opt/airflow/dags/dag_python_with_op_args.py", line 5, in <module>
+    from common.common_func import regist
+ModuleNotFoundError: No module named 'common'
+[2025-04-01T09:29:04.784+0000] {processor.py:842} WARNING - No viable dags retrieved from /opt/airflow/dags/dag_python_with_op_args.py
+[2025-04-01T09:29:04.852+0000] {processor.py:183} INFO - Processing /opt/airflow/dags/dag_python_with_op_args.py took 0.187 seconds
+[2025-04-01T09:29:36.293+0000] {processor.py:161} INFO - Started process (PID=507) to work on /opt/airflow/dags/dag_python_with_op_args.py
+[2025-04-01T09:29:36.295+0000] {processor.py:830} INFO - Processing file /opt/airflow/dags/dag_python_with_op_args.py for tasks to queue
+[2025-04-01T09:29:36.298+0000] {logging_mixin.py:188} INFO - [2025-04-01T09:29:36.298+0000] {dagbag.py:538} INFO - Filling up the DagBag from /opt/airflow/dags/dag_python_with_op_args.py
+[2025-04-01T09:29:33.836+0000] {logging_mixin.py:188} INFO - [2025-04-01T09:29:33.830+0000] {dagbag.py:348} ERROR - Failed to import: /opt/airflow/dags/dag_python_with_op_args.py
+Traceback (most recent call last):
+  File "/home/airflow/.local/lib/python3.11/site-packages/airflow/models/dagbag.py", line 344, in parse
+    loader.exec_module(new_module)
+  File "<frozen importlib._bootstrap_external>", line 940, in exec_module
+  File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
+  File "/opt/airflow/dags/dag_python_with_op_args.py", line 5, in <module>
+    from common.common_func import regist
+ModuleNotFoundError: No module named 'common'
+[2025-04-01T09:29:33.839+0000] {processor.py:842} WARNING - No viable dags retrieved from /opt/airflow/dags/dag_python_with_op_args.py
+[2025-04-01T09:29:33.868+0000] {processor.py:183} INFO - Processing /opt/airflow/dags/dag_python_with_op_args.py took 0.074 seconds
+[2025-04-01T09:30:04.871+0000] {processor.py:161} INFO - Started process (PID=563) to work on /opt/airflow/dags/dag_python_with_op_args.py
+[2025-04-01T09:30:04.872+0000] {processor.py:830} INFO - Processing file /opt/airflow/dags/dag_python_with_op_args.py for tasks to queue
+[2025-04-01T09:30:04.874+0000] {logging_mixin.py:188} INFO - [2025-04-01T09:30:04.873+0000] {dagbag.py:538} INFO - Filling up the DagBag from /opt/airflow/dags/dag_python_with_op_args.py
+[2025-04-01T09:30:04.894+0000] {logging_mixin.py:188} INFO - [2025-04-01T09:30:04.890+0000] {dagbag.py:348} ERROR - Failed to import: /opt/airflow/dags/dag_python_with_op_args.py
+Traceback (most recent call last):
+  File "/home/airflow/.local/lib/python3.11/site-packages/airflow/models/dagbag.py", line 344, in parse
+    loader.exec_module(new_module)
+  File "<frozen importlib._bootstrap_external>", line 940, in exec_module
+  File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
+  File "/opt/airflow/dags/dag_python_with_op_args.py", line 5, in <module>
+    from common.common_func import regist
+ModuleNotFoundError: No module named 'common'
+[2025-04-01T09:30:04.895+0000] {processor.py:842} WARNING - No viable dags retrieved from /opt/airflow/dags/dag_python_with_op_args.py
+[2025-04-01T09:30:04.917+0000] {processor.py:183} INFO - Processing /opt/airflow/dags/dag_python_with_op_args.py took 0.049 seconds
+[2025-04-01T09:30:35.954+0000] {processor.py:161} INFO - Started process (PID=638) to work on /opt/airflow/dags/dag_python_with_op_args.py
+[2025-04-01T09:30:35.956+0000] {processor.py:830} INFO - Processing file /opt/airflow/dags/dag_python_with_op_args.py for tasks to queue
+[2025-04-01T09:30:35.960+0000] {logging_mixin.py:188} INFO - [2025-04-01T09:30:35.960+0000] {dagbag.py:538} INFO - Filling up the DagBag from /opt/airflow/dags/dag_python_with_op_args.py
+[2025-04-01T09:30:36.032+0000] {logging_mixin.py:188} INFO - [2025-04-01T09:30:36.023+0000] {dagbag.py:348} ERROR - Failed to import: /opt/airflow/dags/dag_python_with_op_args.py
+Traceback (most recent call last):
+  File "/home/airflow/.local/lib/python3.11/site-packages/airflow/models/dagbag.py", line 344, in parse
+    loader.exec_module(new_module)
+  File "<frozen importlib._bootstrap_external>", line 940, in exec_module
+  File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
+  File "/opt/airflow/dags/dag_python_with_op_args.py", line 5, in <module>
+    from common.common_func import regist
+ModuleNotFoundError: No module named 'common'
+[2025-04-01T09:30:36.037+0000] {processor.py:842} WARNING - No viable dags retrieved from /opt/airflow/dags/dag_python_with_op_args.py
+[2025-04-01T09:30:36.078+0000] {processor.py:183} INFO - Processing /opt/airflow/dags/dag_python_with_op_args.py took 0.130 seconds
+[2025-04-01T09:31:05.047+0000] {processor.py:161} INFO - Started process (PID=712) to work on /opt/airflow/dags/dag_python_with_op_args.py
+[2025-04-01T09:31:05.050+0000] {processor.py:830} INFO - Processing file /opt/airflow/dags/dag_python_with_op_args.py for tasks to queue
+[2025-04-01T09:31:05.055+0000] {logging_mixin.py:188} INFO - [2025-04-01T09:31:05.054+0000] {dagbag.py:538} INFO - Filling up the DagBag from /opt/airflow/dags/dag_python_with_op_args.py
+[2025-04-01T09:31:05.112+0000] {logging_mixin.py:188} INFO - [2025-04-01T09:31:05.103+0000] {dagbag.py:348} ERROR - Failed to import: /opt/airflow/dags/dag_python_with_op_args.py
+Traceback (most recent call last):
+  File "/home/airflow/.local/lib/python3.11/site-packages/airflow/models/dagbag.py", line 344, in parse
+    loader.exec_module(new_module)
+  File "<frozen importlib._bootstrap_external>", line 940, in exec_module
+  File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
+  File "/opt/airflow/dags/dag_python_with_op_args.py", line 5, in <module>
+    from common.common_func import regist
+ModuleNotFoundError: No module named 'common'
+[2025-04-01T09:31:05.116+0000] {processor.py:842} WARNING - No viable dags retrieved from /opt/airflow/dags/dag_python_with_op_args.py
+[2025-04-01T09:31:05.151+0000] {processor.py:183} INFO - Processing /opt/airflow/dags/dag_python_with_op_args.py took 0.110 seconds
+[2025-04-01T09:31:35.968+0000] {processor.py:161} INFO - Started process (PID=770) to work on /opt/airflow/dags/dag_python_with_op_args.py
+[2025-04-01T09:31:35.970+0000] {processor.py:830} INFO - Processing file /opt/airflow/dags/dag_python_with_op_args.py for tasks to queue
+[2025-04-01T09:31:35.973+0000] {logging_mixin.py:188} INFO - [2025-04-01T09:31:35.973+0000] {dagbag.py:538} INFO - Filling up the DagBag from /opt/airflow/dags/dag_python_with_op_args.py
+[2025-04-01T09:31:36.025+0000] {logging_mixin.py:188} INFO - [2025-04-01T09:31:36.016+0000] {dagbag.py:348} ERROR - Failed to import: /opt/airflow/dags/dag_python_with_op_args.py
+Traceback (most recent call last):
+  File "/home/airflow/.local/lib/python3.11/site-packages/airflow/models/dagbag.py", line 344, in parse
+    loader.exec_module(new_module)
+  File "<frozen importlib._bootstrap_external>", line 940, in exec_module
+  File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
+  File "/opt/airflow/dags/dag_python_with_op_args.py", line 5, in <module>
+    from common.common_func import regist
+ModuleNotFoundError: No module named 'common'
+[2025-04-01T09:31:36.028+0000] {processor.py:842} WARNING - No viable dags retrieved from /opt/airflow/dags/dag_python_with_op_args.py
+[2025-04-01T09:31:36.069+0000] {processor.py:183} INFO - Processing /opt/airflow/dags/dag_python_with_op_args.py took 0.108 seconds
+[2025-04-01T09:32:04.008+0000] {processor.py:161} INFO - Started process (PID=843) to work on /opt/airflow/dags/dag_python_with_op_args.py
+[2025-04-01T09:32:04.010+0000] {processor.py:830} INFO - Processing file /opt/airflow/dags/dag_python_with_op_args.py for tasks to queue
+[2025-04-01T09:32:04.014+0000] {logging_mixin.py:188} INFO - [2025-04-01T09:32:04.013+0000] {dagbag.py:538} INFO - Filling up the DagBag from /opt/airflow/dags/dag_python_with_op_args.py
+[2025-04-01T09:32:04.056+0000] {logging_mixin.py:188} INFO - [2025-04-01T09:32:04.048+0000] {dagbag.py:348} ERROR - Failed to import: /opt/airflow/dags/dag_python_with_op_args.py
+Traceback (most recent call last):
+  File "/home/airflow/.local/lib/python3.11/site-packages/airflow/models/dagbag.py", line 344, in parse
+    loader.exec_module(new_module)
+  File "<frozen importlib._bootstrap_external>", line 940, in exec_module
+  File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
+  File "/opt/airflow/dags/dag_python_with_op_args.py", line 5, in <module>
+    from common.common_func import regist
+ModuleNotFoundError: No module named 'common'
+[2025-04-01T09:32:04.059+0000] {processor.py:842} WARNING - No viable dags retrieved from /opt/airflow/dags/dag_python_with_op_args.py
+[2025-04-01T09:32:04.093+0000] {processor.py:183} INFO - Processing /opt/airflow/dags/dag_python_with_op_args.py took 0.090 seconds
+[2025-04-01T09:32:34.552+0000] {processor.py:161} INFO - Started process (PID=904) to work on /opt/airflow/dags/dag_python_with_op_args.py
+[2025-04-01T09:32:34.554+0000] {processor.py:830} INFO - Processing file /opt/airflow/dags/dag_python_with_op_args.py for tasks to queue
+[2025-04-01T09:32:34.558+0000] {logging_mixin.py:188} INFO - [2025-04-01T09:32:34.557+0000] {dagbag.py:538} INFO - Filling up the DagBag from /opt/airflow/dags/dag_python_with_op_args.py
+[2025-04-01T09:32:34.594+0000] {logging_mixin.py:188} INFO - [2025-04-01T09:32:34.588+0000] {dagbag.py:348} ERROR - Failed to import: /opt/airflow/dags/dag_python_with_op_args.py
+Traceback (most recent call last):
+  File "/home/airflow/.local/lib/python3.11/site-packages/airflow/models/dagbag.py", line 344, in parse
+    loader.exec_module(new_module)
+  File "<frozen importlib._bootstrap_external>", line 940, in exec_module
+  File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
+  File "/opt/airflow/dags/dag_python_with_op_args.py", line 5, in <module>
+    from common.common_func import regist
+ModuleNotFoundError: No module named 'common'
+[2025-04-01T09:32:34.597+0000] {processor.py:842} WARNING - No viable dags retrieved from /opt/airflow/dags/dag_python_with_op_args.py
+[2025-04-01T09:32:34.626+0000] {processor.py:183} INFO - Processing /opt/airflow/dags/dag_python_with_op_args.py took 0.078 seconds
+[2025-04-01T09:33:04.790+0000] {processor.py:161} INFO - Started process (PID=972) to work on /opt/airflow/dags/dag_python_with_op_args.py
+[2025-04-01T09:33:04.792+0000] {processor.py:830} INFO - Processing file /opt/airflow/dags/dag_python_with_op_args.py for tasks to queue
+[2025-04-01T09:33:04.795+0000] {logging_mixin.py:188} INFO - [2025-04-01T09:33:04.794+0000] {dagbag.py:538} INFO - Filling up the DagBag from /opt/airflow/dags/dag_python_with_op_args.py
+[2025-04-01T09:33:04.824+0000] {logging_mixin.py:188} INFO - [2025-04-01T09:33:04.818+0000] {dagbag.py:348} ERROR - Failed to import: /opt/airflow/dags/dag_python_with_op_args.py
+Traceback (most recent call last):
+  File "/home/airflow/.local/lib/python3.11/site-packages/airflow/models/dagbag.py", line 344, in parse
+    loader.exec_module(new_module)
+  File "<frozen importlib._bootstrap_external>", line 940, in exec_module
+  File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
+  File "/opt/airflow/dags/dag_python_with_op_args.py", line 5, in <module>
+    from common.common_func import regist
+ModuleNotFoundError: No module named 'common'
+[2025-04-01T09:33:04.826+0000] {processor.py:842} WARNING - No viable dags retrieved from /opt/airflow/dags/dag_python_with_op_args.py
+[2025-04-01T09:33:04.850+0000] {processor.py:183} INFO - Processing /opt/airflow/dags/dag_python_with_op_args.py took 0.065 seconds
+[2025-04-01T09:33:35.786+0000] {processor.py:161} INFO - Started process (PID=1041) to work on /opt/airflow/dags/dag_python_with_op_args.py
+[2025-04-01T09:33:35.787+0000] {processor.py:830} INFO - Processing file /opt/airflow/dags/dag_python_with_op_args.py for tasks to queue
+[2025-04-01T09:33:35.789+0000] {logging_mixin.py:188} INFO - [2025-04-01T09:33:35.788+0000] {dagbag.py:538} INFO - Filling up the DagBag from /opt/airflow/dags/dag_python_with_op_args.py
+[2025-04-01T09:33:35.813+0000] {logging_mixin.py:188} INFO - [2025-04-01T09:33:35.807+0000] {dagbag.py:348} ERROR - Failed to import: /opt/airflow/dags/dag_python_with_op_args.py
+Traceback (most recent call last):
+  File "/home/airflow/.local/lib/python3.11/site-packages/airflow/models/dagbag.py", line 344, in parse
+    loader.exec_module(new_module)
+  File "<frozen importlib._bootstrap_external>", line 940, in exec_module
+  File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
+  File "/opt/airflow/dags/dag_python_with_op_args.py", line 5, in <module>
+    from common.common_func import regist
+ModuleNotFoundError: No module named 'common'
+[2025-04-01T09:33:35.816+0000] {processor.py:842} WARNING - No viable dags retrieved from /opt/airflow/dags/dag_python_with_op_args.py
+[2025-04-01T09:33:35.835+0000] {processor.py:183} INFO - Processing /opt/airflow/dags/dag_python_with_op_args.py took 0.051 seconds

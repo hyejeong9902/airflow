@@ -165,7 +165,7 @@ def make_predict_data(db_connect):
     return DF
 
 #   t3/ : 모델 로드 및 예측
-def load_moedl(db_connect):
+def load_model(db_connect):
     df = make_predict_data(db_connect)
     print(df.shape)
 
@@ -203,8 +203,8 @@ with DAG(
     )
 
     t3 = PythonOperator(
-        task_id="load_moedl",
-        python_callable=load_moedl,
+        task_id="load_model",
+        python_callable=load_model,
         op_args=[db_connect]
     )
 

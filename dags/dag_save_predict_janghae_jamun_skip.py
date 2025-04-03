@@ -10,66 +10,65 @@ from airflow.operators.python import PythonOperator
 from dotenv import load_dotenv
 from datetime import datetime as dt
 
-# SQL QUERY(전처리된 예측용 데이터셋 및 결과 테이블 저장 / 시각화 결과 표출용)
-# query_create_predict_table = """
-#     CREATE TABLE IF NOT EXISTS JANGHAE_JAMUN_SKIP_PREDICT_DATA (
-#         WONBU_NO VARCHAR(10),
-#         AGE INT,
-#         SEX VERCHAR,
-#         JAEHAEBALSAENG_HYEONGTAE_FG_CD VARCHAR,
-#         CODE_NM VARCHAR,
-#         GEUNROJA_FG VARCHAR,
-#         JONGSAJA_JIWI_CD VARCHAR,
-#         GY_HYEONGTAE_CD VARCHAR
-#         JONGSAJA_JIWI_CD VARCHAR,
-#         GY_HYEONGTAE_CD VARCHAR,
-#         JIKJONG_CD VARCHAR,
-#         YOYANG_ILSU INT,
-#         IPWON_BIYUL FLOAT,
-#         SANGHAE_BUWI_CD VARCHAR,
-#         SANGBYEONG_NUNIQUE VARCHAR,
-#         SANGBYEONG_CD VARCHAR,
-#         SANGSE_SANGBYEONG_NM VARCHAR,
-#         SANGBYEONG_CD_MAJOR VARCHAR,
-#         SANGBYEONG_CD_MIDDLE VARCHAR,
-#         SANGBYEONG_CD_SMALL VARCHAR,
-#         MAIN_SANGHAE_BUWI_CD VARCHAR,
-#         MAIN_SANGBYEONG_CD VARCHAR,
-#         MAIN_SANGSE_SANGBYEONG_NM VARCHAR,
-#         MAIN_SANGBYEONG_CD_MAJOR VARCHAR,
-#         MAIN_SANGBYEONG_CD_MIDDLE VARCHAR,
-#         MAIN_SANGBYEONG_CD_SMALL VARCHAR,
-#         JAEHAE_WONIN VARCHAR,
-#         GYOTONGSAGO_YN VARCHAR,
-#         SUGA_CD_COUNT FLOAT,
-#         SUGA_CD VARCHAR,
-#         EXAM_CD_COUNT FLOAT,
-#         EXAM_CD VARCHAR,
-#         BOJOGI_CD VARCHAR,
-#         JUCHIUI_SOGYEON VARCHAR,
-#         JANGHAE_GRADE VARCHAR,
-#         JANGHAE_GRADE_old VARCHAR,
-#         BUWI_8 VARCHAR,
-#         BUWI_9 VARCHAR,
-#         BUWI_10 VARCHAR,
-#         FINAL_JANGHAE_GRADE VARCHAR,
-#         FIRST_INPUT_ILSI DATE,
-#         LAST_CHANGE_ILSI DATE
-# );"""
+# SQL QUERY(전처리된 예측용 데이터셋 및 결과 테이블 저장 / 시각화 결과 표출용 > 계속 저장되어 있어야함)
+query_create_predict_table = """
+    CREATE TABLE IF NOT EXISTS JANGHAE_JAMUN_SKIP_PREDICT_DATA (
+        WONBU_NO VARCHAR(10),
+        AGE INT,
+        SEX VERCHAR,
+        JAEHAEBALSAENG_HYEONGTAE_FG_CD VARCHAR,
+        CODE_NM VARCHAR,
+        GEUNROJA_FG VARCHAR,
+        JONGSAJA_JIWI_CD VARCHAR,
+        GY_HYEONGTAE_CD VARCHAR
+        JONGSAJA_JIWI_CD VARCHAR,
+        GY_HYEONGTAE_CD VARCHAR,
+        JIKJONG_CD VARCHAR,
+        YOYANG_ILSU INT,
+        IPWON_BIYUL FLOAT,
+        SANGHAE_BUWI_CD VARCHAR,
+        SANGBYEONG_NUNIQUE VARCHAR,
+        SANGBYEONG_CD VARCHAR,
+        SANGSE_SANGBYEONG_NM VARCHAR,
+        SANGBYEONG_CD_MAJOR VARCHAR,
+        SANGBYEONG_CD_MIDDLE VARCHAR,
+        SANGBYEONG_CD_SMALL VARCHAR,
+        MAIN_SANGHAE_BUWI_CD VARCHAR,
+        MAIN_SANGBYEONG_CD VARCHAR,
+        MAIN_SANGSE_SANGBYEONG_NM VARCHAR,
+        MAIN_SANGBYEONG_CD_MAJOR VARCHAR,
+        MAIN_SANGBYEONG_CD_MIDDLE VARCHAR,
+        MAIN_SANGBYEONG_CD_SMALL VARCHAR,
+        JAEHAE_WONIN VARCHAR,
+        GYOTONGSAGO_YN VARCHAR,
+        SUGA_CD_COUNT FLOAT,
+        SUGA_CD VARCHAR,
+        EXAM_CD_COUNT FLOAT,
+        EXAM_CD VARCHAR,
+        BOJOGI_CD VARCHAR,
+        JUCHIUI_SOGYEON VARCHAR,
+        JANGHAE_GRADE VARCHAR,
+        JANGHAE_GRADE_old VARCHAR,
+        BUWI_8 VARCHAR,
+        BUWI_9 VARCHAR,
+        BUWI_10 VARCHAR,
+        FINAL_JANGHAE_GRADE VARCHAR,
+        FIRST_INPUT_ILSI DATE,
+        LAST_CHANGE_ILSI DATE
+);"""
+
+db_connect = psycopg2.connect(
+        database="postgres",
+        user="wesleyquest",
+        password="Wqasdf01!",
+        host="211.218.17.10",
+        port="5432")
 
 # t1/print_text
 def print_text(text):
     print(text)
 
 # t2/make_predict_data: 예측용 데이터셋 생성
-db_connect = psycopg2.connect(
-        database="postgres",
-        user="wesleyquest",
-        password="Wqasdf01!",
-        host="211.218.17.10",
-        port="5432"
-    )
-
 def make_predict_data(db_connect):
     # 1. 원천데이터에서 예측 대상자 불러오기(필터링 조건 수정 필요)
     # (as-is) 주치의소견 테이블에서 LAST_CHANGE_ILSI가 하루 전(2025-01-01)인 경우(주치의 소견에 장해등급 정보가 있으면 신청을 한 사람으로 가정)
@@ -100,7 +99,7 @@ def make_predict_data(db_connect):
     AAA050DT["SANGBYEONG_CD_MAJOR"] = AAA050DT["SANGBYEONG_CD"].map(lambda x: str(x)[0]) # 상병코드(대) 파생변수 생성
     AAA050DT["SANGBYEONG_CD_MIDDLE"] = AAA050DT["SANGBYEONG_CD"].map(lambda x: str(x)[0:2]) # 상병코드(중) 파생변수 생성
     AAA050DT["SANGBYEONG_CD_SMALL"] = AAA050DT["SANGBYEONG_CD"].map(lambda x: str(x)[0:3]) # 상병코드(소) 파생변수 생성
-    AAA050DT = AAA050DT.sort_values(by=["WONBU_NO","SANGHAE_BUWI_CD","SANGBYEONG_FG","SANGBYEONG_CD"]).reset_index(drop=True)
+    AAA050DT = AAA050DT.sort_values(by=["WONBU_NO","SANGHAE_BUWI_CD","SANGBYEONG_FG","SANGBYEONG_CD"]).reset_index(drop=True) # 정렬 후 merge 필요
     # AAA200MT_주치의소견 전처리
     AAA200MT["JANGHAE_GRADE_old"] = AAA200MT["JANGHAE_GRADE"] # 장해등급호 변수 복사
     AAA200MT["JANGHAE_GRADE"] = AAA200MT["JANGHAE_GRADE"].apply(lambda x: x[:2] if not pd.isna(x) else x) # 장해등급호 데이터에서 앞 두자리 추출한 변수 생성
@@ -114,7 +113,7 @@ def make_predict_data(db_connect):
     BOJOGI = BOJOGI[BOJOGI["SUGA_CD"].notnull()] # SUGA_CD notnull인 경우만 사용
     BOJOGI = BOJOGI.sort_values(by=["WONBU_NO","SUGA_CD"]) # 정렬 후 merge 필요
 
-    # 3. DF 통합데이터셋 생성(필요한 데이터만 연계된다고 봐야하는 건지?)
+    # 3. DF 통합데이터셋 생성
     DF = AAA260MT.merge(AAA010MT, on="WONBU_NO", how="inner")
     DF = pd.merge(DF, AAA050DT.groupby('WONBU_NO').SANGHAE_BUWI_CD.unique().apply(lambda x: ", ".join(map(str, filter(pd.notna, x)))).rename('SANGHAE_BUWI_CD'),how='left',left_on='WONBU_NO',right_on='WONBU_NO')
     DF["SANGHAE_BUWI_CD"] = DF["SANGHAE_BUWI_CD"].apply(lambda x: np.nan if x=='' else x) 
@@ -159,15 +158,51 @@ def make_predict_data(db_connect):
             DF.loc[DF[i].notna(),i] = DF.loc[DF[i].notna(),i].astype('str')
     DF = DF[["WONBU_NO"]+int_col+float_col+var_col]
 
+    # 변수 추가
     DF["FIRST_INPUT_ILSI"] = dt.today()
     DF["LAST_CHANGE_ILSI"] = dt.today()
+    # 변수타입 카테고리화
+    DF[["SEX","JAEHAEBALSAENG_HYEONGTAE_FG_CD", "GEUNROJA_FG", "JONGSAJA_JIWI_CD", "GY_HYEONGTAE_CD", "GYOTONGSAGO_YN", "JANGHAE_GRADE"]]=DF[["SEX","JAEHAEBALSAENG_HYEONGTAE_FG_CD", "GEUNROJA_FG", "JONGSAJA_JIWI_CD", "GY_HYEONGTAE_CD", "GYOTONGSAGO_YN", "JANGHAE_GRADE"]].astype('cateogry')
+
+    return DF # 여기서 데이터 프레임 만들고 끝내기. 그래서 t2 수행 후 t3에서는 저장된 데이터 불러와서 예측한 결과 다시 넣기
+
+#   t3/ : 모델 로드 및 예측(*임계값 설정 추가)
+def model_predict_save(db_connect):
+    from autogluon.tabular import TabularPredictor
+
+    DF = make_predict_data(db_connect)
+
+    # 모델 로드 및 임계값 추출하는 함수
+    def load_model_predict(df, num, save_path):
+        predictor = TabularPredictor.load(path=save_path)
+        pre = predictor.predict(df.drop(columns=["WONBU_NO"])) # 예측값
+        pre_proba = predictor.predict_proba(df.drop(columns=["WONBU_NO"])) # 예측확률
+        pre_proba["diff"] = pre_proba["14"] - pre_proba["00"] # 14급과 무장해 예측확률 차이
+        df_pre = pd.concat([pre, pre_proba[["diff"]]], axis=1)
+        df_pre.loc[(df_pre[f"BUWI_{num}"]=="14")&(df_pre["diff"]<0.5), f"BUWI_{num}"] = "00"
+        result_grade = df_pre[[f"BUWI_{num}"]]
+        return result_grade
+    
+    # 장해부위 척주 학습용데이터 & 예측
+    DF_BUWI8 = DF.drop(columns=["GEUNROJA_FG", "JONGSAJA_JIWI_CD", "GY_HYEONGTAE_CD",
+                                "SANGSE_SANGBYEONG_NM", "SANGBYEONG_CD", "MAIN_SANGSE_SANGBYEONG_NM", "MAIN_SANGBYEONG_CD_MAJOR",
+                                "GYOTONGSAGO_YN"])
+    DF["BUWI_8"] = load_model_predict(DF_BUWI8, 8, "AutogluonModels/ag-20250201_074554")
+
+    # 장해부위 팔 학습용데이터 & 예측
+    DF_BUWI9 = DF.drop(columns=["CODE_NM","JONGSAJA_JIWI_CD"])
+    DF["BUWI_9"] = load_model_predict(DF_BUWI9, 9, "AutogluonModels/ag-20250203_182925")
+
+
+    # 장해부위 다리 학습용데이터 & 예측
+    DF_BUWI10 = DF.drop(columns=["GEUNROJA_FG","JONGSAJA_JIWI_CD",
+                             "SANGSE_SANGBYEONG_NM","MAIN_SANGBYEONG_CD_MAJOR",
+                             "GYOTONGSAGO_YN","JUCHIUI_SOGYEON"])
+    DF["BUWI_10"] = load_model_predict(DF_BUWI10, 10, "AutogluonModels/ag-20250205_161832") 
 
     return DF
 
-#   t3/ : 모델 로드 및 예측
-def load_model(db_connect):
-    df = make_predict_data(db_connect)
-    print(df.shape)
+# t4/ : 최종장해등급 도출 및 테이블 저장
 
 
  ########################################################################################################
@@ -203,8 +238,8 @@ with DAG(
     )
 
     t3 = PythonOperator(
-        task_id="load_model",
-        python_callable=load_model,
+        task_id="model_predict_save",
+        python_callable=model_predict_save,
         op_args=[db_connect]
     )
 

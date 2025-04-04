@@ -15,8 +15,6 @@ from datetime import datetime as dt
 def print_text(text):
     print(text)
 
-# t2/make_predict_data
-
 # db 연결함수
 def get_db_connection():
     return psycopg2.connect(
@@ -26,6 +24,7 @@ def get_db_connection():
         host="211.218.17.10",
         port="5432")
 
+# t2/make_predict_data
 def make_predict_data():
     db_connect = None
     try:
@@ -276,7 +275,7 @@ def predict_janhgae_grade_spine(save_path):
         db_connect = get_db_connection()
         # 데이터 불러오기
         with db_connect.cursor() as cur:
-            DF = pd.read_sql_query('SELECT * FROM "JANGHAE_JAMUN_SKIP_PREDICT_DATA" WHERE "LAST_CHANGE_ILSI"=\'2025-01-01\'', db_connect)
+            DF = pd.read_sql_query('SELECT * FROM "JANGHAE_JAMUN_SKIP_PREDICT_DATA" WHERE "LAST_CHANGE_ILSI"= CURRENT_DATE', db_connect)
         # 빈 데이터셋 체크
         if len(DF) == 0:
             print("예측할 데이터가 없습니다.")
@@ -288,7 +287,7 @@ def predict_janhgae_grade_spine(save_path):
         # 예측 - 결과 데이터 프레임 가져오기
         result_df = load_model_predict(DF_BUWI8, 8, save_path)
         # 원본 WONBU_NO와 결합
-        update_df = pd.DataFrame({"WONBU_NO": DF["WONBU_NO"], "BUWI_8": result_df["BUWI_8"]})
+        update_df = pd.DataFrame({"WONBU_NO": DF_BUWI8["WONBU_NO"], "BUWI_8": result_df["BUWI_8"]})
         # 테이블에 예측값 업데이트
         update_prediction_results(db_connect, update_df, 8)
 
@@ -308,7 +307,7 @@ def predict_janhgae_grade_arms(save_path):
         db_connect = get_db_connection()
         # 데이터 불러오기
         with db_connect.cursor() as cur:
-            DF = pd.read_sql_query('SELECT * FROM "JANGHAE_JAMUN_SKIP_PREDICT_DATA" WHERE "LAST_CHANGE_ILSI"=\'2025-01-01\'', db_connect)
+            DF = pd.read_sql_query('SELECT * FROM "JANGHAE_JAMUN_SKIP_PREDICT_DATA" WHERE "LAST_CHANGE_ILSI" = CURRENT_DATE', db_connect)
         # 빈 데이터셋 체크
         if len(DF) == 0:
             print("예측할 데이터가 없습니다.")
@@ -318,7 +317,7 @@ def predict_janhgae_grade_arms(save_path):
         # 예측 -결과 데이터프레임 가져오기
         result_df = load_model_predict(DF_BUWI9, 9, save_path)
         # 원본 WONBU_NO와 결합
-        update_df = pd.DataFrame({"WONBU_NO": DF["WONBU_NO"], "BUWI_9": result_df["BUWI_9"]})
+        update_df = pd.DataFrame({"WONBU_NO": DF_BUWI9["WONBU_NO"], "BUWI_9": result_df["BUWI_9"]})
         # 테이블에 예측값 업데이트
         update_prediction_results(db_connect, update_df, 9)
 
@@ -338,7 +337,7 @@ def predict_janhgae_grade_legs(db_connect, save_path):
         db_connect = get_db_connection()
         # 데이터 불러오기
         with db_connect.cursor() as cur:
-            DF = pd.read_sql_query('SELECT * FROM "JANGHAE_JAMUN_SKIP_PREDICT_DATA" WHERE "LAST_CHANGE_ILSI"=\'2025-01-01\'', db_connect)
+            DF = pd.read_sql_query('SELECT * FROM "JANGHAE_JAMUN_SKIP_PREDICT_DATA" WHERE "LAST_CHANGE_ILSI" = CURRENT_DATE', db_connect)
         # 빈 데이터셋 체크
         if len(DF) == 0:
             print("예측할 데이터가 없습니다.")
@@ -350,7 +349,7 @@ def predict_janhgae_grade_legs(db_connect, save_path):
         # 예측 = 결과 데이터프레임 가져오기
         result_df = load_model_predict(DF_BUWI10, 10, save_path)
         # 원본 WONBU_NO와 결합
-        update_df = pd.DataFrame({"WONBU_NO": DF["WONBU_NO"], "BUWI_10": result_df["BUWI_10"]})
+        update_df = pd.DataFrame({"WONBU_NO": DF_BUWI10["WONBU_NO"], "BUWI_10": result_df["BUWI_10"]})
         # 테이블에 예측값 업데이트
         update_prediction_results(db_connect, update_df, 10)
 
@@ -369,7 +368,7 @@ def predict_final_grade():
     try:
         db_connect = get_db_connection()
         with db_connect.cursor() as cur:
-            DF = pd.read_sql_query('SELECT * FROM "JANGHAE_JAMUN_SKIP_PREDICT_DATA" WHERE "LAST_CHANGE_ILSI"=\'2025-01-01\'', db_connect)
+            DF = pd.read_sql_query('SELECT * FROM "JANGHAE_JAMUN_SKIP_PREDICT_DATA" WHERE "LAST_CHANGE_ILSI"= CURRENT_DATE', db_connect)
         # 빈 데이터셋 체크
         if len(DF) == 0:
             print("예측할 데이터가 없습니다.")

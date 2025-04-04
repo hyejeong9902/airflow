@@ -16,15 +16,20 @@ def print_text(text):
     print(text)
 
 # t2/make_predict_data
-db_connect = psycopg2.connect(
+
+# db 연결함수
+def get_db_connection():
+    return psycopg2.connect(
         database="postgres",
         user="wesleyquest",
         password="Wqasdf01!",
         host="211.218.17.10",
         port="5432")
 
-def make_predict_data(db_connect):
+def make_predict_data():
+    db_connect = None
     try:
+        db_connect = get_db_connection()
         # 0. 테이블 생성 쿼리
         query_create_predict_table = """
             CREATE TABLE IF NOT EXISTS JANGHAE_JAMUN_SKIP_PREDICT_DATA (
@@ -262,8 +267,10 @@ def update_prediction_results(conn, df, num):
             raise
 
 # t3/predict_spine: 장해부위 척주(8) 예측
-def predict_janhgae_grade_spine(db_connect, save_path):
+def predict_janhgae_grade_spine(save_path):
+    db_connect = None
     try:
+        db_connect = get_db_connection()
         # 데이터 불러오기
         with db_connect.cursor() as cur:
             DF = pd.read_sql_query('SELECT * FROM "JANGHAE_JAMUN_SKIP_PREDICT_DATA" WHERE "LAST_CHANGE_ILSI"=\'2025-01-01\'', db_connect)
@@ -292,8 +299,10 @@ def predict_janhgae_grade_spine(db_connect, save_path):
             db_connect.close()
         
 # t4/predict_arms: 장해부위 팔 예측
-def predict_janhgae_grade_arms(db_connect, save_path):
+def predict_janhgae_grade_arms(save_path):
+    db_connect = None
     try:
+        db_connect = get_db_connection()
         # 데이터 불러오기
         with db_connect.cursor() as cur:
             DF = pd.read_sql_query('SELECT * FROM "JANGHAE_JAMUN_SKIP_PREDICT_DATA" WHERE "LAST_CHANGE_ILSI"=\'2025-01-01\'', db_connect)
@@ -321,7 +330,9 @@ def predict_janhgae_grade_arms(db_connect, save_path):
 
 # t5/predict_legs: 장해부위 다리 예측
 def predict_janhgae_grade_legs(db_connect, save_path):
+    db_connect = None
     try:
+        db_connect = get_db_connection()
         # 데이터 불러오기
         with db_connect.cursor() as cur:
             DF = pd.read_sql_query('SELECT * FROM "JANGHAE_JAMUN_SKIP_PREDICT_DATA" WHERE "LAST_CHANGE_ILSI"=\'2025-01-01\'', db_connect)
@@ -350,8 +361,10 @@ def predict_janhgae_grade_legs(db_connect, save_path):
             db_connect.close()
 
 # t6/predict_final_grade : 각 부위별 예측 기초장해등급으로 룰기반 최종장해등급 도출
-def predict_final_grade(db_connect):
+def predict_final_grade():
+    db_connect = None
     try:
+        db_connect = get_db_connection()
         with db_connect.cursor() as cur:
             DF = pd.read_sql_query('SELECT * FROM "JANGHAE_JAMUN_SKIP_PREDICT_DATA" WHERE "LAST_CHANGE_ILSI"=\'2025-01-01\'', db_connect)
         # 빈 데이터셋 체크
@@ -427,7 +440,7 @@ with DAG(
     default_args=default_args,
     start_date=pendulum.datetime(2025, 3, 1, tz="Asia/Seoul"),
     description='predict_janghae_jamun_skip',
-    #schedule="30 6 * * *",
+    #schedule="30 6 * * *", # 배치 일단위로 수정?
     schedule_interval=None,
     catchup=False,
     tags=['predict']
@@ -441,32 +454,30 @@ with DAG(
 
     t2 = PythonOperator(
         task_id="make_predict_data",
-        python_callable=make_predict_data,
-        op_args=[db_connect]
+        python_callable=make_predict_data
     )
 
     t3 = PythonOperator(
         task_id="predict_janhgae_grade_spine",
         python_callable=predict_janhgae_grade_spine,
-        op_args=[db_connect, save_path] # 장해부위 척주 예측모델 저장경로
+        op_args=["AutogluonModels/ag-20250201_074554"] # 장해부위 척주 예측모델 저장경로
     )
     
     t4 = PythonOperator(
         task_id="predict_janhgae_grade_arms",
         python_callable=predict_janhgae_grade_arms,
-        op_args=[db_connect, save_path] # 장해부위 팔 예측모델 저장경로
+        op_args=["AutogluonModels/ag-20250203_182925"] # 장해부위 팔 예측모델 저장경로
     )
 
     t5 = PythonOperator(
         task_id="predict_janhgae_grade_legs",
         python_callable=predict_janhgae_grade_legs,
-        op_args=[db_connect, save_path] # 장해부위 다리 예측모델 저장경로
+        op_args=["AutogluonModels/ag-20250205_161832"] # 장해부위 다리 예측모델 저장경로
     )
 
     t6 = PythonOperator(
         task_id="predict_final_grade",
-        python_callable=predict_final_grade,
-        op_args=[db_connect]
+        python_callable=predict_final_grade
     )
 
     t7 = PythonOperator(

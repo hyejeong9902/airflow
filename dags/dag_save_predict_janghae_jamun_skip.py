@@ -70,7 +70,7 @@ def make_predict_data(db_connect):
             LAST_CHANGE_ILSI DATE
         );"""
 
-        # 1. 원천데이터에서 예측 대상자 불러오기(필터링 조건 수정 필요)
+        # 1. 원천데이터에서 예측 대상자 불러오기(필터링 조건 수정 필요)/일 300명
         # (as-is) 주치의소견 테이블에서 LAST_CHANGE_ILSI가 하루 전(2025-01-01)인 경우(주치의 소견에 장해등급 정보가 있으면 신청을 한 사람으로 가정)
         with db_connect.cursor() as cur:
             AAA200MT = pd.read_sql_query('SELECT * FROM "AAA200MT" WHERE "LAST_CHANGE_ILSI"=\'2025-01-01\'', db_connect)
@@ -80,9 +80,9 @@ def make_predict_data(db_connect):
             if not predict_wonbu:
                 print("예측 대상자가 없습니다.")
                 db_connect.close()
-                return # 이러면 dag 수행 전체 정지되는지?
+                return 
         
-            # 원천데이터 테이블에서 새로 추가할 원부 정보만 추출(나머지 테이블에서 받아오기)
+            # 원천데이터 테이블에서 새로 추가할 원부 정보만 추출(나머지 테이블에서 받아오기) / 평균 300명(일)
             AAA260MT = pd.read_sql_query(f'SELECT * FROM "AAA260MT" WHERE "WONBU_NO" IN ({predict_wonbu})', db_connect)
             AAA010MT = pd.read_sql_query(f'SELECT * FROM "AAA010MT" WHERE "WONBU_NO" in ({predict_wonbu})', db_connect)
             AAA050DT = pd.read_sql_query(f'SELECT * FROM "AAA050DT" WHERE "WONBU_NO" in ({predict_wonbu})', db_connect)
@@ -102,7 +102,7 @@ def make_predict_data(db_connect):
         AAA050DT = AAA050DT[AAA050DT["SEUNGIN_FG"].astype(str) == '3'] # 승인구분이 '3'인 데이터만 남기기
         AAA050DT.loc[AAA050DT["BOJEONG_SANGBYEONG_CD"].notnull(), "SANGBYEONG_CD"] = AAA050DT["BOJEONG_SANGBYEONG_CD"] # 보정상병코드가 null이 아닌 경우 상병코드 컬럼 null에 상관없이 모두 보정상병값으로 대체(상병코드)
         AAA050DT.loc[AAA050DT["BOJEONG_SANGBYEONG_CD"].notnull(), "SANGSE_SANGBYEONG_NM"] = AAA050DT["BOJEONG_SANGSE_SANGBYEONG_NM"] # 보정상병코드가 null이 아닌 경우 상병코드 컬럼 null에 상관없이 모두 보정상병값으로 대체(상세상병명)
-        AAA050DT = AAA050DT[AAA050DT["SANGBYEONG_CD"].notnull()].reset_index(drop=True) # 대체 후 상병코드가 Null인 경우 제외
+        AAA050DT = AAA050DT[AAA050DT["SANGBYEONG_CD"].notnull()] # 대체 후 상병코드가 Null인 경우 제외
         AAA050DT["SANGBYEONG_CD_MAJOR"] = AAA050DT["SANGBYEONG_CD"].map(lambda x: str(x)[0]) # 상병코드(대) 파생변수 생성
         AAA050DT["SANGBYEONG_CD_MIDDLE"] = AAA050DT["SANGBYEONG_CD"].map(lambda x: str(x)[0:2]) # 상병코드(중) 파생변수 생성
         AAA050DT["SANGBYEONG_CD_SMALL"] = AAA050DT["SANGBYEONG_CD"].map(lambda x: str(x)[0:3]) # 상병코드(소) 파생변수 생성
@@ -111,14 +111,14 @@ def make_predict_data(db_connect):
         AAA200MT["JANGHAE_GRADE_old"] = AAA200MT["JANGHAE_GRADE"] # 장해등급호 변수 복사
         AAA200MT["JANGHAE_GRADE"] = AAA200MT["JANGHAE_GRADE"].apply(lambda x: x[:2] if not pd.isna(x) else x) # 장해등급호 데이터에서 앞 두자리 추출한 변수 생성
         # SURGERY 전처리
-        SURGERY = SURGERY[SURGERY["SUGA_CD"].notnull()].reset_index(drop=True) # 수술코드 notnull인 경우만 사용
-        SURGERY = SURGERY.sort_values(by=["WONBU_NO","SUGA_CD"]) # 정렬 후 merge 필요
+        SURGERY = SURGERY[SURGERY["SUGA_CD"].notnull()] # 수술코드 notnull인 경우만 사용
+        SURGERY = SURGERY.sort_values(by=["WONBU_NO","SUGA_CD"]).reset_index(drop=True) # 정렬 후 merge 필요
         # EXAM 전처리
         EXAM = EXAM[(EXAM["SUGA_CD"].notnull())&(EXAM["SEUNGIN_FG"]=='3')] # 검사코드가 notnull이면서, 승인구분이 3인 경우만 사용(승인구분 코드값 '3'인지 확인 필요)
-        EXAM = EXAM.sort_values(by=["WONBU_NO","SUGA_CD"]) # 정렬 후 merge 필요
+        EXAM = EXAM.sort_values(by=["WONBU_NO","SUGA_CD"]).reset_index(drop=True) # 정렬 후 merge 필요
         # BOJOGI 전처리
         BOJOGI = BOJOGI[BOJOGI["SUGA_CD"].notnull()] # SUGA_CD notnull인 경우만 사용
-        BOJOGI = BOJOGI.sort_values(by=["WONBU_NO","SUGA_CD"]) # 정렬 후 merge 필요
+        BOJOGI = BOJOGI.sort_values(by=["WONBU_NO","SUGA_CD"]).reset_index(drop=True) # 정렬 후 merge 필요
 
         # 3. DF 통합데이터셋 생성
         DF = AAA260MT.merge(AAA010MT, on="WONBU_NO", how="inner")
@@ -146,9 +146,9 @@ def make_predict_data(db_connect):
         DF = pd.merge(DF, BOJOGI.groupby('WONBU_NO').SUGA_CD.unique().apply(lambda x: ", ".join(x)).rename('BOJOGI_CD'),how='left',left_on='WONBU_NO',right_on='WONBU_NO')
         DF = DF.merge(AAA200MT, on="WONBU_NO", how="inner")
         DF = DF.reset_index(drop=True)
-        DF = DF.where(pd.notnull(DF), None)
+        DF = DF.where(pd.notnull(DF), None) # DB에 들어갈 결측치 처리
 
-        # 데이터타입 확인
+        # 데이터타입 확인(DB 저장용)
         int_col = ['AGE', 'YOYANG_ILSU', 'SANGBYEONG_NUNIQUE']
         float_col = ['IPWON_BIYUL', 'SUGA_CD_COUNT', 'EXAM_CD_COUNT']
         var_col = ['SEX', 'JAEHAEBALSAENG_HYEONGTAE_FG_CD', 'CODE_NM','GEUNROJA_FG', 'JONGSAJA_JIWI_CD', 'GY_HYEONGTAE_CD', 'JIKJONG_CD',
@@ -188,17 +188,19 @@ def make_predict_data(db_connect):
             _execute_values(conn=db_connect, df=DF, table_name='JANGHAE_JAMUN_SKIP_PREDICT_DATA')
     
         print(f"예측 데이터 생성 완료: 총 {len(DF)}건")
+
     except Exception as e: # 어떤 오류인지 나오는 건지?
         print(f"예측 데이터 생성 중 오류 발생: {e}")
         raise
     
-    db_connect.close()
+    finally:
+        db_connect.close()
   
 # 저장 모델 로드 및 예측값 도출 함수
 def load_model_predict(df, num, save_path, threshold=0.5):
     try:
         from autogluon.tabular import TabularPredictor
-        # 모델 로드
+        # 모델 로드(부위별 모델 불러오기)
         predictor = TabularPredictor.load(path=save_path)
 
         # 예측에서 제외할 컬럼

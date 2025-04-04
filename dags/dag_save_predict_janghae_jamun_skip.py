@@ -331,7 +331,7 @@ def predict_janhgae_grade_arms(save_path):
             db_connect.close()
 
 # t5/predict_legs: 장해부위 다리 예측
-def predict_janhgae_grade_legs(db_connect, save_path):
+def predict_janhgae_grade_legs(save_path):
     db_connect = None
     try:
         db_connect = get_db_connection()

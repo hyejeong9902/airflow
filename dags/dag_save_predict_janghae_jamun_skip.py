@@ -178,7 +178,10 @@ def make_predict_data():
                 cur.execute(query)
                 conn.commit()
         # 이전 실행으로 db에 저장된 테이블이 있다면 해당 테이블에 데이터 누적하는 함수
-        def _execute_values(conn, df, table_name): 
+        def _execute_values(conn, df, table_name):
+            df['FIRST_INPUT_ILSI'] = dt.today()
+            df['LAST_CHANGE_ILSI'] = dt.today()
+            
             tuples = [tuple(x) for x in df.to_numpy()] 
             cols = ', '.join([f'"{col}"' for col in df.columns])  # ','.join(list(df.columns))
             query = f'INSERT INTO "{table_name}" ({cols}) VALUES %s' # "INSERT INTO %s(%s) VALUES %%s" % (table_name, cols) 

@@ -254,17 +254,17 @@ def load_model_predict(df, num, save_path, threshold=0.5):
     
 # 예측 결과값 INSERT 함수
 def update_prediction_results(conn, df, num):
-        try:
-            update_query = f"""UPDATE "JANGHAE_JAMUN_SKIP_PREDICT_DATA" SET "BUWI_{num}" = %s WHERE "WONBU_NO" = %s"""
-            data_to_update = list(zip(df[f"BUWI_{num}"].astype(str), df["WONBU_NO"].astype(str)))
-            # 일괄 업뎃 수행
-            with conn.cursor() as cur:
-                extras.execute_batch(cur, update_query, data_to_update)
-                conn.commit()
-        except Exception as e:
-            conn.rollback()
-            print(f"Error updating BUWI_{num}: {e}")
-            raise
+    try:
+        update_query = f"""UPDATE "JANGHAE_JAMUN_SKIP_PREDICT_DATA" SET "BUWI_{num}" = %s WHERE "WONBU_NO" = %s"""
+        data_to_update = list(zip(df[f"BUWI_{num}"].astype(str), df["WONBU_NO"].astype(str)))
+        # 일괄 업뎃 수행
+        with conn.cursor() as cur:
+            extras.execute_batch(cur, update_query, data_to_update)
+            conn.commit()
+    except Exception as e:
+        conn.rollback()
+        print(f"Error updating BUWI_{num}: {e}")
+        raise
 
 # t3/predict_spine: 장해부위 척주(8) 예측
 def predict_janhgae_grade_spine(save_path):

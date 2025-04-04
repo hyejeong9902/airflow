@@ -181,7 +181,7 @@ def make_predict_data():
         def _execute_values(conn, df, table_name):
             df['FIRST_INPUT_ILSI'] = dt.today()
             df['LAST_CHANGE_ILSI'] = dt.today()
-            
+
             tuples = [tuple(x) for x in df.to_numpy()] 
             cols = ', '.join([f'"{col}"' for col in df.columns])  # ','.join(list(df.columns))
             query = f'INSERT INTO "{table_name}" ({cols}) VALUES %s' # "INSERT INTO %s(%s) VALUES %%s" % (table_name, cols) 
@@ -193,7 +193,7 @@ def make_predict_data():
             # 테이블이 없으면 생성
             _exec_query(conn=db_connect, query=query_create_predict_table) # JANGHAE_JAMUN_SKIP_PREDICT_DATA 테이블 생성
             # 있다면 기존 테이블에 값 추가(if 새로운 원부가 들어온다면?)
-            _execute_values(conn=db_connect, df=DF, table_name='JANGHAE_JAMUN_SKIP_PREDICT_DATA')
+            _execute_values(conn=db_connect, df=DF, table_name="JANGHAE_JAMUN_SKIP_PREDICT_DATA")
     
         print(f"예측 데이터 생성 완료: 총 {len(DF)}건")
 

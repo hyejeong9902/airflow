@@ -208,7 +208,7 @@ def load_model_predict(df, num, save_path, threshold=0.5):
     try:
         from autogluon.tabular import TabularPredictor
         # 모델 로드(부위별 모델 불러오기)
-        predictor = TabularPredictor.load(path=save_path)
+        predictor = TabularPredictor.load(path="/opt/airflow/"+save_path)
 
         # 예측에서 제외할 컬럼
         del_col = ["WONBU_NO", "BUWI_8", "BUWI_9", "BUWI_10", "FINAL_JANGHAE_GRADE", "FIRST_INPUT_ILSI", "LAST_CHANGE_ILSI"]

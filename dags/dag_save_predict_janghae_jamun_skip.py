@@ -254,7 +254,7 @@ def load_model_predict(df, num, save_path, threshold=0.5):
         print(f"Error in prediction for BUWI_{num}: {e}")
         return pd.DataFrame({f"BUWI_{num}": [None] * len(df)})
     
-# 예측 결과값 INSERT 함수
+# 예측값 DB UPDATE 함수
 def update_prediction_results(conn, df, num):
     try:
         update_query = f"""UPDATE "JANGHAE_JAMUN_SKIP_PREDICT_DATA" SET "BUWI_{num}" = %s WHERE "WONBU_NO" = %s"""

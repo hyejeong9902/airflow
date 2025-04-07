@@ -210,9 +210,10 @@ def load_model_predict(df, num, save_path):
         import os
         from autogluon.tabular import TabularPredictor
 
+        # 멀티프로세싱 제한 설정
         os.environ["OMP_NUM_THREADS"] = "1"
         os.environ["OPENBLAS_NUM_THREADS"] = "1"
-        
+
         # 모델 로드(부위별 모델 불러오기)
         predictor = TabularPredictor.load(path="/opt/airflow/"+save_path)
 
@@ -240,8 +241,8 @@ def load_model_predict(df, num, save_path):
                 df_drop.loc[df_drop[col].notna(),col] = df_drop.loc[df_drop[col].notna(),col].astype('str')
         
         # 예측값 및 예측확률 계산
-        pre = predictor.predict(df_drop,num_cpus=1) 
-        pre_proba = predictor.predict_proba(df_drop,num_cpus=1)
+        pre = predictor.predict(df_drop) 
+        pre_proba = predictor.predict_proba(df_drop)
 
         # 임계값 설정 - 클래스 간 확률차이 계산
         positive_class = "14"

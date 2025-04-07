@@ -44,7 +44,7 @@ def make_predict_data():
             "YOYANG_ILSU" INT,
             "IPWON_BIYUL" FLOAT,
             "SANGHAE_BUWI_CD" VARCHAR,
-            "SANGBYEONG_NUNIQUE" VARCHAR,
+            "SANGBYEONG_NUNIQUE" INT,
             "SANGBYEONG_CD" VARCHAR,
             "SANGSE_SANGBYEONG_NM" VARCHAR,
             "SANGBYEONG_CD_MAJOR" VARCHAR,
@@ -75,9 +75,10 @@ def make_predict_data():
         );"""
 
         # 1. 원천데이터에서 예측 대상자 불러오기(필터링 조건 수정 필요)/일 300명
+        # 매일 자정 수행된다고 가정했을 때(schedule_interval="@daily") 하루 전에 들어온 데이터 활용("LAST_CHANGE_ILSI"= CURRENT_DATE - 1')
         # (as-is) 주치의소견 테이블에서 LAST_CHANGE_ILSI가 하루 전(2025-01-01)인 경우(주치의 소견에 장해등급 정보가 있으면 신청을 한 사람으로 가정)
         with db_connect.cursor() as cur:
-            AAA200MT = pd.read_sql_query('SELECT * FROM "AAA200MT" WHERE "LAST_CHANGE_ILSI"=\'2025-01-01\'', db_connect)
+            AAA200MT = pd.read_sql_query('SELECT * FROM "AAA200MT" WHERE "LAST_CHANGE_ILSI"=\'2025-01-01\'', db_connect) # "LAST_CHANGE_ILSI"= CURRENT_DATE - 1'
             predict_wonbu = ', '.join(f"'{w}'" for w in set(AAA200MT["WONBU_NO"].unique()))
 
             # 빈 데이터셋 체크
@@ -178,8 +179,8 @@ def make_predict_data():
                 conn.commit()
         # 이전 실행으로 db에 저장된 테이블이 있다면 해당 테이블에 데이터 누적하는 함수
         def _execute_values(conn, df, table_name):
-            df['FIRST_INPUT_ILSI'] = dt.today()
-            df['LAST_CHANGE_ILSI'] = dt.today()
+            df['FIRST_INPUT_ILSI'] = dt.today() # 예측 시 가져오는 데이터는 전처리된 오늘 날짜 기준
+            df['LAST_CHANGE_ILSI'] = dt.today() # 예측 시 가져오는 데이터는 전처리된 오늘 날짜 기준
 
             tuples = [tuple(x) for x in df.to_numpy()] 
             cols = ', '.join([f'"{col}"' for col in df.columns])  # ','.join(list(df.columns))
@@ -226,10 +227,10 @@ def load_model_predict(df, num, save_path, threshold=0.5):
         for col in df_drop.columns:
             if col in int_col:
                 df_drop[col] = df_drop[col].astype('int')
+            elif col in category_col:
+                df_drop[col] = df_drop[col].astype('category')
             elif col in float_col:
                 df_drop.loc[df_drop[col].notna(),col] = df_drop.loc[df_drop[col].notna(),col].astype('float')
-            elif col in category_col:
-                df_drop.loc[df_drop[col].notna(),col] = df_drop.loc[df_drop[col].notna(),col].astype('category') # 기 저장된 형태와 다르게 cateogry 형태로 수정 필요.
             elif col in object_col:
                 df_drop.loc[df_drop[col].notna(),col] = df_drop.loc[df_drop[col].notna(),col].astype('str')
         
@@ -442,8 +443,8 @@ with DAG(
     default_args=default_args,
     start_date=pendulum.datetime(2025, 3, 1, tz="Asia/Seoul"),
     description='predict_janghae_jamun_skip',
-    #schedule="30 6 * * *", # 배치 일단위로 수정?
-    schedule_interval=None,
+    #schedule="0 0 * * *", # 매일 자정 수행 또는 schedule_interval="@daily"
+    schedule_interval=None, # schedule 지정 시 삭제, 또는 schedule_interval="@daily" 로 지정
     catchup=False,
     tags=['predict']
 ) as dag:

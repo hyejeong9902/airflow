@@ -205,20 +205,20 @@ def make_predict_data():
         db_connect.close()
   
 # 저장 모델 로드 및 예측값 도출 함수
-def load_model_predict(df, num, save_path, threshold=0.5):
+def load_model_predict(df, num, save_path):
     try:
         from autogluon.tabular import TabularPredictor
         # 모델 로드(부위별 모델 불러오기)
         predictor = TabularPredictor.load(path="/opt/airflow/"+save_path)
 
         # 예측에서 제외할 컬럼
-        del_col = ["WONBU_NO", "BUWI_8", "BUWI_9", "BUWI_10", "FINAL_JANGHAE_GRADE", "FIRST_INPUT_ILSI", "LAST_CHANGE_ILSI"]
+        del_col = ['WONBU_NO', 'BUWI_8', 'BUWI_9', 'BUWI_10', 'FINAL_JANGHAE_GRADE', 'FIRST_INPUT_ILSI', 'LAST_CHANGE_ILSI']
         df_drop = df.drop(columns=del_col)
 
         # 데이터 타입 확인
         int_col = ['AGE', 'YOYANG_ILSU', 'SANGBYEONG_NUNIQUE']
         float_col = ['IPWON_BIYUL', 'SUGA_CD_COUNT', 'EXAM_CD_COUNT']
-        category_col = ["SEX", "JAEHAEBALSAENG_HYEONGTAE_FG_CD", "GEUNROJA_FG", "JONGSAJA_JIWI_CD", "GY_HYEONGTAE_CD", "GYOTONGSAGO_YN", "JANGHAE_GRADE"]
+        category_col = ['SEX', 'JAEHAEBALSAENG_HYEONGTAE_FG_CD', 'GEUNROJA_FG', 'JONGSAJA_JIWI_CD', 'GY_HYEONGTAE_CD', 'GYOTONGSAGO_YN', 'JANGHAE_GRADE']
         object_col = ['CODE_NM','JIKJONG_CD',
                       'SANGHAE_BUWI_CD', 'SANGBYEONG_CD', 'SANGSE_SANGBYEONG_NM','SANGBYEONG_CD_MAJOR', 'SANGBYEONG_CD_MIDDLE', 'SANGBYEONG_CD_SMALL',
                       'MAIN_SANGHAE_BUWI_CD', 'MAIN_SANGBYEONG_CD','MAIN_SANGSE_SANGBYEONG_NM', 'MAIN_SANGBYEONG_CD_MAJOR','MAIN_SANGBYEONG_CD_MIDDLE', 'MAIN_SANGBYEONG_CD_SMALL',
@@ -244,7 +244,7 @@ def load_model_predict(df, num, save_path, threshold=0.5):
         pre_proba["diff"] = pre_proba[positive_class] - pre_proba[negative_class]
 
         pre_series = pre.copy()
-        mask = (pre_series == positive_class) & (pre_proba["diff"] < threshold)
+        mask = (pre_series == positive_class) & (pre_proba["diff"] < 0.5) # threshold=0.5
         pre_series[mask] = negative_class
 
         result_grade = pd.DataFrame({f"BUWI_{num}": pre_series})

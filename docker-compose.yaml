@@ -84,6 +84,7 @@ x-airflow-common:
     - ./config:/opt/airflow/config
     - ./airflow/plugins:/opt/airflow/plugins
     - ./.env:/home/airflow/.env
+    - ./AutogluonModels:/opt/airflow/AutogluonModels
 #    - ./requirements.txt:/requirements.txt
   user: "${AIRFLOW_UID:-50000}:0"
   depends_on:

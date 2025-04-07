@@ -207,7 +207,12 @@ def make_predict_data():
 # 저장 모델 로드 및 예측값 도출 함수
 def load_model_predict(df, num, save_path):
     try:
+        import os
         from autogluon.tabular import TabularPredictor
+
+        os.environ["OMP_NUM_THREADS"] = "1"
+        os.environ["OPENBLAS_NUM_THREADS"] = "1"
+        
         # 모델 로드(부위별 모델 불러오기)
         predictor = TabularPredictor.load(path="/opt/airflow/"+save_path)
 
@@ -235,8 +240,8 @@ def load_model_predict(df, num, save_path):
                 df_drop.loc[df_drop[col].notna(),col] = df_drop.loc[df_drop[col].notna(),col].astype('str')
         
         # 예측값 및 예측확률 계산
-        pre = predictor.predict(df_drop) 
-        pre_proba = predictor.predict_proba(df_drop)
+        pre = predictor.predict(df_drop,num_cpus=1) 
+        pre_proba = predictor.predict_proba(df_drop,num_cpus=1)
 
         # 임계값 설정 - 클래스 간 확률차이 계산
         positive_class = "14"

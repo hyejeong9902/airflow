@@ -2,6 +2,8 @@
 FROM apache/airflow:2.10.5-python3.11
 #FROM apache/airflow:2.10.5
 
+RUN apt-get update && apt-get install -y libgomp1
+
 USER airflow 
  # 로컬의 requirements.txt 파일을 컨테이너 내부로 복사합니다
 COPY requirements.txt /requirements.txt

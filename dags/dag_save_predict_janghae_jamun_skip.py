@@ -205,17 +205,20 @@ def make_predict_data():
         db_connect.close()
   
 # 저장 모델 로드 및 예측값 도출 함수
+# GPU 사용가능 하다면 아래 * 표시 된 코드는 수행X
 def load_model_predict(df, num, save_path):
     try:
-        import os
+        import os #(*)
         from autogluon.tabular import TabularPredictor
 
-        # 멀티프로세싱 제한 설정
+        # (*)멀티프로세싱 제한 설정 
         os.environ["OMP_NUM_THREADS"] = "1"
         os.environ["OPENBLAS_NUM_THREADS"] = "1"
+        # (*)GPU 사용 비활성화
+        os.environ["CUDA_VISIBLE_DEVICES"] = "-1"
 
         # 모델 로드(부위별 모델 불러오기)
-        predictor = TabularPredictor.load(path="/opt/airflow/"+save_path)
+        predictor = TabularPredictor.load(path="/opt/airflow/"+save_path,)
 
         # 예측에서 제외할 컬럼
         del_col = ['WONBU_NO', 'BUWI_8', 'BUWI_9', 'BUWI_10', 'FINAL_JANGHAE_GRADE', 'FIRST_INPUT_ILSI', 'LAST_CHANGE_ILSI']
@@ -277,6 +280,19 @@ def update_prediction_results(conn, df, num):
 
 # t3/predict_spine: 장해부위 척주(8) 예측
 def predict_janhgae_grade_spine(save_path):
+
+    # (test용) GPU 사용 제한 ##################################################
+    import multiprocessing
+    import os
+
+    try:
+        multiprocessing.set_start_method('spawn', force=True)
+    except RuntimeError:
+        pass
+
+    os.environ["CUDA_VISIBLE_DEVICES"] = "-1"  # GPU 사용 비활성화
+    ###########################################################################
+
     db_connect = None
     try:
         db_connect = get_db_connection()
@@ -309,6 +325,19 @@ def predict_janhgae_grade_spine(save_path):
         
 # t4/predict_arms: 장해부위 팔 예측
 def predict_janhgae_grade_arms(save_path):
+    
+    # (test용) GPU 사용 제한 ##################################################
+    import multiprocessing
+    import os
+
+    try:
+        multiprocessing.set_start_method('spawn', force=True)
+    except RuntimeError:
+        pass
+
+    os.environ["CUDA_VISIBLE_DEVICES"] = "-1"  # GPU 사용 비활성화
+    ###########################################################################
+
     db_connect = None
     try:
         db_connect = get_db_connection()
@@ -481,7 +510,7 @@ with DAG(
     t5 = PythonOperator(
         task_id="predict_janhgae_grade_legs",
         python_callable=predict_janhgae_grade_legs,
-        op_args=["AutogluonModels/ag-20250205_161832"] # 장해부위 다리 예측모델 저장경로
+        op_args=["AutogluonModels/ag-20250205_161832"] # 장해부위 다리 예측모델 저장경로 
     )
 
     t6 = PythonOperator(

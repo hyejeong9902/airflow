@@ -1,7 +1,14 @@
 venv/
 .venv/
+
 .env
+
 venv_py311/
+
 km-bert_test/*.safetensors
+
 __pycache__/
 *.pyc
+
+logs/
+AutogluonModels/

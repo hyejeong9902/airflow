@@ -218,7 +218,7 @@ def load_model_predict(df, num, save_path):
         os.environ["CUDA_VISIBLE_DEVICES"] = "-1"
 
         # 모델 로드(부위별 모델 불러오기)
-        predictor = TabularPredictor.load(path="/opt/airflow/"+save_path,)
+        predictor = TabularPredictor.load(path="/opt/airflow/"+save_path)
 
         # 예측에서 제외할 컬럼
         del_col = ['WONBU_NO', 'BUWI_8', 'BUWI_9', 'BUWI_10', 'FINAL_JANGHAE_GRADE', 'FIRST_INPUT_ILSI', 'LAST_CHANGE_ILSI']
@@ -325,7 +325,7 @@ def predict_janhgae_grade_spine(save_path):
         
 # t4/predict_arms: 장해부위 팔 예측
 def predict_janhgae_grade_arms(save_path):
-    
+
     # (test용) GPU 사용 제한 ##################################################
     import multiprocessing
     import os

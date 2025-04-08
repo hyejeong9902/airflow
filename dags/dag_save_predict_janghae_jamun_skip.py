@@ -498,13 +498,19 @@ with DAG(
     t3 = PythonOperator(
         task_id="predict_janhgae_grade_spine",
         python_callable=predict_janhgae_grade_spine,
-        op_args=["AutogluonModels/ag-20250201_074554"] # 장해부위 척주 예측모델 저장경로
+        op_args=["AutogluonModels/ag-20250201_074554"], # 장해부위 척주 예측모델 저장경로
+        executor_config={
+            "isolation_level": "process"
+        }
     )
     
     t4 = PythonOperator(
         task_id="predict_janhgae_grade_arms",
         python_callable=predict_janhgae_grade_arms,
-        op_args=["AutogluonModels/ag-20250203_182925"] # 장해부위 팔 예측모델 저장경로
+        op_args=["AutogluonModels/ag-20250203_182925"], # 장해부위 팔 예측모델 저장경로
+        executor_config={
+            "isolation_level": "process"
+        }
     )
 
     t5 = PythonOperator(

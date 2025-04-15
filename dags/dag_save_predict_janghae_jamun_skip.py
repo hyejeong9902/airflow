@@ -214,11 +214,15 @@ def load_model_predict(df, num, save_path):
         # (*)멀티프로세싱 제한 설정 
         os.environ["OMP_NUM_THREADS"] = "1"
         os.environ["OPENBLAS_NUM_THREADS"] = "1"
+        os.environ["MKL_NUM_THREADS"] = "1"
+        os.environ["VECLIB_MAXIMUM_THREADS"] = "1"
+        os.environ["NUMEXPR_NUM_THREADS"] = "1"
         # (*)GPU 사용 비활성화
         os.environ["CUDA_VISIBLE_DEVICES"] = "-1"
 
         # 모델 로드(부위별 모델 불러오기)
-        predictor = TabularPredictor.load(path="/opt/airflow/"+save_path)
+        # AutoGluon 자체의 병렬 처리 제한 verbosity 삭제
+        predictor = TabularPredictor.load(path="/opt/airflow/"+save_path,verbosity=0)
 
         # 예측에서 제외할 컬럼
         del_col = ['WONBU_NO', 'BUWI_8', 'BUWI_9', 'BUWI_10', 'FINAL_JANGHAE_GRADE', 'FIRST_INPUT_ILSI', 'LAST_CHANGE_ILSI']
@@ -282,15 +286,8 @@ def update_prediction_results(conn, df, num):
 def predict_janhgae_grade_spine(save_path):
 
     # (test용) GPU 사용 제한 ##################################################
-    import multiprocessing
     import os
-
-    try:
-        multiprocessing.set_start_method('spawn', force=True)
-    except RuntimeError:
-        pass
-
-    os.environ["CUDA_VISIBLE_DEVICES"] = "-1"  # GPU 사용 비활성화
+    os.environ["CUDA_VISIBLE_DEVICES"] = "-1"
     ###########################################################################
 
     db_connect = None
@@ -327,15 +324,8 @@ def predict_janhgae_grade_spine(save_path):
 def predict_janhgae_grade_arms(save_path):
 
     # (test용) GPU 사용 제한 ##################################################
-    import multiprocessing
     import os
-
-    try:
-        multiprocessing.set_start_method('spawn', force=True)
-    except RuntimeError:
-        pass
-
-    os.environ["CUDA_VISIBLE_DEVICES"] = "-1"  # GPU 사용 비활성화
+    os.environ["CUDA_VISIBLE_DEVICES"] = "-1"
     ###########################################################################
 
     db_connect = None
@@ -500,7 +490,7 @@ with DAG(
         python_callable=predict_janhgae_grade_spine,
         op_args=["AutogluonModels/ag-20250201_074554"], # 장해부위 척주 예측모델 저장경로
         executor_config={
-            "isolation_level": "process"
+            "isolation_level": "none"
         }
     )
     
@@ -509,7 +499,7 @@ with DAG(
         python_callable=predict_janhgae_grade_arms,
         op_args=["AutogluonModels/ag-20250203_182925"], # 장해부위 팔 예측모델 저장경로
         executor_config={
-            "isolation_level": "process"
+            "isolation_level": "none"
         }
     )
 

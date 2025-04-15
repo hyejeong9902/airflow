@@ -74,7 +74,7 @@ def make_predict_data():
             "LAST_CHANGE_ILSI" DATE
         );"""
 
-        # 1. 원천데이터에서 예측 대상자 불러오기(필터링 조건 수정 필요)/일 300명
+        # 1. 원천데이터에서 예측 대상자 불러오기(필터링 조건 수정 필요)/일 300명 / 필터링 정보 확인 필요
         # 매일 자정 수행된다고 가정했을 때(schedule_interval="@daily") 하루 전에 들어온 데이터 활용("LAST_CHANGE_ILSI"= CURRENT_DATE - 1')
         # (as-is) 주치의소견 테이블에서 LAST_CHANGE_ILSI가 하루 전(2025-01-01)인 경우(주치의 소견에 장해등급 정보가 있으면 신청을 한 사람으로 가정)
         with db_connect.cursor() as cur:
@@ -211,18 +211,17 @@ def load_model_predict(df, num, save_path):
         import os #(*)
         from autogluon.tabular import TabularPredictor
 
-        # (*)멀티프로세싱 제한 설정 
-        os.environ["OMP_NUM_THREADS"] = "1"
-        os.environ["OPENBLAS_NUM_THREADS"] = "1"
-        os.environ["MKL_NUM_THREADS"] = "1"
-        os.environ["VECLIB_MAXIMUM_THREADS"] = "1"
-        os.environ["NUMEXPR_NUM_THREADS"] = "1"
-        # (*)GPU 사용 비활성화
-        os.environ["CUDA_VISIBLE_DEVICES"] = "-1"
+        # # (*)멀티프로세싱 제한 설정 
+        # os.environ["OMP_NUM_THREADS"] = "1"
+        # os.environ["OPENBLAS_NUM_THREADS"] = "1"
+        # os.environ["MKL_NUM_THREADS"] = "1"
+        # os.environ["VECLIB_MAXIMUM_THREADS"] = "1"
+        # os.environ["NUMEXPR_NUM_THREADS"] = "1"
+        # # (*)GPU 사용 비활성화
+        # os.environ["CUDA_VISIBLE_DEVICES"] = "-1"
 
         # 모델 로드(부위별 모델 불러오기)
-        # AutoGluon 자체의 병렬 처리 제한 verbosity 삭제
-        predictor = TabularPredictor.load(path="/opt/airflow/"+save_path,verbosity=0)
+        predictor = TabularPredictor.load(path="/opt/airflow/"+save_path)
 
         # 예측에서 제외할 컬럼
         del_col = ['WONBU_NO', 'BUWI_8', 'BUWI_9', 'BUWI_10', 'FINAL_JANGHAE_GRADE', 'FIRST_INPUT_ILSI', 'LAST_CHANGE_ILSI']
@@ -284,13 +283,8 @@ def update_prediction_results(conn, df, num):
 
 # t3/predict_spine: 장해부위 척주(8) 예측
 def predict_janhgae_grade_spine(save_path):
-
-    # (test용) GPU 사용 제한 ##################################################
-    import os
-    os.environ["CUDA_VISIBLE_DEVICES"] = "-1"
-    ###########################################################################
-
     db_connect = None
+
     try:
         db_connect = get_db_connection()
         # 데이터 불러오기
@@ -322,13 +316,8 @@ def predict_janhgae_grade_spine(save_path):
         
 # t4/predict_arms: 장해부위 팔 예측
 def predict_janhgae_grade_arms(save_path):
-
-    # (test용) GPU 사용 제한 ##################################################
-    import os
-    os.environ["CUDA_VISIBLE_DEVICES"] = "-1"
-    ###########################################################################
-
     db_connect = None
+
     try:
         db_connect = get_db_connection()
         # 데이터 불러오기
@@ -488,19 +477,13 @@ with DAG(
     t3 = PythonOperator(
         task_id="predict_janhgae_grade_spine",
         python_callable=predict_janhgae_grade_spine,
-        op_args=["AutogluonModels/ag-20250201_074554"], # 장해부위 척주 예측모델 저장경로
-        executor_config={
-            "isolation_level": "none"
-        }
+        op_args=["AutogluonModels/ag-20250201_074554"] # 장해부위 척주 예측모델 저장경로
     )
     
     t4 = PythonOperator(
         task_id="predict_janhgae_grade_arms",
         python_callable=predict_janhgae_grade_arms,
-        op_args=["AutogluonModels/ag-20250203_182925"], # 장해부위 팔 예측모델 저장경로
-        executor_config={
-            "isolation_level": "none"
-        }
+        op_args=["AutogluonModels/ag-20250203_182925"] # 장해부위 팔 예측모델 저장경로
     )
 
     t5 = PythonOperator(

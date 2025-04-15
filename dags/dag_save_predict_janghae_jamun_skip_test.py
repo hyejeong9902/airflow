@@ -1,4 +1,3 @@
-
 import psycopg2
 import psycopg2.extras as extras
 import numpy as np
@@ -229,7 +228,7 @@ def load_model_predict(df, num, save_path):
 
         # 모델 로드(부위별 모델 불러오기)
         # AutoGluon 자체의 병렬 처리 제한 verbosity 삭제
-        predictor = TabularPredictor.load(path="/opt/airflow/"+save_path)
+        predictor = TabularPredictor.load(path="/opt/airflow/"+save_path, verbosity=0)
 
         # 예측에서 제외할 컬럼
         del_col = ['WONBU_NO', 'BUWI_8', 'BUWI_9', 'BUWI_10', 'FINAL_JANGHAE_GRADE', 'FIRST_INPUT_ILSI', 'LAST_CHANGE_ILSI']
@@ -253,28 +252,14 @@ def load_model_predict(df, num, save_path):
                 df_drop.loc[df_drop[col].notna(),col] = df_drop.loc[df_drop[col].notna(),col].astype('float')
             elif col in object_col:
                 df_drop.loc[df_drop[col].notna(),col] = df_drop.loc[df_drop[col].notna(),col].astype('str')
-        
-        # 예측값 및 예측확률 계산
-        #pre = predictor.predict(df_drop) 
-        #pre_proba = predictor.predict_proba(df_drop)
 
          # 스레드 및 프로세스 수를 명시적으로 1로 설정
         import torch
         if hasattr(torch, 'set_num_threads'):
             torch.set_num_threads(1)
         
-        # 모든 병렬 처리 옵션을 비활성화
-        pre = predictor.predict(df_drop, pred_kwargs={
-            "num_cpus": 1,
-            "num_gpus": 0,
-            "disable_parallel": True
-        })
-        
-        pre_proba = predictor.predict_proba(df_drop, pred_kwargs={
-            "num_cpus": 1, 
-            "num_gpus": 0,
-            "disable_parallel": True
-        })
+        pre = predictor.predict(df_drop) 
+        pre_proba = predictor.predict_proba(df_drop)
 
         # 임계값 설정 - 클래스 간 확률차이 계산
         positive_class = "14"

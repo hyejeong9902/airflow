@@ -489,14 +489,14 @@ default_args = {
 }
 # DAG 정의
 with DAG(
-    dag_id="dag_save_predict_janghae_jamun_skip",
+    dag_id="dag_save_predict_janghae_jamun_skip_test",
     default_args=default_args,
-    start_date=pendulum.datetime(2025, 3, 1, tz="Asia/Seoul"),
-    description='predict_janghae_jamun_skip',
+    start_date=pendulum.datetime(2025, 4, 1, tz="Asia/Seoul"),
+    description='predict_janghae_jamun_skip_multiprocessing_test',
     #schedule="0 0 * * *", # 매일 자정 수행 또는 schedule_interval="@daily"
     schedule_interval=None, # schedule 지정 시 삭제, 또는 schedule_interval="@daily" 로 지정
     catchup=False,
-    tags=['predict']
+    tags=['multiprocessing_test']
 ) as dag:
     
     t1 = PythonOperator(

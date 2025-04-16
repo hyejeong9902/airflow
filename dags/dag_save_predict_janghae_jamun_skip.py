@@ -90,24 +90,24 @@ def make_predict_data():
         # 매일 자정 수행된다고 가정했을 때(schedule_interval="@daily") 하루 전에 들어온 데이터 활용("LAST_CHANGE_ILSI"= CURRENT_DATE - 1')
         # (as-is) 주치의소견 테이블에서 LAST_CHANGE_ILSI가 하루 전(2025-01-01)인 경우(주치의 소견에 장해등급 정보가 있으면 신청을 한 사람으로 가정)
         with db_connect.cursor() as cur:
-            AAA200MT = pd.read_sql_query('SELECT * FROM "AAA200MT" WHERE "LAST_CHANGE_ILSI"=\'2025-01-01\'', db_connect) # "LAST_CHANGE_ILSI"= CURRENT_DATE - 1'
-            predict_wonbu = ', '.join(f"'{w}'" for w in set(AAA200MT["WONBU_NO"].unique()))
-
+            AAA200MT = pd.read_sql_query('SELECT "WONBU_NO" FROM "AAA200MT" WHERE "LAST_CHANGE_ILSI"=\'2025-01-01\'', db_connect) # "LAST_CHANGE_ILSI"= CURRENT_DATE - 1'
             # 빈 데이터셋 체크
-            if not predict_wonbu:
+            if len(AAA200MT)==0:
                 print("예측 대상자가 없습니다.")
                 db_connect.close()
-                return 
+                return
+            
+            base_query = '''SELECT * FROM "{table}" WHERE "WONBU_NO" IN (SELECT "WONBU_NO" FROM "AAA200MT" WHERE "LAST_CHANGE_ILSI" = '2025-01-01')'''
         
             # 원천데이터 테이블에서 새로 추가할 원부 정보만 추출(나머지 테이블에서 받아오기) / 평균 300명(일)
-            AAA260MT = pd.read_sql_query(f'SELECT * FROM "AAA260MT" WHERE "WONBU_NO" IN ({predict_wonbu})', db_connect)
-            AAA010MT = pd.read_sql_query(f'SELECT * FROM "AAA010MT" WHERE "WONBU_NO" in ({predict_wonbu})', db_connect)
-            AAA050DT = pd.read_sql_query(f'SELECT * FROM "AAA050DT" WHERE "WONBU_NO" in ({predict_wonbu})', db_connect)
-            AAA230MT = pd.read_sql_query(f'SELECT * FROM "AAA230MT" WHERE "WONBU_NO" in ({predict_wonbu})', db_connect)
-            AAA460MT = pd.read_sql_query(f'SELECT * FROM "AAA460MT" WHERE "WONBU_NO" in ({predict_wonbu})', db_connect)
-            SURGERY = pd.read_sql_query(f'SELECT * FROM "SURGERY" WHERE "WONBU_NO" in ({predict_wonbu})', db_connect)
-            EXAM = pd.read_sql_query(f'SELECT * FROM "EXAM" WHERE "WONBU_NO" in ({predict_wonbu})', db_connect)
-            BOJOGI = pd.read_sql_query(f'SELECT * FROM "BOJOGI" WHERE "WONBU_NO" in ({predict_wonbu})', db_connect)
+            AAA260MT = pd.read_sql_query(base_query.format(table="AAA260MT"), db_connect)
+            AAA010MT = pd.read_sql_query(base_query.format(table="AAA010MT"), db_connect)
+            AAA050DT = pd.read_sql_query(base_query.format(table="AAA050DT"), db_connect)
+            AAA230MT = pd.read_sql_query(base_query.format(table="AAA230MT"), db_connect)
+            AAA460MT = pd.read_sql_query(base_query.format(table="AAA460MT"), db_connect)
+            SURGERY  = pd.read_sql_query(base_query.format(table="SURGERY"), db_connect)
+            EXAM     = pd.read_sql_query(base_query.format(table="EXAM"), db_connect)
+            BOJOGI   = pd.read_sql_query(base_query.format(table="BOJOGI"), db_connect)
     
         # 2. 테이블별 전처리
         # AAA260MT_급여원부정보 전처리

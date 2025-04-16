@@ -217,8 +217,7 @@ def make_predict_data():
     finally:
         db_connect.close()
 
-# t3 ~ t5
-# 스크립트 파일 생성
+# BashOperator 수행을 위한 스크립트 파일 생성
 scripts_dir = "/opt/airflow/scripts"
 os.makedirs(scripts_dir, exist_ok=True)
 
@@ -247,16 +246,16 @@ def get_db_connection():
 
 
 # 예측값 DB UPDATE 함수
-def update_prediction_results(conn, df, num):
+def update_prediction_results(conn, df):
     try:
-        update_query = f\"\"\"UPDATE "JANGHAE_JAMUN_SKIP_PREDICT_DATA" SET "BUWI_{num}" = %s WHERE "WONBU_NO" = %s\"\"\"
-        data_to_update = list(zip(df[f"BUWI_{num}"].astype(str), df["WONBU_NO"].astype(str)))
+        update_query = """UPDATE "JANGHAE_JAMUN_SKIP_PREDICT_DATA" SET "BUWI_8" = %s WHERE "WONBU_NO" = %s"""
+        data_to_update = list(zip(df["BUWI_8"].astype(str), df["WONBU_NO"].astype(str)))
         with conn.cursor() as cur:
             extras.execute_batch(cur, update_query, data_to_update)
             conn.commit()
     except Exception as e:
         conn.rollback()
-        print(f"Error updating BUWI_{num}: {e}")
+        print(f"Error updating BUWI_8: {e}")
         raise
 
 # 메인 실행 함수
@@ -273,14 +272,13 @@ def predict_janhgae_grade_spine():
             print("예측할 데이터가 없습니다.")
             return
         
-        # 사용하지 않는 변수 제거(del_col로 합치기)
-        DF_BUWI8 = DF.drop(columns=["GEUNROJA_FG", "JONGSAJA_JIWI_CD", "GY_HYEONGTAE_CD",
-                                   "SANGSE_SANGBYEONG_NM", "SANGBYEONG_CD", "MAIN_SANGSE_SANGBYEONG_NM", "MAIN_SANGBYEONG_CD_MAJOR",
-                                   "GYOTONGSAGO_YN"])
-        
-        # 예측에서 제외할 컬럼(del_col로 합치기)
-        del_col = ['WONBU_NO', 'BUWI_8', 'BUWI_9', 'BUWI_10', 'FINAL_JANGHAE_GRADE', 'FIRST_INPUT_ILSI', 'LAST_CHANGE_ILSI']
-        df_drop = DF_BUWI8.drop(columns=del_col)
+        # 예측에서 제외할 컬럼
+        del_col = ['WONBU_NO','BUWI_8', 'BUWI_9', 'BUWI_10', 'FINAL_JANGHAE_GRADE', 'FIRST_INPUT_ILSI', 'LAST_CHANGE_ILSI'
+                   # 장해부위 척주 예측에 사용되지 않는 변수 
+                   'GEUNROJA_FG', 'JONGSAJA_JIWI_CD', 'GY_HYEONGTAE_CD',
+                   'SANGSE_SANGBYEONG_NM', 'SANGBYEONG_CD', 'MAIN_SANGSE_SANGBYEONG_NM', 'MAIN_SANGBYEONG_CD_MAJOR',
+                   'GYOTONGSAGO_YN']
+        df_drop = DF.drop(columns=del_col)
         
         # 데이터 타입 확인
         int_col = ['AGE', 'YOYANG_ILSU', 'SANGBYEONG_NUNIQUE']
@@ -311,7 +309,6 @@ def predict_janhgae_grade_spine():
         positive_class = "14"
         negative_class = "00"
         pre_proba["diff"] = pre_proba[positive_class] - pre_proba[negative_class]
-        
         pre_series = pre.copy()
         mask = (pre_series == positive_class) & (pre_proba["diff"] < 0.5) # threshold=0.5
         pre_series[mask] = negative_class
@@ -321,12 +318,12 @@ def predict_janhgae_grade_spine():
         
         # 원본 WONBU_NO와 결합
         update_df = pd.DataFrame({
-            "WONBU_NO": DF_BUWI8["WONBU_NO"],
+            "WONBU_NO": DF["WONBU_NO"],
             "BUWI_8": result_df["BUWI_8"]
         })
         
         # 테이블에 예측값 업데이트
-        update_prediction_results(db_connect, update_df, 8)
+        update_prediction_results(db_connect, update_df)
         
         print("장해부위 척주 예측 완료")
         
@@ -366,16 +363,16 @@ def get_db_connection():
         port="5432")
 
 # 예측값 DB UPDATE 함수
-def update_prediction_results(conn, df, num):
+def update_prediction_results(conn, df):
     try:
-        update_query = f\"\"\"UPDATE "JANGHAE_JAMUN_SKIP_PREDICT_DATA" SET "BUWI_{num}" = %s WHERE "WONBU_NO" = %s\"\"\"
-        data_to_update = list(zip(df[f"BUWI_{num}"].astype(str), df["WONBU_NO"].astype(str)))
+        update_query = """UPDATE "JANGHAE_JAMUN_SKIP_PREDICT_DATA" SET "BUWI_9" = %s WHERE "WONBU_NO" = %s"""
+        data_to_update = list(zip(df["BUWI_9"].astype(str), df["WONBU_NO"].astype(str)))
         with conn.cursor() as cur:
             extras.execute_batch(cur, update_query, data_to_update)
             conn.commit()
     except Exception as e:
         conn.rollback()
-        print(f"Error updating BUWI_{num}: {e}")
+        print(f"Error updating BUWI_9: {e}")
         raise
 
 # 메인 실행 함수
@@ -392,12 +389,11 @@ def predict_janhgae_grade_arms():
             print("예측할 데이터가 없습니다.")
             return
         
-        # 사용하지 않는 변수 제거
-        DF_BUWI9 = DF.drop(columns=["CODE_NM","JONGSAJA_JIWI_CD"])
-        
         # 예측에서 제외할 컬럼
-        del_col = ['WONBU_NO', 'BUWI_8', 'BUWI_9', 'BUWI_10', 'FINAL_JANGHAE_GRADE', 'FIRST_INPUT_ILSI', 'LAST_CHANGE_ILSI']
-        df_drop = DF_BUWI9.drop(columns=del_col)
+        del_col = ['WONBU_NO', 'BUWI_8', 'BUWI_9', 'BUWI_10', 'FINAL_JANGHAE_GRADE', 'FIRST_INPUT_ILSI', 'LAST_CHANGE_ILSI',
+                   # 장해부위 팔 예측에 사용되지 않는 변수
+                   'CODE_NM','JONGSAJA_JIWI_CD']
+        df_drop = DF.drop(columns=del_col)
         
         # 데이터 타입 확인
         int_col = ['AGE', 'YOYANG_ILSU', 'SANGBYEONG_NUNIQUE']
@@ -427,8 +423,7 @@ def predict_janhgae_grade_arms():
         # 임계값 설정 - 클래스 간 확률차이 계산
         positive_class = "14"
         negative_class = "00"
-        pre_proba["diff"] = pre_proba[positive_class] - pre_proba[negative_class]
-        
+        pre_proba["diff"] = pre_proba[positive_class] - pre_proba[negative_class]        
         pre_series = pre.copy()
         mask = (pre_series == positive_class) & (pre_proba["diff"] < 0.5) # threshold=0.5
         pre_series[mask] = negative_class
@@ -438,12 +433,12 @@ def predict_janhgae_grade_arms():
         
         # 원본 WONBU_NO와 결합
         update_df = pd.DataFrame({
-            "WONBU_NO": DF_BUWI9["WONBU_NO"],
+            "WONBU_NO": DF["WONBU_NO"],
             "BUWI_9": result_df["BUWI_9"]
         })
         
         # 테이블에 예측값 업데이트
-        update_prediction_results(db_connect, update_df, 9)
+        update_prediction_results(db_connect, update_df)
         
         print("장해부위 팔 예측 완료")
         
@@ -483,16 +478,16 @@ def get_db_connection():
         port="5432")
 
 # 예측값 DB UPDATE 함수
-def update_prediction_results(conn, df, num):
+def update_prediction_results(conn, df):
     try:
-        update_query = f\"\"\"UPDATE "JANGHAE_JAMUN_SKIP_PREDICT_DATA" SET "BUWI_{num}" = %s WHERE "WONBU_NO" = %s\"\"\"
-        data_to_update = list(zip(df[f"BUWI_{num}"].astype(str), df["WONBU_NO"].astype(str)))
+        update_query = """UPDATE "JANGHAE_JAMUN_SKIP_PREDICT_DATA" SET "BUWI_10" = %s WHERE "WONBU_NO" = %s"""
+        data_to_update = list(zip(df["BUWI_10"].astype(str), df["WONBU_NO"].astype(str)))
         with conn.cursor() as cur:
             extras.execute_batch(cur, update_query, data_to_update)
             conn.commit()
     except Exception as e:
         conn.rollback()
-        print(f"Error updating BUWI_{num}: {e}")
+        print(f"Error updating BUWI_10: {e}")
         raise
 
 # 메인 실행 함수
@@ -509,14 +504,13 @@ def predict_janhgae_grade_legs():
             print("예측할 데이터가 없습니다.")
             return
         
-        # 사용하지 않는 변수 제거
-        DF_BUWI10 = DF.drop(columns=["GEUNROJA_FG","JONGSAJA_JIWI_CD",
-                                   "SANGSE_SANGBYEONG_NM","MAIN_SANGBYEONG_CD_MAJOR",
-                                   "GYOTONGSAGO_YN","JUCHIUI_SOGYEON"])
-        
         # 예측에서 제외할 컬럼
-        del_col = ['WONBU_NO', 'BUWI_8', 'BUWI_9', 'BUWI_10', 'FINAL_JANGHAE_GRADE', 'FIRST_INPUT_ILSI', 'LAST_CHANGE_ILSI']
-        df_drop = DF_BUWI10.drop(columns=del_col)
+        del_col = ['WONBU_NO', 'BUWI_8', 'BUWI_9', 'BUWI_10', 'FINAL_JANGHAE_GRADE', 'FIRST_INPUT_ILSI', 'LAST_CHANGE_ILSI',
+                   # 장해부위 다리 예측에 사용되지 않는 변수
+                   'GEUNROJA_FG','JONGSAJA_JIWI_CD',
+                   'SANGSE_SANGBYEONG_NM','MAIN_SANGBYEONG_CD_MAJOR',
+                   'GYOTONGSAGO_YN','JUCHIUI_SOGYEON']
+        df_drop = DF.drop(columns=del_col)
         
         # 데이터 타입 확인
         int_col = ['AGE', 'YOYANG_ILSU', 'SANGBYEONG_NUNIQUE']
@@ -547,7 +541,6 @@ def predict_janhgae_grade_legs():
         positive_class = "14"
         negative_class = "00"
         pre_proba["diff"] = pre_proba[positive_class] - pre_proba[negative_class]
-        
         pre_series = pre.copy()
         mask = (pre_series == positive_class) & (pre_proba["diff"] < 0.5) # threshold=0.5
         pre_series[mask] = negative_class
@@ -557,12 +550,12 @@ def predict_janhgae_grade_legs():
         
         # 원본 WONBU_NO와 결합
         update_df = pd.DataFrame({
-            "WONBU_NO": DF_BUWI10["WONBU_NO"],
+            "WONBU_NO": DF["WONBU_NO"],
             "BUWI_10": result_df["BUWI_10"]
         })
         
         # 테이블에 예측값 업데이트
-        update_prediction_results(db_connect, update_df, 10)
+        update_prediction_results(db_connect, update_df)
         
         print("장해부위 다리 예측 완료")
         
@@ -626,7 +619,7 @@ def predict_final_grade():
         condition5_3 = (DF['GRADE_LIST'].apply(lambda x: len([i for i in x if (i <= '13') & (i not in ['00','14'])])>=2))
         DF.loc[~condition5_1&~condition5_2&condition5_3,'FINAL_JANGHAE_GRADE'] = DF.loc[~condition5_1&~condition5_2&condition5_3,'GRADE_LIST'].apply(lambda x: '01' if [i for i in x if i not in ['00','14']][0]<='01' else str(int([i for i in x if i not in ['00','14']][0])-1).zfill(2))
 
-        DF.drop(['GRADE_LIST'],axis=1)
+        DF = DF.drop(['GRADE_LIST'],axis=1)
 
         # 업뎃 시 필요없는 컬럼 제거
         update_df = DF[['WONBU_NO', 'FINAL_JANGHAE_GRADE']]
@@ -708,5 +701,5 @@ with DAG(
         op_args=["end predict"]
     )
 
-    t1 >> t2 >> t3 >> t4 >> t5 >> t6 >> t7
-    # t1 >> t2 >> [t3 >> t4 >> t5] >> t6 >> t7
+    #t1 >> t2 >> t3 >> t4 >> t5 >> t6 >> t7
+    t1 >> t2 >> [t3 >> t4 >> t5] >> t6 >> t7

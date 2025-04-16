@@ -7,9 +7,9 @@ RUN apt-get update && apt-get install -y libgomp1
 # 이후 airflow 유저로 돌아오기
 USER airflow 
 
-# autogluon 설치
+# autogluon==1.1.1 설치
 COPY requirements.txt /requirements.txt
 RUN pip install --no-cache-dir -r /requirements.txt
 
-# PyTorch CPU 전용 버전 명시적 설치
+# PyTorch CPU 전용 버전 명시적 설치(원래는 gpu 버전 설치해서 실행)
 RUN pip install --no-cache-dir torch==2.3.1 torchvision==0.18.1 torchaudio==2.3.1 --extra-index-url https://download.pytorch.org/whl/cpu

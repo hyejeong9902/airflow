@@ -90,14 +90,15 @@ def make_predict_data():
         # 매일 자정 수행된다고 가정했을 때(schedule_interval="@daily") 하루 전에 들어온 데이터 활용("LAST_CHANGE_ILSI"= CURRENT_DATE - 1')
         # (as-is) 주치의소견 테이블에서 LAST_CHANGE_ILSI가 하루 전(2025-01-01)인 경우(주치의 소견에 장해등급 정보가 있으면 신청을 한 사람으로 가정)
         with db_connect.cursor() as cur:
-            AAA200MT = pd.read_sql_query('SELECT * FROM "AAA200MT" WHERE "LAST_CHANGE_ILSI"=\'2025-01-01\'', db_connect) # "LAST_CHANGE_ILSI"= CURRENT_DATE - 1'
+            #AAA200MT = pd.read_sql_query('SELECT * FROM "AAA200MT" WHERE "LAST_CHANGE_ILSI"=\'2025-01-01\'', db_connect) # "LAST_CHANGE_ILSI"= CURRENT_DATE - 1'
+            AAA200MT = pd.read_sql_query('SELECT * FROM "AAA200MT" WHERE "WONBU_NO"=\'3257\'', db_connect)
             # 빈 데이터셋 체크
             if len(AAA200MT)==0:
                 print("예측 대상자가 없습니다.")
                 db_connect.close()
                 return
             
-            base_query = '''SELECT * FROM "{table}" WHERE "WONBU_NO" IN (SELECT "WONBU_NO" FROM "AAA200MT" WHERE "LAST_CHANGE_ILSI" = '2025-01-01')'''
+            base_query = '''SELECT * FROM "{table}" WHERE "WONBU_NO" IN (SELECT "WONBU_NO" FROM "AAA200MT" WHERE "WONBU_NO" = '3257')'''
         
             # 원천데이터 테이블에서 새로 추가할 원부 정보만 추출(나머지 테이블에서 받아오기) / 평균 300명(일)
             AAA260MT = pd.read_sql_query(base_query.format(table="AAA260MT"), db_connect)

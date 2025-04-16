@@ -6,23 +6,10 @@ import os
 from airflow import DAG
 import pendulum
 import datetime
-from airflow.operators.python import PythonOperator
-from airflow.operators.bash import BashOperator
+from airflow.operators.python import PythonOperator 
+from dotenv import load_dotenv
 from datetime import datetime as dt
-# from dotenv import load_dotenv
 
-# # 환경 변수 load
-# load_dotenv()
-
-# # db 연결 함수
-# def get_db_connection():
-#     return psycopg2.connect(
-#         database=os.getenv('DB_NAME'),
-#         user=os.getenv('DB_USER'),
-#         password=os.getenv('DB_PASSWORD'),
-#         host=os.getenv('DB_HOST'),
-#         port=os.getenv('DB_PORT')
-#     )
 
 # t1/print_text
 def print_text(text):
@@ -216,366 +203,170 @@ def make_predict_data():
     
     finally:
         db_connect.close()
-
-# BashOperator 수행을 위한 스크립트 파일 생성
-scripts_dir = "/opt/airflow/scripts"
-os.makedirs(scripts_dir, exist_ok=True)
-
-# t3/predict_janhgae_grade_spine
-with open(f"{scripts_dir}/predict_spine.py", "w") as f:
-    f.write('''#!/usr/bin/env python
-import psycopg2
-import psycopg2.extras as extras
-import pandas as pd
-import numpy as np
-import sys
-import os
-from autogluon.tabular import TabularPredictor
-
-# 인자로 전달된 모델 경로
-save_path = sys.argv[1]
-
-# db 연결함수(환경변수 연결로 변경 필요)
-def get_db_connection():
-    return psycopg2.connect(
-        database="postgres",
-        user="wesleyquest",
-        password="Wqasdf01!",
-        host="211.218.17.10",
-        port="5432")
-
-
-# 예측값 DB UPDATE 함수
-def update_prediction_results(conn, df):
+  
+# 저장 모델 로드 및 예측값 도출 함수
+# GPU 사용가능 하다면 아래 * 표시 된 코드는 수행X
+def load_model_predict(df, num, save_path):
     try:
-        update_query = """UPDATE "JANGHAE_JAMUN_SKIP_PREDICT_DATA" SET "BUWI_8" = %s WHERE "WONBU_NO" = %s"""
-        data_to_update = list(zip(df["BUWI_8"].astype(str), df["WONBU_NO"].astype(str)))
+
+        from autogluon.tabular import TabularPredictor
+
+        # 모델 로드(부위별 모델 불러오기)
+        predictor = TabularPredictor.load(path="/opt/airflow/"+save_path)
+
+        # 예측에서 제외할 컬럼
+        del_col = ['WONBU_NO', 'BUWI_8', 'BUWI_9', 'BUWI_10', 'FINAL_JANGHAE_GRADE', 'FIRST_INPUT_ILSI', 'LAST_CHANGE_ILSI']
+        df_drop = df.drop(columns=del_col)
+
+        # 데이터 타입 확인
+        int_col = ['AGE', 'YOYANG_ILSU', 'SANGBYEONG_NUNIQUE']
+        float_col = ['IPWON_BIYUL', 'SUGA_CD_COUNT', 'EXAM_CD_COUNT']
+        category_col = ['SEX', 'JAEHAEBALSAENG_HYEONGTAE_FG_CD', 'GEUNROJA_FG', 'JONGSAJA_JIWI_CD', 'GY_HYEONGTAE_CD', 'GYOTONGSAGO_YN', 'JANGHAE_GRADE']
+        object_col = ['CODE_NM','JIKJONG_CD',
+                      'SANGHAE_BUWI_CD', 'SANGBYEONG_CD', 'SANGSE_SANGBYEONG_NM','SANGBYEONG_CD_MAJOR', 'SANGBYEONG_CD_MIDDLE', 'SANGBYEONG_CD_SMALL',
+                      'MAIN_SANGHAE_BUWI_CD', 'MAIN_SANGBYEONG_CD','MAIN_SANGSE_SANGBYEONG_NM', 'MAIN_SANGBYEONG_CD_MAJOR','MAIN_SANGBYEONG_CD_MIDDLE', 'MAIN_SANGBYEONG_CD_SMALL',
+                      'JAEHAE_WONIN','SUGA_CD', 'EXAM_CD', 'BOJOGI_CD', 'JUCHIUI_SOGYEON',
+                      'JANGHAE_GRADE_old']
+        for col in df_drop.columns:
+            if col in int_col:
+                df_drop[col] = df_drop[col].astype('int')
+            elif col in category_col:
+                df_drop[col] = df_drop[col].astype('category')
+            elif col in float_col:
+                df_drop.loc[df_drop[col].notna(),col] = df_drop.loc[df_drop[col].notna(),col].astype('float')
+            elif col in object_col:
+                df_drop.loc[df_drop[col].notna(),col] = df_drop.loc[df_drop[col].notna(),col].astype('str')
+        
+        # 예측값 및 예측확률 계산
+        pre = predictor.predict(df_drop) 
+        pre_proba = predictor.predict_proba(df_drop)
+
+        # 임계값 설정 - 클래스 간 확률차이 계산
+        positive_class = "14"
+        negative_class = "00"
+        pre_proba["diff"] = pre_proba[positive_class] - pre_proba[negative_class]
+
+        pre_series = pre.copy()
+        mask = (pre_series == positive_class) & (pre_proba["diff"] < 0.5) # threshold=0.5
+        pre_series[mask] = negative_class
+
+        result_grade = pd.DataFrame({f"BUWI_{num}": pre_series})
+
+        return result_grade
+    
+    except Exception as e:
+        print(f"Error in prediction for BUWI_{num}: {e}")
+        return pd.DataFrame({f"BUWI_{num}": [None] * len(df)})
+    
+# 예측값 DB UPDATE 함수
+def update_prediction_results(conn, df, num):
+    try:
+        update_query = f"""UPDATE "JANGHAE_JAMUN_SKIP_PREDICT_DATA" SET "BUWI_{num}" = %s WHERE "WONBU_NO" = %s"""
+        data_to_update = list(zip(df[f"BUWI_{num}"].astype(str), df["WONBU_NO"].astype(str)))
+        # 일괄 업뎃 수행
         with conn.cursor() as cur:
             extras.execute_batch(cur, update_query, data_to_update)
             conn.commit()
     except Exception as e:
         conn.rollback()
-        print(f"Error updating BUWI_8: {e}")
+        print(f"Error updating BUWI_{num}: {e}")
         raise
 
-# 메인 실행 함수
-def predict_janhgae_grade_spine():
+# t3/predict_spine: 장해부위 척주(8) 예측
+def predict_janhgae_grade_spine(save_path):
     db_connect = None
+
     try:
         db_connect = get_db_connection()
         # 데이터 불러오기
         with db_connect.cursor() as cur:
             DF = pd.read_sql_query('SELECT * FROM "JANGHAE_JAMUN_SKIP_PREDICT_DATA" WHERE "LAST_CHANGE_ILSI"= CURRENT_DATE', db_connect)
-        
         # 빈 데이터셋 체크
         if len(DF) == 0:
             print("예측할 데이터가 없습니다.")
             return
-        
-        # 예측에서 제외할 컬럼
-        del_col = ['WONBU_NO','BUWI_8', 'BUWI_9', 'BUWI_10', 'FINAL_JANGHAE_GRADE', 'FIRST_INPUT_ILSI', 'LAST_CHANGE_ILSI'
-                   # 장해부위 척주 예측에 사용되지 않는 변수 
-                   'GEUNROJA_FG', 'JONGSAJA_JIWI_CD', 'GY_HYEONGTAE_CD',
-                   'SANGSE_SANGBYEONG_NM', 'SANGBYEONG_CD', 'MAIN_SANGSE_SANGBYEONG_NM', 'MAIN_SANGBYEONG_CD_MAJOR',
-                   'GYOTONGSAGO_YN']
-        df_drop = DF.drop(columns=del_col)
-        
-        # 데이터 타입 확인
-        int_col = ['AGE', 'YOYANG_ILSU', 'SANGBYEONG_NUNIQUE']
-        float_col = ['IPWON_BIYUL', 'SUGA_CD_COUNT', 'EXAM_CD_COUNT']
-        category_col = ['SEX', 'JAEHAEBALSAENG_HYEONGTAE_FG_CD', 'GEUNROJA_FG', 'JONGSAJA_JIWI_CD', 'GY_HYEONGTAE_CD', 'GYOTONGSAGO_YN', 'JANGHAE_GRADE']
-        object_col = ['CODE_NM','JIKJONG_CD',
-                     'SANGHAE_BUWI_CD', 'SANGBYEONG_CD', 'SANGSE_SANGBYEONG_NM','SANGBYEONG_CD_MAJOR', 'SANGBYEONG_CD_MIDDLE', 'SANGBYEONG_CD_SMALL',
-                     'MAIN_SANGHAE_BUWI_CD', 'MAIN_SANGBYEONG_CD','MAIN_SANGSE_SANGBYEONG_NM', 'MAIN_SANGBYEONG_CD_MAJOR','MAIN_SANGBYEONG_CD_MIDDLE', 'MAIN_SANGBYEONG_CD_SMALL',
-                     'JAEHAE_WONIN','SUGA_CD', 'EXAM_CD', 'BOJOGI_CD', 'JUCHIUI_SOGYEON',
-                     'JANGHAE_GRADE_old']
-        
-        for col in df_drop.columns:
-            if col in int_col:
-                df_drop[col] = df_drop[col].astype('int')
-            elif col in category_col:
-                df_drop[col] = df_drop[col].astype('category')
-            elif col in float_col:
-                df_drop.loc[df_drop[col].notna(),col] = df_drop.loc[df_drop[col].notna(),col].astype('float')
-            elif col in object_col:
-                df_drop.loc[df_drop[col].notna(),col] = df_drop.loc[df_drop[col].notna(),col].astype('str')
-        
-        # 모델 로드 및 예측
-        predictor = TabularPredictor.load(path=save_path)
-        pre = predictor.predict(df_drop)
-        pre_proba = predictor.predict_proba(df_drop)
-        
-        # 임계값 설정 - 클래스 간 확률차이 계산
-        positive_class = "14"
-        negative_class = "00"
-        pre_proba["diff"] = pre_proba[positive_class] - pre_proba[negative_class]
-        pre_series = pre.copy()
-        mask = (pre_series == positive_class) & (pre_proba["diff"] < 0.5) # threshold=0.5
-        pre_series[mask] = negative_class
-        
-        # 예측 결과 데이터프레임 생성
-        result_df = pd.DataFrame({f"BUWI_8": pre_series})
-        
+        # 사용하지 않는 변수 제거
+        DF_BUWI8 = DF.drop(columns=["GEUNROJA_FG", "JONGSAJA_JIWI_CD", "GY_HYEONGTAE_CD",
+                                    "SANGSE_SANGBYEONG_NM", "SANGBYEONG_CD", "MAIN_SANGSE_SANGBYEONG_NM", "MAIN_SANGBYEONG_CD_MAJOR",
+                                    "GYOTONGSAGO_YN"])
+        # 예측 - 결과 데이터 프레임 가져오기
+        result_df = load_model_predict(DF_BUWI8, 8, save_path)
         # 원본 WONBU_NO와 결합
-        update_df = pd.DataFrame({
-            "WONBU_NO": DF["WONBU_NO"],
-            "BUWI_8": result_df["BUWI_8"]
-        })
-        
+        update_df = pd.DataFrame({"WONBU_NO": DF_BUWI8["WONBU_NO"], "BUWI_8": result_df["BUWI_8"]})
         # 테이블에 예측값 업데이트
-        update_prediction_results(db_connect, update_df)
-        
+        update_prediction_results(db_connect, update_df, 8)
+
         print("장해부위 척주 예측 완료")
-        
+
     except Exception as e:
-        print(f"장해부위 척주 예측 중 오류 발생: {e}")
-        
+        print("장해부위 척주 예측 중 오류 발생")
+
     finally:
         if db_connect:
             db_connect.close()
-
-# 스크립트 실행
-if __name__ == "__main__":
-    predict_janhgae_grade_spine() # taskid
-''')
-
-# t4/predict_janhgae_grade_arms
-with open(f"{scripts_dir}/predict_arms.py", "w") as f:
-    f.write('''#!/usr/bin/env python
-import psycopg2
-import psycopg2.extras as extras
-import pandas as pd
-import numpy as np
-import sys
-import os
-from autogluon.tabular import TabularPredictor
-
-# 인자로 전달된 모델 경로
-save_path = sys.argv[1] 
-
-# db 연결함수(환경변수 연결로 변경 필요)
-def get_db_connection():
-    return psycopg2.connect(
-        database="postgres",
-        user="wesleyquest",
-        password="Wqasdf01!",
-        host="211.218.17.10",
-        port="5432")
-
-# 예측값 DB UPDATE 함수
-def update_prediction_results(conn, df):
-    try:
-        update_query = """UPDATE "JANGHAE_JAMUN_SKIP_PREDICT_DATA" SET "BUWI_9" = %s WHERE "WONBU_NO" = %s"""
-        data_to_update = list(zip(df["BUWI_9"].astype(str), df["WONBU_NO"].astype(str)))
-        with conn.cursor() as cur:
-            extras.execute_batch(cur, update_query, data_to_update)
-            conn.commit()
-    except Exception as e:
-        conn.rollback()
-        print(f"Error updating BUWI_9: {e}")
-        raise
-
-# 메인 실행 함수
-def predict_janhgae_grade_arms():
+        
+# t4/predict_arms: 장해부위 팔 예측
+def predict_janhgae_grade_arms(save_path):
     db_connect = None
+
     try:
         db_connect = get_db_connection()
         # 데이터 불러오기
         with db_connect.cursor() as cur:
             DF = pd.read_sql_query('SELECT * FROM "JANGHAE_JAMUN_SKIP_PREDICT_DATA" WHERE "LAST_CHANGE_ILSI" = CURRENT_DATE', db_connect)
-        
         # 빈 데이터셋 체크
         if len(DF) == 0:
             print("예측할 데이터가 없습니다.")
             return
-        
-        # 예측에서 제외할 컬럼
-        del_col = ['WONBU_NO', 'BUWI_8', 'BUWI_9', 'BUWI_10', 'FINAL_JANGHAE_GRADE', 'FIRST_INPUT_ILSI', 'LAST_CHANGE_ILSI',
-                   # 장해부위 팔 예측에 사용되지 않는 변수
-                   'CODE_NM','JONGSAJA_JIWI_CD']
-        df_drop = DF.drop(columns=del_col)
-        
-        # 데이터 타입 확인
-        int_col = ['AGE', 'YOYANG_ILSU', 'SANGBYEONG_NUNIQUE']
-        float_col = ['IPWON_BIYUL', 'SUGA_CD_COUNT', 'EXAM_CD_COUNT']
-        category_col = ['SEX', 'JAEHAEBALSAENG_HYEONGTAE_FG_CD', 'GEUNROJA_FG', 'JONGSAJA_JIWI_CD', 'GY_HYEONGTAE_CD', 'GYOTONGSAGO_YN', 'JANGHAE_GRADE']
-        object_col = ['CODE_NM','JIKJONG_CD',
-                     'SANGHAE_BUWI_CD', 'SANGBYEONG_CD', 'SANGSE_SANGBYEONG_NM','SANGBYEONG_CD_MAJOR', 'SANGBYEONG_CD_MIDDLE', 'SANGBYEONG_CD_SMALL',
-                     'MAIN_SANGHAE_BUWI_CD', 'MAIN_SANGBYEONG_CD','MAIN_SANGSE_SANGBYEONG_NM', 'MAIN_SANGBYEONG_CD_MAJOR','MAIN_SANGBYEONG_CD_MIDDLE', 'MAIN_SANGBYEONG_CD_SMALL',
-                     'JAEHAE_WONIN','SUGA_CD', 'EXAM_CD', 'BOJOGI_CD', 'JUCHIUI_SOGYEON',
-                     'JANGHAE_GRADE_old']
-        
-        for col in df_drop.columns:
-            if col in int_col:
-                df_drop[col] = df_drop[col].astype('int')
-            elif col in category_col:
-                df_drop[col] = df_drop[col].astype('category')
-            elif col in float_col:
-                df_drop.loc[df_drop[col].notna(),col] = df_drop.loc[df_drop[col].notna(),col].astype('float')
-            elif col in object_col:
-                df_drop.loc[df_drop[col].notna(),col] = df_drop.loc[df_drop[col].notna(),col].astype('str')
-        
-        # 모델 로드 및 예측
-        predictor = TabularPredictor.load(path=save_path)
-        pre = predictor.predict(df_drop)
-        pre_proba = predictor.predict_proba(df_drop)
-        
-        # 임계값 설정 - 클래스 간 확률차이 계산
-        positive_class = "14"
-        negative_class = "00"
-        pre_proba["diff"] = pre_proba[positive_class] - pre_proba[negative_class]        
-        pre_series = pre.copy()
-        mask = (pre_series == positive_class) & (pre_proba["diff"] < 0.5) # threshold=0.5
-        pre_series[mask] = negative_class
-        
-        # 예측 결과 데이터프레임 생성
-        result_df = pd.DataFrame({f"BUWI_9": pre_series})
-        
+        # 사용하지 않는 변수 제거
+        DF_BUWI9 = DF.drop(columns=["CODE_NM","JONGSAJA_JIWI_CD"])
+        # 예측 -결과 데이터프레임 가져오기
+        result_df = load_model_predict(DF_BUWI9, 9, save_path)
         # 원본 WONBU_NO와 결합
-        update_df = pd.DataFrame({
-            "WONBU_NO": DF["WONBU_NO"],
-            "BUWI_9": result_df["BUWI_9"]
-        })
-        
+        update_df = pd.DataFrame({"WONBU_NO": DF_BUWI9["WONBU_NO"], "BUWI_9": result_df["BUWI_9"]})
         # 테이블에 예측값 업데이트
-        update_prediction_results(db_connect, update_df)
-        
+        update_prediction_results(db_connect, update_df, 9)
+
         print("장해부위 팔 예측 완료")
-        
+
     except Exception as e:
-        print(f"장해부위 팔 예측 중 오류 발생: {e}")
+        print("장해부위 팔 예측 중 오류 발생")
         
     finally:
         if db_connect:
             db_connect.close()
 
-# 스크립트 실행
-if __name__ == "__main__":
-    predict_janhgae_grade_arms() # taskid
-''')
-
-# t5/predict_janhgae_grade_legs
-with open(f"{scripts_dir}/predict_legs.py", "w") as f:
-    f.write('''#!/usr/bin/env python
-import psycopg2
-import psycopg2.extras as extras
-import pandas as pd
-import numpy as np
-import sys
-import os
-from autogluon.tabular import TabularPredictor
-
-# 인자로 전달된 모델 경로
-save_path = sys.argv[1]
-
-# db 연결함수(환경변수 연결로 변경 필요)
-def get_db_connection():
-    return psycopg2.connect(
-        database="postgres",
-        user="wesleyquest",
-        password="Wqasdf01!",
-        host="211.218.17.10",
-        port="5432")
-
-# 예측값 DB UPDATE 함수
-def update_prediction_results(conn, df):
-    try:
-        update_query = """UPDATE "JANGHAE_JAMUN_SKIP_PREDICT_DATA" SET "BUWI_10" = %s WHERE "WONBU_NO" = %s"""
-        data_to_update = list(zip(df["BUWI_10"].astype(str), df["WONBU_NO"].astype(str)))
-        with conn.cursor() as cur:
-            extras.execute_batch(cur, update_query, data_to_update)
-            conn.commit()
-    except Exception as e:
-        conn.rollback()
-        print(f"Error updating BUWI_10: {e}")
-        raise
-
-# 메인 실행 함수
-def predict_janhgae_grade_legs():
+# t5/predict_legs: 장해부위 다리 예측
+def predict_janhgae_grade_legs(save_path):
     db_connect = None
     try:
         db_connect = get_db_connection()
         # 데이터 불러오기
         with db_connect.cursor() as cur:
             DF = pd.read_sql_query('SELECT * FROM "JANGHAE_JAMUN_SKIP_PREDICT_DATA" WHERE "LAST_CHANGE_ILSI" = CURRENT_DATE', db_connect)
-        
         # 빈 데이터셋 체크
         if len(DF) == 0:
             print("예측할 데이터가 없습니다.")
             return
-        
-        # 예측에서 제외할 컬럼
-        del_col = ['WONBU_NO', 'BUWI_8', 'BUWI_9', 'BUWI_10', 'FINAL_JANGHAE_GRADE', 'FIRST_INPUT_ILSI', 'LAST_CHANGE_ILSI',
-                   # 장해부위 다리 예측에 사용되지 않는 변수
-                   'GEUNROJA_FG','JONGSAJA_JIWI_CD',
-                   'SANGSE_SANGBYEONG_NM','MAIN_SANGBYEONG_CD_MAJOR',
-                   'GYOTONGSAGO_YN','JUCHIUI_SOGYEON']
-        df_drop = DF.drop(columns=del_col)
-        
-        # 데이터 타입 확인
-        int_col = ['AGE', 'YOYANG_ILSU', 'SANGBYEONG_NUNIQUE']
-        float_col = ['IPWON_BIYUL', 'SUGA_CD_COUNT', 'EXAM_CD_COUNT']
-        category_col = ['SEX', 'JAEHAEBALSAENG_HYEONGTAE_FG_CD', 'GEUNROJA_FG', 'JONGSAJA_JIWI_CD', 'GY_HYEONGTAE_CD', 'GYOTONGSAGO_YN', 'JANGHAE_GRADE']
-        object_col = ['CODE_NM','JIKJONG_CD',
-                     'SANGHAE_BUWI_CD', 'SANGBYEONG_CD', 'SANGSE_SANGBYEONG_NM','SANGBYEONG_CD_MAJOR', 'SANGBYEONG_CD_MIDDLE', 'SANGBYEONG_CD_SMALL',
-                     'MAIN_SANGHAE_BUWI_CD', 'MAIN_SANGBYEONG_CD','MAIN_SANGSE_SANGBYEONG_NM', 'MAIN_SANGBYEONG_CD_MAJOR','MAIN_SANGBYEONG_CD_MIDDLE', 'MAIN_SANGBYEONG_CD_SMALL',
-                     'JAEHAE_WONIN','SUGA_CD', 'EXAM_CD', 'BOJOGI_CD', 'JUCHIUI_SOGYEON',
-                     'JANGHAE_GRADE_old']
-        
-        for col in df_drop.columns:
-            if col in int_col:
-                df_drop[col] = df_drop[col].astype('int')
-            elif col in category_col:
-                df_drop[col] = df_drop[col].astype('category')
-            elif col in float_col:
-                df_drop.loc[df_drop[col].notna(),col] = df_drop.loc[df_drop[col].notna(),col].astype('float')
-            elif col in object_col:
-                df_drop.loc[df_drop[col].notna(),col] = df_drop.loc[df_drop[col].notna(),col].astype('str')
-        
-        # 모델 로드 및 예측
-        predictor = TabularPredictor.load(path=save_path)
-        pre = predictor.predict(df_drop)
-        pre_proba = predictor.predict_proba(df_drop)
-        
-        # 임계값 설정 - 클래스 간 확률차이 계산
-        positive_class = "14"
-        negative_class = "00"
-        pre_proba["diff"] = pre_proba[positive_class] - pre_proba[negative_class]
-        pre_series = pre.copy()
-        mask = (pre_series == positive_class) & (pre_proba["diff"] < 0.5) # threshold=0.5
-        pre_series[mask] = negative_class
-        
-        # 예측 결과 데이터프레임 생성
-        result_df = pd.DataFrame({f"BUWI_10": pre_series})
-        
+        # 사용하지 않는 변수 제거
+        DF_BUWI10 = DF.drop(columns=["GEUNROJA_FG","JONGSAJA_JIWI_CD",
+                                     "SANGSE_SANGBYEONG_NM","MAIN_SANGBYEONG_CD_MAJOR",
+                                     "GYOTONGSAGO_YN","JUCHIUI_SOGYEON"])
+        # 예측 = 결과 데이터프레임 가져오기
+        result_df = load_model_predict(DF_BUWI10, 10, save_path)
         # 원본 WONBU_NO와 결합
-        update_df = pd.DataFrame({
-            "WONBU_NO": DF["WONBU_NO"],
-            "BUWI_10": result_df["BUWI_10"]
-        })
-        
+        update_df = pd.DataFrame({"WONBU_NO": DF_BUWI10["WONBU_NO"], "BUWI_10": result_df["BUWI_10"]})
         # 테이블에 예측값 업데이트
-        update_prediction_results(db_connect, update_df)
-        
+        update_prediction_results(db_connect, update_df, 10)
+
         print("장해부위 다리 예측 완료")
-        
+
     except Exception as e:
-        print(f"장해부위 다리 예측 중 오류 발생: {e}")
+        print("장해부위 다리 예측 중 오류 발생")
         
     finally:
         if db_connect:
             db_connect.close()
-
-# 스크립트 실행
-if __name__ == "__main__":
-    predict_janhgae_grade_legs() # taskid
-''')
-
-# 스크립트에 실행 권한 부여
-os.chmod(f"{scripts_dir}/predict_spine.py", 0o755)
-os.chmod(f"{scripts_dir}/predict_arms.py", 0o755)
-os.chmod(f"{scripts_dir}/predict_legs.py", 0o755)
-
 
 # t6/predict_final_grade : 각 부위별 예측 기초장해등급으로 룰기반 최종장해등급 도출
 def predict_final_grade():
@@ -619,7 +410,7 @@ def predict_final_grade():
         condition5_3 = (DF['GRADE_LIST'].apply(lambda x: len([i for i in x if (i <= '13') & (i not in ['00','14'])])>=2))
         DF.loc[~condition5_1&~condition5_2&condition5_3,'FINAL_JANGHAE_GRADE'] = DF.loc[~condition5_1&~condition5_2&condition5_3,'GRADE_LIST'].apply(lambda x: '01' if [i for i in x if i not in ['00','14']][0]<='01' else str(int([i for i in x if i not in ['00','14']][0])-1).zfill(2))
 
-        DF = DF.drop(['GRADE_LIST'],axis=1)
+        DF.drop(['GRADE_LIST'],axis=1)
 
         # 업뎃 시 필요없는 컬럼 제거
         update_df = DF[['WONBU_NO', 'FINAL_JANGHAE_GRADE']]
@@ -643,7 +434,7 @@ def predict_final_grade():
         if db_connect:
             db_connect.close()
 
-############################################################################
+ ########################################################################################################
 
 # 기본 args 생성
 default_args = {
@@ -651,16 +442,16 @@ default_args = {
     #'email' : ['airflow@airflow.com'],
     'email_on_failure' : False,
 }
-
 # DAG 정의
 with DAG(
-    dag_id="dag_save_predict_janghae_jamun_skip_test",
+    dag_id="dag_save_predict_janghae_jamun_skip_old",
     default_args=default_args,
     start_date=pendulum.datetime(2025, 3, 1, tz="Asia/Seoul"),
-    description='predict_janghae_jamun_skip_test',
-    schedule_interval=None,
+    description='predict_janghae_jamun_skip_old',
+    #schedule="0 0 * * *", # 매일 자정 수행 또는 schedule_interval="@daily"
+    schedule_interval=None, # schedule 지정 시 삭제, 또는 schedule_interval="@daily" 로 지정
     catchup=False,
-    tags=['predict_test']
+    tags=['predict_old']
 ) as dag:
     
     t1 = PythonOperator(
@@ -674,20 +465,22 @@ with DAG(
         python_callable=make_predict_data
     )
 
-    # BashOperator로 예측 스크립트 실행
-    t3 = BashOperator(
+    t3 = PythonOperator(
         task_id="predict_janhgae_grade_spine",
-        bash_command=f"python {scripts_dir}/predict_spine.py /opt/airflow/AutogluonModels/ag-20250201_074554"
+        python_callable=predict_janhgae_grade_spine,
+        op_args=["AutogluonModels/ag-20250201_074554"] # 장해부위 척주 예측모델 저장경로
     )
     
-    t4 = BashOperator(
+    t4 = PythonOperator(
         task_id="predict_janhgae_grade_arms",
-        bash_command=f"python {scripts_dir}/predict_arms.py /opt/airflow/AutogluonModels/ag-20250203_182925"
+        python_callable=predict_janhgae_grade_arms,
+        op_args=["AutogluonModels/ag-20250203_182925"] # 장해부위 팔 예측모델 저장경로
     )
 
-    t5 = BashOperator(
+    t5 = PythonOperator(
         task_id="predict_janhgae_grade_legs",
-        bash_command=f"python {scripts_dir}/predict_legs.py /opt/airflow/AutogluonModels/ag-20250205_161832"
+        python_callable=predict_janhgae_grade_legs,
+        op_args=["AutogluonModels/ag-20250205_161832"] # 장해부위 다리 예측모델 저장경로 
     )
 
     t6 = PythonOperator(
@@ -702,3 +495,4 @@ with DAG(
     )
 
     t1 >> t2 >> t3 >> t4 >> t5 >> t6 >> t7
+    # t1 >> t2 >> [t3, t4, t5] >> t6 >> t7  # 부위별 예측은 병렬로 실행 가능

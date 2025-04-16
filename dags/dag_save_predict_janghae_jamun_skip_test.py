@@ -9,33 +9,33 @@ import datetime
 from airflow.operators.python import PythonOperator
 from airflow.operators.bash import BashOperator
 from datetime import datetime as dt
-from dotenv import load_dotenv
+# from dotenv import load_dotenv
 
-# 환경 변수 load
-load_dotenv()
+# # 환경 변수 load
+# load_dotenv()
 
-# db 연결 함수
-def get_db_connection():
-    return psycopg2.connect(
-        database=os.getenv('DB_NAME'),
-        user=os.getenv('DB_USER'),
-        password=os.getenv('DB_PASSWORD'),
-        host=os.getenv('DB_HOST'),
-        port=os.getenv('DB_PORT')
-    )
+# # db 연결 함수
+# def get_db_connection():
+#     return psycopg2.connect(
+#         database=os.getenv('DB_NAME'),
+#         user=os.getenv('DB_USER'),
+#         password=os.getenv('DB_PASSWORD'),
+#         host=os.getenv('DB_HOST'),
+#         port=os.getenv('DB_PORT')
+#     )
 
 # t1/print_text
 def print_text(text):
     print(text)
 
-# # db 연결함수
-# def get_db_connection():
-#     return psycopg2.connect(
-#         database="postgres",
-#         user="wesleyquest",
-#         password="Wqasdf01!",
-#         host="211.218.17.10",
-#         port="5432")
+# db 연결함수
+def get_db_connection():
+    return psycopg2.connect(
+        database="postgres",
+        user="wesleyquest",
+        password="Wqasdf01!",
+        host="211.218.17.10",
+        port="5432")
 
 # t2/make_predict_data
 def make_predict_data():
@@ -236,15 +236,15 @@ from autogluon.tabular import TabularPredictor
 # 인자로 전달된 모델 경로
 save_path = sys.argv[1]
 
-# db 연결함수
+# db 연결함수(환경변수 연결로 변경 필요)
 def get_db_connection():
     return psycopg2.connect(
-        database=os.environ.get('DB_NAME'),
-        user=os.environ.get('DB_USER'),
-        password=os.environ.get('DB_PASSWORD'),
-        host=os.environ.get('DB_HOST'),
-        port=os.environ.get('DB_PORT')
-    )
+        database="postgres",
+        user="wesleyquest",
+        password="Wqasdf01!",
+        host="211.218.17.10",
+        port="5432")
+
 
 # 예측값 DB UPDATE 함수
 def update_prediction_results(conn, df, num):
@@ -356,14 +356,14 @@ from autogluon.tabular import TabularPredictor
 # 인자로 전달된 모델 경로
 save_path = sys.argv[1] 
 
+# db 연결함수(환경변수 연결로 변경 필요)
 def get_db_connection():
     return psycopg2.connect(
-        database=os.environ.get('DB_NAME'),
-        user=os.environ.get('DB_USER'),
-        password=os.environ.get('DB_PASSWORD'),
-        host=os.environ.get('DB_HOST'),
-        port=os.environ.get('DB_PORT')
-    )
+        database="postgres",
+        user="wesleyquest",
+        password="Wqasdf01!",
+        host="211.218.17.10",
+        port="5432")
 
 # 예측값 DB UPDATE 함수
 def update_prediction_results(conn, df, num):
@@ -473,14 +473,14 @@ from autogluon.tabular import TabularPredictor
 # 인자로 전달된 모델 경로
 save_path = sys.argv[1]
 
+# db 연결함수(환경변수 연결로 변경 필요)
 def get_db_connection():
     return psycopg2.connect(
-        database=os.environ.get('DB_NAME'),
-        user=os.environ.get('DB_USER'),
-        password=os.environ.get('DB_PASSWORD'),
-        host=os.environ.get('DB_HOST'),
-        port=os.environ.get('DB_PORT')
-    )
+        database="postgres",
+        user="wesleyquest",
+        password="Wqasdf01!",
+        host="211.218.17.10",
+        port="5432")
 
 # 예측값 DB UPDATE 함수
 def update_prediction_results(conn, df, num):

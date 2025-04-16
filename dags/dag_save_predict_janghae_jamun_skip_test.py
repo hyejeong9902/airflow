@@ -684,17 +684,17 @@ with DAG(
     # BashOperator로 예측 스크립트 실행
     t3 = BashOperator(
         task_id="predict_janhgae_grade_spine",
-        bash_command=f"DB_HOST={os.getenv('DB_HOST')} DB_USER={os.getenv('DB_USER')} DB_PASSWORD={os.getenv('DB_PASSWORD')} DB_NAME={os.getenv('DB_NAME')} DB_PORT={os.getenv('DB_PORT')} python {scripts_dir}/predict_spine.py /opt/airflow/AutogluonModels/ag-20250201_074554"
+        bash_command=f"python {scripts_dir}/predict_spine.py /opt/airflow/AutogluonModels/ag-20250201_074554"
     )
     
     t4 = BashOperator(
         task_id="predict_janhgae_grade_arms",
-        bash_command=f"DB_HOST={os.getenv('DB_HOST')} DB_USER={os.getenv('DB_USER')} DB_PASSWORD={os.getenv('DB_PASSWORD')} DB_NAME={os.getenv('DB_NAME')} DB_PORT={os.getenv('DB_PORT')} python {scripts_dir}/predict_arms.py /opt/airflow/AutogluonModels/ag-20250203_182925"
+        bash_command=f"python {scripts_dir}/predict_arms.py /opt/airflow/AutogluonModels/ag-20250203_182925"
     )
 
     t5 = BashOperator(
         task_id="predict_janhgae_grade_legs",
-        bash_command=f"DB_HOST={os.getenv('DB_HOST')} DB_USER={os.getenv('DB_USER')} DB_PASSWORD={os.getenv('DB_PASSWORD')} DB_NAME={os.getenv('DB_NAME')} DB_PORT={os.getenv('DB_PORT')} python {scripts_dir}/predict_legs.py /opt/airflow/AutogluonModels/ag-20250205_161832"
+        bash_command=f"python {scripts_dir}/predict_legs.py /opt/airflow/AutogluonModels/ag-20250205_161832"
     )
 
     t6 = PythonOperator(

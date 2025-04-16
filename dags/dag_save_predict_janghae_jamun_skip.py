@@ -272,7 +272,7 @@ def predict_janhgae_grade_spine():
             return
         
         # 예측에서 제외할 컬럼
-        del_col = ['WONBU_NO','BUWI_8', 'BUWI_9', 'BUWI_10', 'FINAL_JANGHAE_GRADE', 'FIRST_INPUT_ILSI', 'LAST_CHANGE_ILSI'
+        del_col = ['WONBU_NO','BUWI_8', 'BUWI_9', 'BUWI_10', 'FINAL_JANGHAE_GRADE', 'FIRST_INPUT_ILSI', 'LAST_CHANGE_ILSI',
                    # 장해부위 척주 예측에 사용되지 않는 변수 
                    'GEUNROJA_FG', 'JONGSAJA_JIWI_CD', 'GY_HYEONGTAE_CD',
                    'SANGSE_SANGBYEONG_NM', 'SANGBYEONG_CD', 'MAIN_SANGSE_SANGBYEONG_NM', 'MAIN_SANGBYEONG_CD_MAJOR',

@@ -258,7 +258,7 @@ def update_prediction_results(conn, df):
         raise
 
 # 메인 실행 함수
-def predict_janhgae_grade_spine():
+def predict_janghae_grade_spine():
     db_connect = None
     try:
         db_connect = get_db_connection()
@@ -335,7 +335,7 @@ def predict_janhgae_grade_spine():
 
 # 스크립트 실행
 if __name__ == "__main__":
-    predict_janhgae_grade_spine() # taskid
+    predict_janghae_grade_spine() # taskid
 ''')
 
 # t4/predict_janhgae_grade_arms
@@ -375,7 +375,7 @@ def update_prediction_results(conn, df):
         raise
 
 # 메인 실행 함수
-def predict_janhgae_grade_arms():
+def predict_janghae_grade_arms():
     db_connect = None
     try:
         db_connect = get_db_connection()
@@ -450,7 +450,7 @@ def predict_janhgae_grade_arms():
 
 # 스크립트 실행
 if __name__ == "__main__":
-    predict_janhgae_grade_arms() # taskid
+    predict_janghae_grade_arms() # taskid
 ''')
 
 # t5/predict_janhgae_grade_legs
@@ -490,7 +490,7 @@ def update_prediction_results(conn, df):
         raise
 
 # 메인 실행 함수
-def predict_janhgae_grade_legs():
+def predict_janghae_grade_legs():
     db_connect = None
     try:
         db_connect = get_db_connection()
@@ -567,7 +567,7 @@ def predict_janhgae_grade_legs():
 
 # 스크립트 실행
 if __name__ == "__main__":
-    predict_janhgae_grade_legs() # taskid
+    predict_janghae_grade_legs() # taskid
 ''')
 
 # 스크립트에 실행 권한 부여
@@ -659,7 +659,7 @@ with DAG(
     description='predict_janghae_jamun_skip',
     schedule_interval=None,
     catchup=False,
-    tags=['predict']
+    tags=['predict_jamun_skip']
 ) as dag:
     
     t1 = PythonOperator(
@@ -675,17 +675,17 @@ with DAG(
 
     # BashOperator로 예측 스크립트 실행
     t3 = BashOperator(
-        task_id="predict_janhgae_grade_spine",
+        task_id="predict_janghae_grade_spine",
         bash_command=f"python {scripts_dir}/script_jamun_skip_spine.py /opt/airflow/AutogluonModels/ag-20250201_074554" # 경로수정필요
     )
     
     t4 = BashOperator(
-        task_id="predict_janhgae_grade_arms",
+        task_id="predict_janghae_grade_arms",
         bash_command=f"python {scripts_dir}/script_jamun_skip_arms.py /opt/airflow/AutogluonModels/ag-20250203_182925" # 경로수정필요
     )
 
     t5 = BashOperator(
-        task_id="predict_janhgae_grade_legs",
+        task_id="predict_janghae_grade_legs",
         bash_command=f"python {scripts_dir}/script_jamun_skip_legs.py /opt/airflow/AutogluonModels/ag-20250205_161832" # 경로수정필요
     )
 

@@ -221,7 +221,7 @@ scripts_dir = "/opt/airflow/scripts"
 os.makedirs(scripts_dir, exist_ok=True)
 
 # t3/predict_janhgae_grade_spine
-with open(f"{scripts_dir}/predict_spine.py", "w") as f:
+with open(f"{scripts_dir}/script_jamun_skip_spine.py", "w") as f:
     f.write('''#!/usr/bin/env python
 import psycopg2
 import psycopg2.extras as extras
@@ -339,7 +339,7 @@ if __name__ == "__main__":
 ''')
 
 # t4/predict_janhgae_grade_arms
-with open(f"{scripts_dir}/predict_arms.py", "w") as f:
+with open(f"{scripts_dir}/script_jamun_skip_arms.py", "w") as f:
     f.write('''#!/usr/bin/env python
 import psycopg2
 import psycopg2.extras as extras
@@ -454,7 +454,7 @@ if __name__ == "__main__":
 ''')
 
 # t5/predict_janhgae_grade_legs
-with open(f"{scripts_dir}/predict_legs.py", "w") as f:
+with open(f"{scripts_dir}/script_jamun_skip_legs.py", "w") as f:
     f.write('''#!/usr/bin/env python
 import psycopg2
 import psycopg2.extras as extras
@@ -571,9 +571,9 @@ if __name__ == "__main__":
 ''')
 
 # 스크립트에 실행 권한 부여
-os.chmod(f"{scripts_dir}/predict_spine.py", 0o755)
-os.chmod(f"{scripts_dir}/predict_arms.py", 0o755)
-os.chmod(f"{scripts_dir}/predict_legs.py", 0o755)
+os.chmod(f"{scripts_dir}/script_jamun_skip_spine.py", 0o755)
+os.chmod(f"{scripts_dir}/script_jamun_skip_arms.py", 0o755)
+os.chmod(f"{scripts_dir}/script_jamun_skip_legs.py", 0o755)
 
 
 # t6/predict_final_grade : 각 부위별 예측 기초장해등급으로 룰기반 최종장해등급 도출
@@ -676,17 +676,17 @@ with DAG(
     # BashOperator로 예측 스크립트 실행
     t3 = BashOperator(
         task_id="predict_janhgae_grade_spine",
-        bash_command=f"python {scripts_dir}/predict_spine.py /opt/airflow/AutogluonModels/ag-20250201_074554" # 경로수정필요
+        bash_command=f"python {scripts_dir}/script_jamun_skip_spine.py /opt/airflow/AutogluonModels/ag-20250201_074554" # 경로수정필요
     )
     
     t4 = BashOperator(
         task_id="predict_janhgae_grade_arms",
-        bash_command=f"python {scripts_dir}/predict_arms.py /opt/airflow/AutogluonModels/ag-20250203_182925" # 경로수정필요
+        bash_command=f"python {scripts_dir}/script_jamun_skip_arms.py /opt/airflow/AutogluonModels/ag-20250203_182925" # 경로수정필요
     )
 
     t5 = BashOperator(
         task_id="predict_janhgae_grade_legs",
-        bash_command=f"python {scripts_dir}/predict_legs.py /opt/airflow/AutogluonModels/ag-20250205_161832" # 경로수정필요
+        bash_command=f"python {scripts_dir}/script_jamun_skip_legs.py /opt/airflow/AutogluonModels/ag-20250205_161832" # 경로수정필요
     )
 
     t6 = PythonOperator(

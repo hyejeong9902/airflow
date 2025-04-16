@@ -223,7 +223,7 @@ os.makedirs(scripts_dir, exist_ok=True)
 
 # t3/predict_janhgae_grade_spine
 with open(f"{scripts_dir}/predict_spine.py", "w") as f:
-    f.write("""#!/usr/bin/env python
+    f.write('''#!/usr/bin/env python
 import psycopg2
 import psycopg2.extras as extras
 import pandas as pd
@@ -337,11 +337,11 @@ def predict_janhgae_grade_spine():
 # 스크립트 실행
 if __name__ == "__main__":
     predict_janhgae_grade_spine() # taskid
-""")
+''')
 
 # t4/predict_janhgae_grade_arms
 with open(f"{scripts_dir}/predict_arms.py", "w") as f:
-    f.write("""#!/usr/bin/env python
+    f.write('''#!/usr/bin/env python
 import psycopg2
 import psycopg2.extras as extras
 import pandas as pd
@@ -452,11 +452,11 @@ def predict_janhgae_grade_arms():
 # 스크립트 실행
 if __name__ == "__main__":
     predict_janhgae_grade_arms() # taskid
-""")
+''')
 
 # t5/predict_janhgae_grade_legs
 with open(f"{scripts_dir}/predict_legs.py", "w") as f:
-    f.write("""#!/usr/bin/env python
+    f.write('''#!/usr/bin/env python
 import psycopg2
 import psycopg2.extras as extras
 import pandas as pd
@@ -569,7 +569,7 @@ def predict_janhgae_grade_legs():
 # 스크립트 실행
 if __name__ == "__main__":
     predict_janhgae_grade_legs() # taskid
-""")
+''')
 
 # 스크립트에 실행 권한 부여
 os.chmod(f"{scripts_dir}/predict_spine.py", 0o755)
